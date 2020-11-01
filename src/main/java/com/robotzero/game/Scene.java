@@ -1,6 +1,8 @@
-package com.robotzero.engine;
+package com.robotzero.game;
 
 import com.robotzero.dataStructure.Tuple;
+import com.robotzero.engine.Component;
+import com.robotzero.engine.GameObject;
 import com.robotzero.infrastructure.constants.Window;
 import com.robotzero.render.Camera;
 import com.robotzero.render.Renderer;

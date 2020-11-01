@@ -1,5 +1,6 @@
 package com.robotzero.engine;
 
+import com.robotzero.game.Scene;
 import com.robotzero.infrastructure.Window;
 
 import java.util.ArrayList;

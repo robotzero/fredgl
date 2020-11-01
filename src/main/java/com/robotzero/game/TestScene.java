@@ -1,10 +1,8 @@
 package com.robotzero.game;
 
-import com.robotzero.engine.Scene;
 import com.robotzero.render.Shader;
 import org.lwjgl.BufferUtils;
 
-import java.awt.Graphics2D;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 

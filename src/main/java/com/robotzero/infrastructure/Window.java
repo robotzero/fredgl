@@ -1,6 +1,7 @@
 package com.robotzero.infrastructure;
 
-import com.robotzero.engine.Scene;
+import com.robotzero.game.LevelScene;
+import com.robotzero.game.Scene;
 import com.robotzero.game.TestScene;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
@@ -129,7 +130,7 @@ public class Window {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    changeScene(2);
+    changeScene(1);
   }
 
   public static Scene getScene() {
@@ -173,12 +174,13 @@ public class Window {
 //        currentScene = new LevelEditorScene("Level Editor");
 //        currentScene.init();
 //        currentScene.start();
+        System.out.println("BLAH2");
         break;
       case 1:
-//        isInEditor = false;
-//        currentScene = new LevelScene("Level");
-//        currentScene.init();
-//        currentScene.start();
+        isInEditor = false;
+        currentScene = new LevelScene("Level");
+        currentScene.init();
+        currentScene.start();
         break;
       case 2:
         isInEditor = false;
@@ -230,7 +232,7 @@ public class Window {
   public void setAspect(float val) {
     this.aspect = val;
   }
-  public float getAsepct() {
+  public float getAspect() {
     return this.aspect;
   }
 }

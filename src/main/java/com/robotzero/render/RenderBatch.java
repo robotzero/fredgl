@@ -186,7 +186,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
             glActiveTexture(GL_TEXTURE0 + i + 1);
             textures.get(i).bind();
         }
-        shader.uploadFloat("uAspect", Window.getWindow().getAsepct());
+        shader.uploadFloat("uAspect", Window.getWindow().getAspect());
 
         // Bind the vertex array and enable our location
         glBindVertexArray(vaoID);

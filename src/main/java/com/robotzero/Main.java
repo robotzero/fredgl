@@ -10,8 +10,6 @@ import java.io.StringWriter;
 
 public class Main {
 
-
-
   public static void main(String[] args) {
     String[] customArgs = {
         "-Dorg.lwjgl.util.Debug=true"
