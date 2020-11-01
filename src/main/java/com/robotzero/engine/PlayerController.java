@@ -140,7 +140,7 @@ public class PlayerController implements Component {
 //                rb.acceleration.x = 1000;
                 runTime -= dt;
                 if (runTime < 0) {
-                    Window.getWindow().changeScene(0);
+                    Window.getWindow().changeScene(2);
                 }
             }
             return;
@@ -193,7 +193,7 @@ public class PlayerController implements Component {
 //                rb.acceleration.y = -100;
                 movingUp = false;
                 if (deadAnimTime < 0) {
-                    Window.getWindow().changeScene(0);
+                    Window.getWindow().changeScene(2);
                 }
                 deadAnimTime -= dt;
             }
