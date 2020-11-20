@@ -1,11 +1,21 @@
 package com.robotzero.game;
 
 import com.robotzero.dataStructure.AssetPool;
+import com.robotzero.dataStructure.Transform;
 import com.robotzero.dataStructure.Tuple;
+import com.robotzero.engine.Animation;
+import com.robotzero.engine.AnimationMachine;
 import com.robotzero.engine.GameObject;
 import com.robotzero.engine.PlayerController;
+import com.robotzero.engine.RigidBody;
+import com.robotzero.engine.Sprite;
+import com.robotzero.engine.SpriteRenderer;
+import com.robotzero.engine.Spritesheet;
 import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
+import org.joml.Vector2f;
+
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 
@@ -18,7 +28,34 @@ public class LevelScene extends Scene {
   @Override
   public void init() {
     initAssetPool();
-    //importLevel(Constants.CURRENT_LEVEL);
+    Spritesheet spritesheet = AssetPool.getSpritesheet("assets/spritesheets/character_and_enemies_32.png");
+    RigidBody rigidBody = new RigidBody();
+    FredController fredController = new FredController();
+    Animation idle = new Animation("Idle", 0.1f, List.of(spritesheet.sprites.get(0)), false);
+    Animation walk = new Animation("Walk", 0.1f, List.of(spritesheet.sprites.get(0), spritesheet.sprites.get(1), spritesheet.sprites.get(2), spritesheet.sprites.get(3)), false);
+    idle.addStateTransfer("StartWalking", "Walk");
+    walk.addStateTransfer("StartIdling", "Idle");
+    Transform transform = new Transform(new Vector2f(64.0f, 64.0f));
+    transform.scale = new Vector2f(32f, 32f);
+    GameObject gameObject = new GameObject("Fred", transform, 1);
+    idle.setGameObject(gameObject);
+    walk.setGameObject(gameObject);
+    AnimationMachine animationMachine = new AnimationMachine(gameObject);
+    animationMachine.addAnimation(idle);
+    animationMachine.addAnimation(walk);
+    animationMachine.setStartAnimation("Idle");
+    Sprite sprite = spritesheet.sprites.get(0);
+    SpriteRenderer spriteRenderer = new SpriteRenderer(sprite, gameObject);
+    spriteRenderer.setGameObject(gameObject);
+    sprite.setGameObject(gameObject);
+    gameObject.addComponent(spriteRenderer);
+    gameObject.addComponent(animationMachine);
+    gameObject.addComponent(rigidBody);
+    gameObject.addComponent(fredController);
+    gameObjects.add(gameObject);
+    renderer.add(gameObject);
+    physics.addGameObject(gameObject);
+    gameObject.start();
     Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.SKY_COLOR);
     //AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").play();
   }

@@ -3,6 +3,7 @@ package com.robotzero.game;
 import com.robotzero.dataStructure.Tuple;
 import com.robotzero.engine.Component;
 import com.robotzero.engine.GameObject;
+import com.robotzero.engine.Physics;
 import com.robotzero.infrastructure.constants.Window;
 import com.robotzero.render.Camera;
 import com.robotzero.render.Renderer;
@@ -21,12 +22,15 @@ public abstract class Scene {
   List<GameObject> objsToDelete;
   List<GameObject> objsToAdd;
   Renderer renderer;
+  Physics physics;
 
   public void Scene(String name) {
     this.name = name;
     this.camera = new Camera(new Vector2f());
     this.gameObjects = new ArrayList<>();
     this.renderer = new Renderer(this.camera);
+    this.physics = new Physics();
+
     this.worldPartition = new HashMap<>();
     this.objsToDelete = new ArrayList<>();
     this.objsToAdd = new ArrayList<>();

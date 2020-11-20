@@ -89,12 +89,11 @@ public class GameObject {
     public void addComponent(Component c) {
         components.add(c);
         c.setGameObject(this);
-//        c.gameObject = this;
     }
 
     public Tuple<Integer> getGridCoords() {
-        Integer gridX = (int)(Math.floor(this.transform.position.x / Window.TILE_WIDTH) * Window.TILE_WIDTH);
-        Integer gridY = (int)(Math.floor(this.transform.position.y / Window.TILE_WIDTH) * Window.TILE_HEIGHT);
+        int gridX = (int)(Math.floor(this.transform.position.x / Window.TILE_WIDTH) * Window.TILE_WIDTH);
+        int gridY = (int)(Math.floor(this.transform.position.y / Window.TILE_WIDTH) * Window.TILE_HEIGHT);
         gridCoords.x = gridX;
         gridCoords.y = gridY;
         gridCoords.z = this.zIndex;
