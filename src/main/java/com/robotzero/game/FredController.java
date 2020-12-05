@@ -53,7 +53,7 @@ public class FredController implements Component {
         gameObject.getTransform().scale.x *= -1;
       }
       if (onGround) {
-        machine.trigger("StartRunning");
+        machine.trigger("StartWalking");
       }
     } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
       rigidBody.acceleration.x = -runSpeed;

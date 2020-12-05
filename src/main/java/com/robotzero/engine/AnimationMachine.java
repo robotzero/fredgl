@@ -16,6 +16,11 @@ public class AnimationMachine implements Component {
     private SpriteRenderer spriteRenderer;
     private GameObject gameObject;
 
+    public AnimationMachine() {
+        this.animations = new ArrayList<>();
+        this.current = null;
+    }
+
     public AnimationMachine(GameObject gameObject) {
         this.animations = new ArrayList<>();
         this.current = null;

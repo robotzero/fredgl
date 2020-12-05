@@ -28,34 +28,16 @@ public class LevelScene extends Scene {
   @Override
   public void init() {
     initAssetPool();
-    Spritesheet spritesheet = AssetPool.getSpritesheet("assets/spritesheets/character_and_enemies_32.png");
-    RigidBody rigidBody = new RigidBody();
-    FredController fredController = new FredController();
-    Animation idle = new Animation("Idle", 0.1f, List.of(spritesheet.sprites.get(0)), false);
-    Animation walk = new Animation("Walk", 0.1f, List.of(spritesheet.sprites.get(0), spritesheet.sprites.get(1), spritesheet.sprites.get(2), spritesheet.sprites.get(3)), false);
-    idle.addStateTransfer("StartWalking", "Walk");
-    walk.addStateTransfer("StartIdling", "Idle");
-    Transform transform = new Transform(new Vector2f(64.0f, 64.0f));
-    transform.scale = new Vector2f(32f, 32f);
-    GameObject gameObject = new GameObject("Fred", transform, 1);
-    idle.setGameObject(gameObject);
-    walk.setGameObject(gameObject);
-    AnimationMachine animationMachine = new AnimationMachine(gameObject);
-    animationMachine.addAnimation(idle);
-    animationMachine.addAnimation(walk);
-    animationMachine.setStartAnimation("Idle");
-    Sprite sprite = spritesheet.sprites.get(0);
-    SpriteRenderer spriteRenderer = new SpriteRenderer(sprite, gameObject);
-    spriteRenderer.setGameObject(gameObject);
-    sprite.setGameObject(gameObject);
-    gameObject.addComponent(spriteRenderer);
-    gameObject.addComponent(animationMachine);
-    gameObject.addComponent(rigidBody);
-    gameObject.addComponent(fredController);
-    gameObjects.add(gameObject);
-    renderer.add(gameObject);
-    physics.addGameObject(gameObject);
-    gameObject.start();
+    GameObject fredGameObject = Prefabs.FRED_PREFAB();
+    GameObject brickBlock = Prefabs.BRICK_BLOCK();
+    gameObjects.add(fredGameObject);
+    gameObjects.add(brickBlock);
+    renderer.add(fredGameObject);
+    renderer.add(brickBlock);
+    physics.addGameObject(fredGameObject);
+    physics.addGameObject(brickBlock);
+    fredGameObject.start();
+    brickBlock.start();
     Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.SKY_COLOR);
     //AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").play();
   }
@@ -69,6 +51,7 @@ public class LevelScene extends Scene {
     AssetPool.addSpritesheet("assets/spritesheets/character_and_enemies_64.png", 16, 32, 0, 21, 21 * 2);
     AssetPool.addSpritesheet("assets/spritesheets/icons.png", 32, 32, 0, 7, 15);
     AssetPool.addSpritesheet("assets/spritesheets/turtle.png", 16, 24, 0, 4, 4);
+    AssetPool.addSpritesheet("assets/spritesheets/fred_walking_sheet.png", 32, 32, 0, 12, 12);
 
     // Engine Assets
     AssetPool.addSpritesheet("assets/spritesheets/defaultAssets.png", 24, 21, 0, 2, 2);
