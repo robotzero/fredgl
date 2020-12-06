@@ -11,7 +11,9 @@ public interface Component {
 
   Component copy();
 
-  // public void collision(Collision coll);
+  default void collision(Collision coll) {
+    return;
+  }
 
 //  public void trigger(Trigger trigger) {
 //    return;

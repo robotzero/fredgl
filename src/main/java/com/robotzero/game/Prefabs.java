@@ -4,6 +4,7 @@ import com.robotzero.dataStructure.AssetPool;
 import com.robotzero.dataStructure.Transform;
 import com.robotzero.engine.Animation;
 import com.robotzero.engine.AnimationMachine;
+import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.GameObject;
 import com.robotzero.engine.RigidBody;
 import com.robotzero.engine.Sprite;
@@ -29,6 +30,7 @@ public class Prefabs {
     fredAnimation.addAnimation(walk);
 
     RigidBody rigidBody = new RigidBody();
+    BoxBounds boxBounds = new BoxBounds(32, 32, false, false);
     FredController fredController = new FredController();
 
     Transform transform = new Transform(new Vector2f(64.0f, 64.0f));
@@ -41,9 +43,12 @@ public class Prefabs {
     SpriteRenderer spriteRenderer = new SpriteRenderer(fredAnimation.getPreviewSprite(), gameObject);
     spriteRenderer.setGameObject(gameObject);
     sprite.setGameObject(gameObject);
+    rigidBody.setGameObject(gameObject);
+    boxBounds.setGameObject(gameObject);
     gameObject.addComponent(spriteRenderer);
     gameObject.addComponent(fredAnimation);
     gameObject.addComponent(rigidBody);
+    gameObject.addComponent(boxBounds);
     gameObject.addComponent(fredController);
 
     return gameObject;
@@ -66,6 +71,7 @@ public class Prefabs {
     return IntStream.rangeClosed(0, 40).mapToObj(index -> {
       GameObject stone = new GameObject(String.format("Stone_Block_Prefab%d", index), new Transform(new Vector2f(index * 31, 0)), 0);
       stone.addComponent(new SpriteRenderer(items.sprites.get(index % 3), stone));
+      stone.addComponent(new BoxBounds(31, 39, true, false));
 
       stone.getTransform().scale.x = 31;
       stone.getTransform().scale.y = 39;

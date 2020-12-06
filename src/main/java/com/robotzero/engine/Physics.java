@@ -1,6 +1,7 @@
 package com.robotzero.engine;
 
 import com.robotzero.dataStructure.Tuple;
+import com.robotzero.infrastructure.Window;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +27,15 @@ public class Physics {
   }
 
   public void addGameObject(GameObject go) {
-//    Bounds bounds = go.getComponent(Bounds.class);
-//    if (bounds != null) {
-//      if (bounds.isStatic) {
-//        this.staticObjects.add(go);
-//      } else {
-//        this.dynamicObjects.add(go);
-//      }
-//    }
-    this.dynamicObjects.add(go);
+    Bounds bounds = (Bounds) go.getComponent(Bounds.class);
+    if (bounds != null) {
+      if (bounds.isStatic) {
+        this.staticObjects.add(go);
+      } else {
+        this.dynamicObjects.add(go);
+      }
+    }
+//    this.dynamicObjects.add(go);
   }
 
   public void update(double dt) {
@@ -44,7 +45,6 @@ public class Physics {
         if (rb != null) {
           rb.update(tickSpeed);
         }
-
         resolveCollisions(go);
       }
     }
@@ -62,58 +62,58 @@ public class Physics {
     // 0 x 0
     // 0 0 0
 
-////    Bounds bounds = go.getComponent(Bounds.class);
-////
-////    Tuple<Integer> gridCoords = go.getGridCoords();
-////    for (int i=-1; i < 2; i++) {
-////      for (int j=-1; j < 3; j++) {
-////        this.tuple.x = gridCoords.x + (Constants.TILE_WIDTH * i);
-////        this.tuple.y = gridCoords.y + (Constants.TILE_HEIGHT * j);
-////        this.tuple.z = go.zIndex;
-////
-////        GameObject otherGo = Window.getScene().getWorldPartition().get(this.tuple);
-////        if (otherGo != null && otherGo != go) {
-////          Bounds otherBounds = otherGo.getComponent(Bounds.class);
-////          if (otherBounds != null && otherBounds.isStatic) {
-////            if (Bounds.checkCollision(bounds, otherBounds)) {
-////              if (bounds.gameObject.getComponent(FlagPole.class) != null || bounds.gameObject.getComponent(FlagTop.class) != null ||
-////                  otherBounds.gameObject.getComponent(FlagPole.class) != null || otherBounds.gameObject.getComponent(FlagTop.class) != null) {
-////                continue;
-////              }
-////              Collision collision = Bounds.resolveCollision(bounds, otherBounds);
-////              if (collision == null) continue;
-////              go.collision(collision);
-////
-////              // Flip the collision side for the other game object
-////              collision.flip(go);
-////
-////              otherGo.collision(collision);
-////            }
-////          }
-////        }
-////      }
-//    }
+    Bounds bounds = (Bounds) go.getComponent(Bounds.class);
+
+    Tuple<Integer> gridCoords = go.getGridCoords();
+    for (int i=-1; i < 2; i++) {
+      for (int j=-1; j < 3; j++) {
+        this.tuple.x = gridCoords.x + (com.robotzero.infrastructure.constants.Window.TILE_WIDTH * i);
+        this.tuple.y = gridCoords.y + (com.robotzero.infrastructure.constants.Window.TILE_HEIGHT * j);
+        this.tuple.z = go.getzIndex();
+
+        GameObject otherGo = Window.getScene().getWorldPartition().get(this.tuple);
+        if (otherGo != null && otherGo != go) {
+          Bounds otherBounds = (Bounds) otherGo.getComponent(Bounds.class);
+          if (otherBounds != null && otherBounds.isStatic) {
+            if (Bounds.checkCollision(bounds, otherBounds)) {
+//              if (bounds.gameObject.getComponent(FlagPole.class) != null || bounds.gameObject.getComponent(FlagTop.class) != null ||
+//                  otherBounds.gameObject.getComponent(FlagPole.class) != null || otherBounds.gameObject.getComponent(FlagTop.class) != null) {
+//                continue;
+//              }
+              Collision collision = Bounds.resolveCollision(bounds, otherBounds);
+              if (collision == null) continue;
+              go.collision(collision);
+
+              // Flip the collision side for the other game object
+              collision.flip(go);
+
+              otherGo.collision(collision);
+            }
+          }
+        }
+      }
+    }
 
     // Check for collisions/triggers among dynamic objects
     for (GameObject obj : dynamicObjects) {
       if (obj == go) continue;
 
-//      Bounds otherBounds = obj.getComponent(Bounds.class);
-//      if (Bounds.checkCollision(bounds, otherBounds)) {
+      Bounds otherBounds = (Bounds) obj.getComponent(Bounds.class);
+      if (Bounds.checkCollision(bounds, otherBounds)) {
 //        if (bounds.isTrigger() || otherBounds.isTrigger()) {
-//          go.trigger(new Trigger(otherBounds.gameObject));
-//          otherBounds.gameObject.trigger(new Trigger(go));
+////          go.trigger(new Trigger(otherBounds.gameObject));
+////          otherBounds.gameObject.trigger(new Trigger(go));
 //        } else {
-//          Collision collision = Bounds.resolveCollision(bounds, otherBounds);
-//          if (collision == null) continue;
-//          go.collision(collision);
-//
-//          // Flip the collision side for the other game object
-//          collision.flip(go);
-//
-//          obj.collision(collision);
+          Collision collision = Bounds.resolveCollision(bounds, otherBounds);
+          if (collision == null) continue;
+          go.collision(collision);
+
+          // Flip the collision side for the other game object
+          collision.flip(go);
+
+          obj.collision(collision);
 //        }
-//      }
+      }
     }
   }
 }

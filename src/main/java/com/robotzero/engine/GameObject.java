@@ -46,11 +46,11 @@ public class GameObject {
         return this.lastZIndex;
     }
 
-//    public void collision(Collision coll) {
-//        for (java.awt.Component c : components) {
-//            c.collision(coll);
-//        }
-//    }
+    public void collision(Collision coll) {
+        for (Component c : components) {
+            c.collision(coll);
+        }
+    }
 //
 //    public void trigger(Trigger trigger) {
 //        for (java.awt.Component c : components) {
@@ -123,9 +123,9 @@ public class GameObject {
         }
 
         for (Component c : components) {
-//            if (!(c instanceof Rigidbody)) {
+            if (!(c instanceof RigidBody)) {
                 c.update(dt);
-//            }
+            }
         }
 
         lastZIndex = this.zIndex;

@@ -29,16 +29,21 @@ public class LevelScene extends Scene {
   public void init() {
     initAssetPool();
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
-    List<GameObject> stoneBlocks = Prefabs.STONES();
-    stoneBlocks.forEach(stoneBlock -> {
-      gameObjects.add(stoneBlock);
-      renderer.add(stoneBlock);
-      physics.addGameObject(stoneBlock);
-      stoneBlock.start();
-    });
+//    List<GameObject> stoneBlocks = Prefabs.STONES();
+//    stoneBlocks.forEach(stoneBlock -> {
+//      gameObjects.add(stoneBlock);
+//      renderer.add(stoneBlock);
+//      physics.addGameObject(stoneBlock);
+//      stoneBlock.start();
+//    });
+    GameObject blah = Prefabs.BRICK_BLOCK();
     gameObjects.add(fredGameObject);
+    gameObjects.add(blah);
     renderer.add(fredGameObject);
+    renderer.add(blah);
     physics.addGameObject(fredGameObject);
+    physics.addGameObject(blah);
+    blah.start();
     fredGameObject.start();
     Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.COLOR_BLACK);
     //AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").play();
