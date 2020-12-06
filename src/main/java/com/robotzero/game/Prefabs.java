@@ -31,20 +31,21 @@ public class Prefabs {
 
     RigidBody rigidBody = new RigidBody();
     BoxBounds boxBounds = new BoxBounds(32, 32, false, false);
+    boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 
-    Transform transform = new Transform(new Vector2f(64.0f, 64.0f));
+    Transform transform = new Transform(new Vector2f(32.0f, 32.0f));
     transform.scale = new Vector2f(32f, 32f);
-    GameObject gameObject = new GameObject("Fred", transform, 1);
+    GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
     walk.setGameObject(gameObject);
     fredAnimation.setGameObject(gameObject);
-    Sprite sprite = spritesheet.sprites.get(0);
     SpriteRenderer spriteRenderer = new SpriteRenderer(fredAnimation.getPreviewSprite(), gameObject);
     spriteRenderer.setGameObject(gameObject);
-    sprite.setGameObject(gameObject);
     rigidBody.setGameObject(gameObject);
     boxBounds.setGameObject(gameObject);
+    fredController.setGameObject(gameObject);
+    fredAnimation.setGameObject(gameObject);
     gameObject.addComponent(spriteRenderer);
     gameObject.addComponent(fredAnimation);
     gameObject.addComponent(rigidBody);
@@ -70,8 +71,12 @@ public class Prefabs {
     Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
     return IntStream.rangeClosed(0, 40).mapToObj(index -> {
       GameObject stone = new GameObject(String.format("Stone_Block_Prefab%d", index), new Transform(new Vector2f(index * 31, 0)), 0);
-      stone.addComponent(new SpriteRenderer(items.sprites.get(index % 3), stone));
-      stone.addComponent(new BoxBounds(31, 39, true, false));
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(index % 3), stone);
+      BoxBounds boxBounds = new BoxBounds(31, 39, true, false);
+      spriteRenderer.setGameObject(stone);
+      boxBounds.setGameObject(stone);
+      stone.addComponent(spriteRenderer);
+      stone.addComponent(boxBounds);
 
       stone.getTransform().scale.x = 31;
       stone.getTransform().scale.y = 39;

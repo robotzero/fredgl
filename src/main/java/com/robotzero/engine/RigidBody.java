@@ -23,11 +23,6 @@ public class RigidBody implements Component {
   }
 
   @Override
-  public void start() {
-
-  }
-
-  @Override
   public void setGameObject(GameObject gameObject) {
     this.gameObject = gameObject;
   }

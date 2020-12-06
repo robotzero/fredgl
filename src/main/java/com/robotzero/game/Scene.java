@@ -17,12 +17,12 @@ import java.util.Map;
 public abstract class Scene {
   String name;
   public Camera camera;
+  public Physics physics;
   List<GameObject> gameObjects;
   Map<Tuple<Integer>, GameObject> worldPartition;
   List<GameObject> objsToDelete;
   List<GameObject> objsToAdd;
   Renderer renderer;
-  Physics physics;
 
   public void Scene(String name) {
     this.name = name;

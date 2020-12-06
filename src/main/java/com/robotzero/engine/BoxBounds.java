@@ -71,23 +71,23 @@ public class BoxBounds extends Bounds {
       Tuple<Integer> gridCoords = gameObject.getGridCoords().copy();
       gridCoords.y += com.robotzero.infrastructure.constants.Window.TILE_HEIGHT;
       GameObject go = Window.getScene().getWorldPartition().get(gridCoords);
-      if (go != null && ((BoxBounds) go.getComponent(BoxBounds.class)).isStatic) {
+      if (go != null && go.getComponent(BoxBounds.class).isStatic) {
         this.shouldCheckTop = false;
       }
       gridCoords.y -= com.robotzero.infrastructure.constants.Window.TILE_HEIGHT * 2;
       go = Window.getScene().getWorldPartition().get(gridCoords);
-      if (go != null && ((BoxBounds) go.getComponent(BoxBounds.class)).isStatic) {
+      if (go != null && go.getComponent(BoxBounds.class).isStatic) {
         this.shouldCheckBottom = false;
       }
       gridCoords.y += com.robotzero.infrastructure.constants.Window.TILE_HEIGHT;
       gridCoords.x += com.robotzero.infrastructure.constants.Window.TILE_WIDTH;
       go = Window.getScene().getWorldPartition().get(gridCoords);
-      if (go != null && ((BoxBounds) go.getComponent(BoxBounds.class)).isStatic) {
+      if (go != null && go.getComponent(BoxBounds.class).isStatic) {
         this.shouldCheckRight = false;
       }
       gridCoords.x -= com.robotzero.infrastructure.constants.Window.TILE_WIDTH * 2;
       go = Window.getScene().getWorldPartition().get(gridCoords);
-      if (go != null && ((BoxBounds) go.getComponent(BoxBounds.class)).isStatic) {
+      if (go != null && go.getComponent(BoxBounds.class).isStatic) {
         this.shouldCheckLeft = false;
       }
     }
@@ -138,8 +138,8 @@ public class BoxBounds extends Bounds {
 
         // Collision on the bottom of this
         this.gameObject.getTransform().position.y = otherBounds.gameObject.getTransform().position.y + otherBounds.getHeight();
-        if (this.gameObject.getComponent(RigidBody.class) != null && ((RigidBody) this.gameObject.getComponent(RigidBody.class)).velocity.y < 0)
-          ((RigidBody) this.gameObject.getComponent(RigidBody.class)).velocity.y = 0;
+        if (this.gameObject.getComponent(RigidBody.class) != null && this.gameObject.getComponent(RigidBody.class).velocity.y < 0)
+          this.gameObject.getComponent(RigidBody.class).velocity.y = 0;
 
         // Top of other bounds
         Vector2f contactPoint = new Vector2f(otherBounds.center.x, otherBounds.gameObject.getTransform().position.y + otherBounds.getHeight());
@@ -151,8 +151,8 @@ public class BoxBounds extends Bounds {
 
         // Collision on the top of this
         this.gameObject.getTransform().position.y = otherBounds.gameObject.getTransform().position.y - this.getHeight();
-        if (this.gameObject.getComponent(RigidBody.class) != null && ((RigidBody) this.gameObject.getComponent(RigidBody.class)).velocity.y > 0)
-          ((RigidBody) this.gameObject.getComponent(RigidBody.class)).velocity.y = 0;
+        if (this.gameObject.getComponent(RigidBody.class) != null && this.gameObject.getComponent(RigidBody.class).velocity.y > 0)
+          this.gameObject.getComponent(RigidBody.class).velocity.y = 0;
 
         // Bottom of other bounds
         Vector2f contactPoint = new Vector2f(otherBounds.center.x, otherBounds.gameObject.getTransform().position.y);

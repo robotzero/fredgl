@@ -3,17 +3,16 @@ package com.robotzero.engine;
 public interface Component {
   // public GameObject gameObject;
 
-  void update(double dt);
+  default void collision(Collision coll) {}
 
-  void start();
+  default void start() {}
 
   void setGameObject(GameObject gameObject);
 
+  void update(double dt);
+
   Component copy();
 
-  default void collision(Collision coll) {
-    return;
-  }
 
 //  public void trigger(Trigger trigger) {
 //    return;

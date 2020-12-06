@@ -27,7 +27,7 @@ public class Physics {
   }
 
   public void addGameObject(GameObject go) {
-    Bounds bounds = (Bounds) go.getComponent(Bounds.class);
+    Bounds bounds = go.getComponent(Bounds.class);
     if (bounds != null) {
       if (bounds.isStatic) {
         this.staticObjects.add(go);
@@ -41,7 +41,7 @@ public class Physics {
   public void update(double dt) {
     for (; tickSpeedLeft < dt; tickSpeedLeft += tickSpeed) {
       for (GameObject go : dynamicObjects) {
-        RigidBody rb = (RigidBody) go.getComponent(RigidBody.class);
+        RigidBody rb = go.getComponent(RigidBody.class);
         if (rb != null) {
           rb.update(tickSpeed);
         }
@@ -62,7 +62,7 @@ public class Physics {
     // 0 x 0
     // 0 0 0
 
-    Bounds bounds = (Bounds) go.getComponent(Bounds.class);
+    Bounds bounds = go.getComponent(Bounds.class);
 
     Tuple<Integer> gridCoords = go.getGridCoords();
     for (int i=-1; i < 2; i++) {
@@ -73,7 +73,7 @@ public class Physics {
 
         GameObject otherGo = Window.getScene().getWorldPartition().get(this.tuple);
         if (otherGo != null && otherGo != go) {
-          Bounds otherBounds = (Bounds) otherGo.getComponent(Bounds.class);
+          Bounds otherBounds = otherGo.getComponent(Bounds.class);
           if (otherBounds != null && otherBounds.isStatic) {
             if (Bounds.checkCollision(bounds, otherBounds)) {
 //              if (bounds.gameObject.getComponent(FlagPole.class) != null || bounds.gameObject.getComponent(FlagTop.class) != null ||
@@ -98,7 +98,7 @@ public class Physics {
     for (GameObject obj : dynamicObjects) {
       if (obj == go) continue;
 
-      Bounds otherBounds = (Bounds) obj.getComponent(Bounds.class);
+      Bounds otherBounds = obj.getComponent(Bounds.class);
       if (Bounds.checkCollision(bounds, otherBounds)) {
 //        if (bounds.isTrigger() || otherBounds.isTrigger()) {
 ////          go.trigger(new Trigger(otherBounds.gameObject));

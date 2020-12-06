@@ -1,6 +1,7 @@
 package com.robotzero.game;
 
 import com.robotzero.engine.AnimationMachine;
+import com.robotzero.engine.Collision;
 import com.robotzero.engine.Component;
 import com.robotzero.engine.GameObject;
 import com.robotzero.engine.RigidBody;
@@ -13,6 +14,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class FredController implements Component {
   private AnimationMachine machine = null;
@@ -27,9 +29,9 @@ public class FredController implements Component {
 
   @Override
   public void start() {
-    this.machine = (AnimationMachine) gameObject.getComponent(AnimationMachine.class);
-    this.sprite = (SpriteRenderer) gameObject.getComponent(SpriteRenderer.class);
-    this.rigidBody = (RigidBody) gameObject.getComponent(RigidBody.class);
+    this.machine = gameObject.getComponent(AnimationMachine.class);
+    this.sprite = gameObject.getComponent(SpriteRenderer.class);
+    this.rigidBody = gameObject.getComponent(RigidBody.class);
     this.camera = Window.getScene().camera;
   }
 
@@ -68,12 +70,32 @@ public class FredController implements Component {
       machine.trigger("StartIdling");
     }
 
+    if (KeyListener.isKeyPressed(GLFW_KEY_SPACE) && onGround) {
+//      AssetPool.getSound("assets/sounds/jump-small.ogg").play();
+      onGround = false;
+      rigidBody.acceleration.y = jumpSpeed;
+      machine.trigger("StartJumping");
+    } else {
+      rigidBody.acceleration.y = 0;
+    }
+
 //    immunityLeft -= dt;
 //    flashLeft -= dt;
 //    fireballCooldownTime -= dt;
 //    invincibilityLeft -= dt;
   }
 
+  @Override
+  public void collision(Collision collision) {
+//    if (doWinAnimation && collision.side == Collision.CollisionSide.BOTTOM) {
+//      slidingDown = false;
+//      return;
+//    }
+
+    if (collision.side == Collision.CollisionSide.BOTTOM) {
+      onGround = true;
+    }
+  }
 
   @Override
   public void setGameObject(GameObject gameObject) {

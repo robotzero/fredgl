@@ -212,8 +212,9 @@ public class Window {
 
   public void update(double dt) {
     currentScene.update(dt);
-//    if (currentScene instanceof LevelScene)
-//      currentScene.physics.update(dt);
+    if (currentScene instanceof LevelScene) {
+      currentScene.physics.update(dt);
+    }
 //    MouseListener.endFrame();
   }
 

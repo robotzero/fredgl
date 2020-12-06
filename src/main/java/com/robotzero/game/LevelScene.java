@@ -1,19 +1,11 @@
 package com.robotzero.game;
 
 import com.robotzero.dataStructure.AssetPool;
-import com.robotzero.dataStructure.Transform;
 import com.robotzero.dataStructure.Tuple;
-import com.robotzero.engine.Animation;
-import com.robotzero.engine.AnimationMachine;
+import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.GameObject;
-import com.robotzero.engine.PlayerController;
-import com.robotzero.engine.RigidBody;
-import com.robotzero.engine.Sprite;
-import com.robotzero.engine.SpriteRenderer;
-import com.robotzero.engine.Spritesheet;
 import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
-import org.joml.Vector2f;
 
 import java.util.List;
 
@@ -29,21 +21,18 @@ public class LevelScene extends Scene {
   public void init() {
     initAssetPool();
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
-//    List<GameObject> stoneBlocks = Prefabs.STONES();
-//    stoneBlocks.forEach(stoneBlock -> {
-//      gameObjects.add(stoneBlock);
-//      renderer.add(stoneBlock);
-//      physics.addGameObject(stoneBlock);
-//      stoneBlock.start();
-//    });
-    GameObject blah = Prefabs.BRICK_BLOCK();
+    List<GameObject> stoneBlocks = Prefabs.STONES();
+    stoneBlocks.forEach(stoneBlock -> {
+      gameObjects.add(stoneBlock);
+      renderer.add(stoneBlock);
+      physics.addGameObject(stoneBlock);
+      worldPartition.put(stoneBlock.getGridCoords(), stoneBlock);
+      stoneBlock.start();
+    });
     gameObjects.add(fredGameObject);
-    gameObjects.add(blah);
     renderer.add(fredGameObject);
-    renderer.add(blah);
     physics.addGameObject(fredGameObject);
-    physics.addGameObject(blah);
-    blah.start();
+    worldPartition.put(fredGameObject.getGridCoords(), fredGameObject);
     fredGameObject.start();
     Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.COLOR_BLACK);
     //AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").play();
@@ -85,7 +74,7 @@ public class LevelScene extends Scene {
   @Override
   public void update(double dt) {
     for (GameObject go : gameObjects) {
-      if (go.getComponent(PlayerController.class) != null || go.getTransform().position.x > this.camera.position().x && go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x + 32.0f * 40f + 128) {
+      if (go.getComponent(FredController.class) != null || go.getTransform().position.x > this.camera.position().x && go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x + 32.0f * 40f + 128) {
         go.update(dt);
       } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_2) {
         deleteGameObject(go);
@@ -102,7 +91,7 @@ public class LevelScene extends Scene {
         worldPartition.remove(gridCoords);
         this.gameObjects.remove(obj);
         this.renderer.deleteGameObject(obj);
-//        this.physics.deleteGameObject(obj);
+        this.physics.deleteGameObject(obj);
       }
       objsToDelete.clear();
     }
@@ -111,12 +100,12 @@ public class LevelScene extends Scene {
       for (GameObject g : objsToAdd) {
         gameObjects.add(g);
         renderer.add(g);
-//        physics.addGameObject(g);
+        physics.addGameObject(g);
 
-//        if (g.getComponent(BoxBounds.class) != null && g.getComponent(BoxBounds.class).isStatic) {
-//          Tuple<Integer> gridPos = g.getGridCoords();
-//          worldPartition.put(gridPos, g);
-//        }
+        if (g.getComponent(BoxBounds.class) != null && g.getComponent(BoxBounds.class).isStatic) {
+          Tuple<Integer> gridPos = g.getGridCoords();
+          worldPartition.put(gridPos, g);
+        }
       }
 
       for (GameObject g : objsToAdd) {

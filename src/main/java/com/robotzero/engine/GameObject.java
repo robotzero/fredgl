@@ -58,11 +58,11 @@ public class GameObject {
 //        }
 //    }
 
-    public Component getComponent(Class clazz) {
+    public <T extends Component> T getComponent(Class<T> clazz) {
         for (Component c : components) {
-            if (c.getClass().equals(clazz)) {
+            if (clazz.isAssignableFrom(c.getClass())) {
                 try {
-                    return c;
+                    return clazz.cast(c);
                 } catch (ClassCastException e) {
                     e.printStackTrace();
                     System.exit(-1);
@@ -73,14 +73,14 @@ public class GameObject {
         return null;
     }
 
-//    public void removeComponent(Component componentClass) {
-//        for (Component c : components) {
-//            if (componentClass.isAssignableFrom(c.getClass())) {
-//                components.remove(c);
-//                return;
-//            }
-//        }
-//    }
+    public <T extends Component> void removeComponent(Class<T> componentClass) {
+        for (Component c : components) {
+            if (componentClass.isAssignableFrom(c.getClass())) {
+                components.remove(c);
+                return;
+            }
+        }
+    }
 
     public List<Component> getAllComponents() {
         return this.components;
