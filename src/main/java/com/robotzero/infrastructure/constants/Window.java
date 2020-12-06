@@ -11,8 +11,7 @@ public class Window {
 
   public static final int TILE_WIDTH = 32;
   public static final int TILE_HEIGHT = 32;
-  public static final float GRAVITY = -10;
-//  public static final float GRAVITY = 0;
+  public static final float GRAVITY = -800;
 
   public static FontMetrics FONT_METRICS;
   public static String CURRENT_LEVEL = "Default";

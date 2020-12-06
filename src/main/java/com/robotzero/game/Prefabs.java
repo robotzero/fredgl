@@ -7,7 +7,6 @@ import com.robotzero.engine.AnimationMachine;
 import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.GameObject;
 import com.robotzero.engine.RigidBody;
-import com.robotzero.engine.Sprite;
 import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.engine.Spritesheet;
 import org.joml.Vector2f;
