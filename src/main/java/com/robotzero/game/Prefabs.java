@@ -11,11 +11,16 @@ import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.engine.Spritesheet;
 import org.joml.Vector2f;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class Prefabs {
   public static GameObject FRED_PREFAB() {
     Spritesheet spritesheet = AssetPool.getSpritesheet("assets/spritesheets/fred_walking_sheet.png");
     Animation idle = new Animation("Idle", 0.1f, spritesheet.sprites.subList(0, 1), false);
-    Animation walk = new Animation("Walk", 0.1f, spritesheet.sprites.subList(0, 11), true);
+    Animation walk = new Animation("Walk", 0.1f, spritesheet.sprites.subList(1, 11), true);
     AnimationMachine fredAnimation = new AnimationMachine();
     fredAnimation.setStartAnimation("Idle");
     idle.addStateTransfer("StartWalking", "Walk");
@@ -54,5 +59,18 @@ public class Prefabs {
     brickBlock.getTransform().scale.y = 32;
 
     return brickBlock;
+  }
+
+  public static List<GameObject> STONES() {
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    return IntStream.rangeClosed(0, 40).mapToObj(index -> {
+      GameObject stone = new GameObject(String.format("Stone_Block_Prefab%d", index), new Transform(new Vector2f(index * 31, 0)), 0);
+      stone.addComponent(new SpriteRenderer(items.sprites.get(index % 3), stone));
+
+      stone.getTransform().scale.x = 31;
+      stone.getTransform().scale.y = 39;
+
+      return stone;
+    }).collect(Collectors.toList());
   }
 }

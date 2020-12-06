@@ -29,16 +29,18 @@ public class LevelScene extends Scene {
   public void init() {
     initAssetPool();
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
-    GameObject brickBlock = Prefabs.BRICK_BLOCK();
+    List<GameObject> stoneBlocks = Prefabs.STONES();
+    stoneBlocks.forEach(stoneBlock -> {
+      gameObjects.add(stoneBlock);
+      renderer.add(stoneBlock);
+      physics.addGameObject(stoneBlock);
+      stoneBlock.start();
+    });
     gameObjects.add(fredGameObject);
-    gameObjects.add(brickBlock);
     renderer.add(fredGameObject);
-    renderer.add(brickBlock);
     physics.addGameObject(fredGameObject);
-    physics.addGameObject(brickBlock);
     fredGameObject.start();
-    brickBlock.start();
-    Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.SKY_COLOR);
+    Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.COLOR_BLACK);
     //AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").play();
   }
 
@@ -52,6 +54,7 @@ public class LevelScene extends Scene {
     AssetPool.addSpritesheet("assets/spritesheets/icons.png", 32, 32, 0, 7, 15);
     AssetPool.addSpritesheet("assets/spritesheets/turtle.png", 16, 24, 0, 4, 4);
     AssetPool.addSpritesheet("assets/spritesheets/fred_walking_sheet.png", 32, 32, 0, 12, 12);
+    AssetPool.addSpritesheet("assets/spritesheets/stone_sheet.png", 31, 39, 0, 3, 3);
 
     // Engine Assets
     AssetPool.addSpritesheet("assets/spritesheets/defaultAssets.png", 24, 21, 0, 2, 2);
