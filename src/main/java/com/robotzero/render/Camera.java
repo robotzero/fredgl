@@ -4,7 +4,6 @@ import com.robotzero.infrastructure.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 public class Camera {
   private boolean isPerspective = false;
@@ -21,7 +20,7 @@ public class Camera {
     this.projectionMatrix = new Matrix4f();
     this.viewMatrix = new Matrix4f();
     this.inverseProjection = new Matrix4f();
-    this.caluclateAspect();
+    this.calculateAspect();
     this.adjustPerspective();
   }
 
@@ -29,8 +28,8 @@ public class Camera {
     return this.position;
   }
 
-  private void caluclateAspect() {
-    this.aspect = (float) Window.getWindow().getWidth() / (float)Window.getWindow().getHeight();
+  private void calculateAspect() {
+    this.aspect = (float) Window.getWindow().getWidth() / (float) Window.getWindow().getHeight();
   }
 
   public void adjustPerspective() {

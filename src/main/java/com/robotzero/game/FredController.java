@@ -5,7 +5,6 @@ import com.robotzero.engine.Collision;
 import com.robotzero.engine.Component;
 import com.robotzero.engine.GameObject;
 import com.robotzero.engine.RigidBody;
-import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
 import com.robotzero.render.Camera;
@@ -18,19 +17,17 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class FredController implements Component {
   private AnimationMachine machine = null;
-  private SpriteRenderer sprite = null;
   private GameObject gameObject = null;
   private RigidBody rigidBody = null;
   private boolean onGround = true;
   private Camera camera;
 
-  private float runSpeed = 1800;
-  private float jumpSpeed = 17000;
+  private float runSpeed = 1000;
+  private float jumpSpeed = 15000;
 
   @Override
   public void start() {
     this.machine = gameObject.getComponent(AnimationMachine.class);
-    this.sprite = gameObject.getComponent(SpriteRenderer.class);
     this.rigidBody = gameObject.getComponent(RigidBody.class);
     this.camera = Window.getScene().camera;
   }
@@ -39,14 +36,8 @@ public class FredController implements Component {
   public void update(double dt) {
     if (this.camera.position().x < this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X) {
       this.camera.position().x = this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X;
-    }
-
-    if (this.gameObject.getTransform().position.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_1 && camera.position().y != com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_2) {
-      Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.COLOR_BLACK);
-      this.camera.position().y = com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_2;
-    } else if (this.gameObject.getTransform().position.y > com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_1 && camera.position().y != com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_1) {
-      Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.SKY_COLOR);
-      this.camera.position().y = com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_1;
+    } else {
+      this.camera.position().x = this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X;
     }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {

@@ -70,14 +70,8 @@ public class AnimationMachine implements Component {
 
     @Override
     public void update(double dt) {
-        if (inLevelEditor) {
-//            Transform.copyValues(gameObject.getTransform(), levelEditorGo.getTransform());
-//            levelEditorGo.getTransform().position.sub(Window.getScene().camera.position());
-//            levelEditorGo. = gameObject.getzIndex();
-        } else {
-            spriteRenderer.sprite = current.getCurrentSprite();
-            current.update(dt);
-        }
+        spriteRenderer.sprite = current.getCurrentSprite();
+        current.update(dt);
     }
 
     public void trigger(String trigger) {
@@ -95,44 +89,6 @@ public class AnimationMachine implements Component {
             machine.addAnimation((Animation)anim.copy());
         }
         machine.setStartAnimation(this.startAnimation);
-
-        return machine;
-    }
-
-//    @Override
-//    public String serialize(int tabSize) {
-//        StringBuilder builder = new StringBuilder();
-//
-//        builder.append(beginObjectProperty("AnimationMachine", tabSize));
-//        builder.append(addStringProperty("StartAnimation", startAnimation, tabSize + 1, true, true));
-//        builder.append(addIntProperty("NumberOfAnimations", animations.size(), tabSize + 1, true, true));
-//        for (int i=0; i < animations.size(); i++) {
-//            Animation anim = animations.get(i);
-//            builder.append(anim.serialize(tabSize + 1));
-//            builder.append(addEnding(true, true));
-//        }
-//
-//        builder.append(closeObjectProperty(tabSize));
-//
-//        return builder.toString();
-//    }
-
-    public static AnimationMachine deserialize() {
-        AnimationMachine machine = new AnimationMachine(deserialize().gameObject);
-//
-//        String startAnimation = Parser.consumeStringProperty("StartAnimation");
-//        machine.setStartAnimation(startAnimation);
-//        Parser.consume(',');
-//        int numOfAnimations = Parser.consumeIntProperty("NumberOfAnimations");
-//        Parser.consume(',');
-//        for (int i=0; i < numOfAnimations; i++) {
-//            Parser.consumeBeginObjectProperty("Animation");
-//            Animation anim = Animation.deserialize();
-//            machine.addAnimation(anim);
-//            Parser.consume(',');
-//        }
-//
-//        Parser.consumeEndObjectProperty();
 
         return machine;
     }

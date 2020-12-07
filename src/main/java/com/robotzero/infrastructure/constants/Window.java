@@ -11,12 +11,13 @@ public class Window {
 
   public static final int TILE_WIDTH = 32;
   public static final int TILE_HEIGHT = 32;
-  public static final float GRAVITY = -800;
+  public static final float GRAVITY = -2000;
 
   public static FontMetrics FONT_METRICS;
   public static String CURRENT_LEVEL = "Default";
   public static int Z_INDEX = 0;
-  public static final int CAMERA_OFFSET_X = 32 * 12;
+//  public static final int CAMERA_OFFSET_X = 32 * 12;
+  public static final int CAMERA_OFFSET_X = (32 * 32) / 2;
   public static final int CAMERA_OFFSET_Y_1 = 0;
   public static final int CAMERA_OFFSET_Y_2 = 0 - (32 * 21);
 

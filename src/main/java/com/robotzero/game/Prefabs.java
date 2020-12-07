@@ -9,6 +9,7 @@ import com.robotzero.engine.GameObject;
 import com.robotzero.engine.RigidBody;
 import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.engine.Spritesheet;
+import com.robotzero.infrastructure.constants.Window;
 import org.joml.Vector2f;
 
 import java.util.List;
@@ -18,22 +19,29 @@ import java.util.stream.IntStream;
 
 public class Prefabs {
   public static GameObject FRED_PREFAB() {
-    Spritesheet spritesheet = AssetPool.getSpritesheet("assets/spritesheets/fred_walking_sheet.png");
-    Animation idle = new Animation("Idle", 0.1f, spritesheet.sprites.subList(0, 1), false);
-    Animation walk = new Animation("Walk", 0.1f, spritesheet.sprites.subList(1, 11), true);
+    Spritesheet walk_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_walking_sheet.png")).orElseThrow();
+    Animation idle = new Animation("Idle", 0.1f, walk_spritesheet.sprites.subList(0, 1), false);
+    Animation walk = new Animation("Walk", 0.1f, walk_spritesheet.sprites.subList(1, 11), true);
+    Spritesheet jump_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_jump_sheet.png")).orElseThrow();
+    Animation jump = new Animation("Jump", 1f, jump_spritesheet.sprites.subList(0, 1), false);
     AnimationMachine fredAnimation = new AnimationMachine();
     fredAnimation.setStartAnimation("Idle");
     idle.addStateTransfer("StartWalking", "Walk");
+    idle.addStateTransfer("StartJumping", "Jump");
+
     walk.addStateTransfer("StartIdling", "Idle");
+    jump.addStateTransfer("StartIdling", "Idle");
+
     fredAnimation.addAnimation(idle);
     fredAnimation.addAnimation(walk);
+    fredAnimation.addAnimation(jump);
 
     RigidBody rigidBody = new RigidBody();
     BoxBounds boxBounds = new BoxBounds(32, 32, false, false);
     boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 
-    Transform transform = new Transform(new Vector2f(32.0f, 32.0f));
+    Transform transform = new Transform(new Vector2f(Window.SCREEN_WIDTH / 2f, 32.0f));
     transform.scale = new Vector2f(32f, 32f);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
@@ -55,7 +63,7 @@ public class Prefabs {
   }
 
   public static GameObject BRICK_BLOCK() {
-    Spritesheet items = AssetPool.getSpritesheet("assets/spritesheets/items.png");
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/items.png")).orElseThrow();
 
     GameObject brickBlock = new GameObject("Brick_Block_Prefab", new Transform(new Vector2f()), 0);
     brickBlock.addComponent(new SpriteRenderer(items.sprites.get(5), brickBlock));

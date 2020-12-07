@@ -12,6 +12,8 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 
+import java.util.Optional;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
@@ -26,9 +28,9 @@ public class Window {
   private Scene currentScene = null;
   private long glfwWindow = 0L;
   private int width, height;
-  private String title;
+  private final String title;
   private float aspect;
-  private Vector4f clearColor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+  private final Vector4f clearColor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 
   private long audioContext;
   private long audioDevice;
@@ -38,7 +40,7 @@ public class Window {
   public static void framebufferSizeCallback(long window, int width, int height) {
     Window.getWindow().setWidth(width);
     Window.getWindow().setHeight(height);
-    Window.getWindow().setAspect(width / height);
+    Window.getWindow().setAspect((float) width / (float) height);
     if (Window.getScene() != null) {
       glViewport(0, 0, width, height);
       Window.getScene().camera.adjustPerspective();
@@ -64,7 +66,7 @@ public class Window {
 
     // Terminate GLFW and free the error callback
     glfwTerminate();
-    glfwSetErrorCallback(null).free();
+    Optional.ofNullable(glfwSetErrorCallback(null)).orElseThrow().free();
   }
 
   public void init() {
@@ -115,9 +117,7 @@ public class Window {
     ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
     ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
 
-    if(!alCapabilities.OpenAL10) {
-      assert false : "Audio Library not supported.";
-    }
+    assert alCapabilities.OpenAL10 : "Audio Library not supported.";
 
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -169,29 +169,23 @@ public class Window {
 
   public void changeScene(int scene) {
     switch (scene) {
-      case 0:
-//        isInEditor = true;
-//        currentScene = new LevelEditorScene("Level Editor");
-//        currentScene.init();
-//        currentScene.start();
-        System.out.println("BLAH2");
-        break;
-      case 1:
+      case 0 -> System.out.println("Not suported scene.");
+      case 1 -> {
         isInEditor = false;
         currentScene = new LevelScene("Level");
         currentScene.init();
         currentScene.start();
-        break;
-      case 2:
+      }
+      case 2 -> {
         isInEditor = false;
         currentScene = new TestScene("Test");
         currentScene.init();
         currentScene.start();
-        break;
-      default:
+      }
+      default -> {
         System.out.println("Do not know what this scene is.");
         currentScene = null;
-        break;
+      }
     }
   }
 
@@ -215,7 +209,6 @@ public class Window {
     if (currentScene instanceof LevelScene) {
       currentScene.physics.update(dt);
     }
-//    MouseListener.endFrame();
   }
 
   public void setWidth(int width) {

@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Renderer {
     private final int MAX_BATCH_SIZE = 1000;
-    private List<com.robotzero.render.RenderBatch> batches;
-    private Camera camera;
+    private final List<com.robotzero.render.RenderBatch> batches;
+    private final Camera camera;
 
     public Renderer(Camera camera) {
         this.batches = new ArrayList<>();
@@ -26,14 +26,14 @@ public class Renderer {
     }
 
     public void add(GameObject go) {
-        SpriteRenderer spr = (SpriteRenderer) go.getComponent(SpriteRenderer.class);
+        SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
         if (spr != null) {
             add(spr);
         }
     }
 
     public void deleteGameObject(GameObject go) {
-        SpriteRenderer spr = (SpriteRenderer) go.getComponent(SpriteRenderer.class);
+        SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
         if (spr != null) {
             spr.getQuad().shouldDelete = true;
         }

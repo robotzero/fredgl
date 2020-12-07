@@ -10,17 +10,13 @@ import java.util.List;
 public class GameObject {
     private final Transform transform;
     private final int zIndex;
-    private List<Component> components;
+    private final List<Component> components;
     private float lastZIndex;
 
-    private String name;
-    private boolean serializable = true;
-
-    public boolean isUi = false;
-
+    private final String name;
     private boolean isStarted = false;
 
-    private Tuple<Integer> gridCoords = new Tuple<>(0, 0, 0);
+    private final Tuple<Integer> gridCoords = new Tuple<>(0, 0, 0);
 
     public GameObject(String name, Transform transform, int zIndex) {
         this.name = name;
@@ -129,10 +125,6 @@ public class GameObject {
         }
 
         lastZIndex = this.zIndex;
-    }
-
-    public void setNonserializable() {
-        serializable = false;
     }
 
     public void start() {
