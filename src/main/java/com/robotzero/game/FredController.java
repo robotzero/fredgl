@@ -9,6 +9,8 @@ import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
 import com.robotzero.render.Camera;
 
+import java.util.List;
+
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
@@ -16,6 +18,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class FredController implements Component {
+  private final List<Integer> walkingKeys = List.of(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_RIGHT, GLFW_KEY_LEFT);
   private AnimationMachine machine = null;
   private GameObject gameObject = null;
   private RigidBody rigidBody = null;
@@ -61,7 +64,7 @@ public class FredController implements Component {
       machine.trigger("StartIdling");
     }
 
-    if (KeyListener.isKeyPressed(GLFW_KEY_SPACE) && onGround) {
+    if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_SPACE) && onGround) {
 //      AssetPool.getSound("assets/sounds/jump-small.ogg").play();
       onGround = false;
       rigidBody.acceleration.y = jumpSpeed;
@@ -96,5 +99,9 @@ public class FredController implements Component {
   @Override
   public Component copy() {
     return null;
+  }
+
+  private boolean isWalking() {
+    return walkingKeys.stream().anyMatch(KeyListener::isKeyPressed);
   }
 }
