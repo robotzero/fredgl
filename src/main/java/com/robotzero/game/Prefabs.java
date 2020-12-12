@@ -6,6 +6,8 @@ import com.robotzero.engine.Animation;
 import com.robotzero.engine.AnimationMachine;
 import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.GameObject;
+import com.robotzero.dataStructure.MapAsset;
+import com.robotzero.engine.Line;
 import com.robotzero.engine.RigidBody;
 import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.engine.Spritesheet;
@@ -14,8 +16,8 @@ import org.joml.Vector2f;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Prefabs {
   public static GameObject FRED_PREFAB() {
@@ -24,10 +26,13 @@ public class Prefabs {
     Animation walk = new Animation("Walk", 0.1f, walk_spritesheet.sprites.subList(1, 11), true);
     Spritesheet jump_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_jump_sheet.png")).orElseThrow();
     Animation jump = new Animation("Jump", 1f, jump_spritesheet.sprites.subList(0, 1), false);
+    Spritesheet climb_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_climb.png")).orElseThrow();
+    Animation climb = new Animation("Climb", 1f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
     AnimationMachine fredAnimation = new AnimationMachine();
     fredAnimation.setStartAnimation("Idle");
     idle.addStateTransfer("StartWalking", "Walk");
     idle.addStateTransfer("StartJumping", "Jump");
+    idle.addStateTransfer("StartClimbing", "Climb");
 
     walk.addStateTransfer("StartIdling", "Idle");
     jump.addStateTransfer("StartIdling", "Idle");
@@ -35,6 +40,7 @@ public class Prefabs {
     fredAnimation.addAnimation(idle);
     fredAnimation.addAnimation(walk);
     fredAnimation.addAnimation(jump);
+    fredAnimation.addAnimation(climb);
 
     RigidBody rigidBody = new RigidBody();
     BoxBounds boxBounds = new BoxBounds(32, 32, false, false);
@@ -74,11 +80,12 @@ public class Prefabs {
     return brickBlock;
   }
 
-  public static List<GameObject> STONES() {
+  public static List<GameObject> STONES(MapAsset map) {
+    final Random randomGen = new Random();
     Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
-    return IntStream.rangeClosed(0, 40).mapToObj(index -> {
-      GameObject stone = new GameObject(String.format("Stone_Block_Prefab%d", index), new Transform(new Vector2f(index * 31, 0)), 0);
-      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(index % 3), stone);
+    return map.getStoneTransforms().stream().map(transform -> {
+      GameObject stone = new GameObject(String.format("Stone_Block_Prefab_%s", transform.toString()), transform, 0);
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(randomGen.nextInt(3)), stone);
       BoxBounds boxBounds = new BoxBounds(31, 39, true, false);
       spriteRenderer.setGameObject(stone);
       boxBounds.setGameObject(stone);
@@ -90,5 +97,30 @@ public class Prefabs {
 
       return stone;
     }).collect(Collectors.toList());
+  }
+
+  public static List<GameObject> LINES(MapAsset map) {
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    return map.getLineTransforms().stream().map(transform -> {
+      GameObject line = new GameObject(String.format("Line_Block_Prefab_%s", transform.toString()), transform, 0);
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(0), line);
+      spriteRenderer.color.x = 1f;
+      spriteRenderer.color.y = 0.4f;
+      spriteRenderer.color.z = 0.8f;
+      BoxBounds boxBounds = new BoxBounds(5, 39, false, true);
+      Line lineComponent = new Line();
+      lineComponent.setGameObject(line);
+      spriteRenderer.setGameObject(line);
+      boxBounds.setGameObject(line);
+      line.addComponent(spriteRenderer);
+      line.addComponent(boxBounds);
+      line.addComponent(lineComponent);
+
+      line.getTransform().scale.x = 31;
+      line.getTransform().scale.y = 39;
+
+      return line;
+    }).collect(Collectors.toList());
+
   }
 }

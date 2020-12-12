@@ -11,8 +11,6 @@ public class AnimationMachine implements Component {
     Animation current;
     String startAnimation;
 
-    private boolean inLevelEditor = false;
-    private GameObject levelEditorGo;
     private SpriteRenderer spriteRenderer;
     private GameObject gameObject;
 
@@ -52,14 +50,7 @@ public class AnimationMachine implements Component {
         assert startAnim != null : "Error: Start Animation was never set for: " + this.gameObject.getName() + ". Did you forget to setStartAnimation?";
         this.current = startAnim;
 
-        Scene scene = Window.getScene();
-//        if (scene instanceof LevelEditorScene) {
-//            inLevelEditor = true;
-//            this.levelEditorGo = new GameObject("LevelEditorCopy", gameObject.transform.copy(), gameObject.zIndex);
-//            levelEditorGo.addComponent(getPreviewSprite().copy());
-//        }
-
-        this.spriteRenderer = (SpriteRenderer) gameObject.getComponent(SpriteRenderer.class);
+        this.spriteRenderer = gameObject.getComponent(SpriteRenderer.class);
         assert this.spriteRenderer != null : "Animation machine must be attached to GameObject with SpriteRenderer!";
     }
 

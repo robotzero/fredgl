@@ -23,6 +23,7 @@ public class FredController implements Component {
   private GameObject gameObject = null;
   private RigidBody rigidBody = null;
   private boolean onGround = true;
+  private boolean isOnTheLine = false;
   private Camera camera;
 
   private float runSpeed = 1000;
@@ -67,8 +68,13 @@ public class FredController implements Component {
     if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_SPACE) && onGround) {
 //      AssetPool.getSound("assets/sounds/jump-small.ogg").play();
       onGround = false;
-      rigidBody.acceleration.y = jumpSpeed;
-      machine.trigger("StartJumping");
+      if (isOnTheLine) {
+        rigidBody.acceleration.y = jumpSpeed;
+        machine.trigger("StartClimbing");
+      } else {
+        rigidBody.acceleration.y = jumpSpeed;
+        machine.trigger("StartJumping");
+      }
     } else {
       rigidBody.acceleration.y = 0;
     }
@@ -103,5 +109,9 @@ public class FredController implements Component {
 
   private boolean isWalking() {
     return walkingKeys.stream().anyMatch(KeyListener::isKeyPressed);
+  }
+
+  public void setOnTheLine() {
+    this.isOnTheLine = true;
   }
 }

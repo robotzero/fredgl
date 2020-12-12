@@ -1,32 +1,30 @@
 package com.robotzero.dataStructure;
 
-import com.robotzero.engine.Maps;
 import com.robotzero.engine.Sprite;
 import com.robotzero.engine.Spritesheet;
 import com.robotzero.render.Shader;
 import com.robotzero.render.Texture;
 import org.joml.Vector2f;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class AssetPool {
     static Map<String, Sprite> sprites = new HashMap<>();
     static Map<String, Spritesheet> spritesheets = new HashMap<>();
     static Map<String, Shader> shaders = new HashMap<>();
     static Map<String, Texture> textures = new HashMap<>();
-    static Map<String, Maps> maps = new HashMap<>();
+    static Map<String, MapAsset> maps = new HashMap<>();
 //    static Map<String, Sound> sounds = new HashMap<>();
 
     public static boolean hasSprite(String pictureFile) {
@@ -124,7 +122,7 @@ public class AssetPool {
         return null;
     }
 
-    public static Maps getMap(String map) {
+    public static MapAsset getMap(String map) {
         File file = new File(map);
         if (AssetPool.hasMap(file.getAbsolutePath())) {
             return AssetPool.maps.get(file.getAbsolutePath());
@@ -155,17 +153,36 @@ public class AssetPool {
     public static void addMap(String mapFile) {
         File file = new File(mapFile);
         if (!AssetPool.hasMap(file.getAbsolutePath())) {
+            Map<Integer, String> lines = new HashMap<>();
             try (LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(file))) {
                 String line = lineNumberReader.readLine();
-                List<Transform> transforms = new ArrayList<>();
+                List<Transform> stoneTransforms = new ArrayList<>();
+                List<Transform> lineTransforms = new ArrayList<>();
                 while (line != null) {
-                    byte [] bytes = line.getBytes(StandardCharsets.UTF_8);
-                    for (int i = 0; i < bytes.length; i++) {
-                        transforms.add(new Transform(new Vector2f(32 * i, lineNumberReader.getLineNumber() * 32)));
-                    }
+                    lines.put(lineNumberReader.getLineNumber(), line);
                     line = lineNumberReader.readLine();
                 }
-                Maps map = new Maps(transforms);
+
+                Map<Integer, String> linesReverseOrder = lines.entrySet().stream()
+                    .sorted(Comparator.comparingInt(value -> {
+                        Map.Entry<Integer, String> entry = (Map.Entry<Integer, String>) value;
+                        return entry.getKey();
+                    }).reversed())
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+                linesReverseOrder.forEach((key, value) -> {
+                    byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
+                    for (int i = 0; i < bytes.length; i++) {
+                        if (bytes[i] == 49) {
+                            stoneTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 39)));
+                        }
+
+                        if (bytes[i] == 50) {
+                            lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 39)));
+                        }
+                    }
+                });
+                MapAsset map = new MapAsset(stoneTransforms, lineTransforms);
                 maps.put(file.getAbsolutePath(), map);
             } catch (IOException e) {
                 e.printStackTrace();

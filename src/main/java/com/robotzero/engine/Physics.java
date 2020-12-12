@@ -100,10 +100,10 @@ public class Physics {
 
       Bounds otherBounds = obj.getComponent(Bounds.class);
       if (Bounds.checkCollision(bounds, otherBounds)) {
-//        if (bounds.isTrigger() || otherBounds.isTrigger()) {
-////          go.trigger(new Trigger(otherBounds.gameObject));
-////          otherBounds.gameObject.trigger(new Trigger(go));
-//        } else {
+        if (bounds.isTrigger() || otherBounds.isTrigger()) {
+          go.trigger(new Trigger(otherBounds.gameObject));
+          otherBounds.gameObject.trigger(new Trigger(go));
+        } else {
           Collision collision = Bounds.resolveCollision(bounds, otherBounds);
           if (collision == null) continue;
           go.collision(collision);
@@ -112,7 +112,7 @@ public class Physics {
           collision.flip(go);
 
           obj.collision(collision);
-//        }
+        }
       }
     }
   }

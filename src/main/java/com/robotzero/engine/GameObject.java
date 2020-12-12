@@ -47,12 +47,12 @@ public class GameObject {
             c.collision(coll);
         }
     }
-//
-//    public void trigger(Trigger trigger) {
-//        for (java.awt.Component c : components) {
-//            c.trigger(trigger);
-//        }
-//    }
+
+    public void trigger(Trigger trigger) {
+        for (Component c : components) {
+            c.trigger(trigger);
+        }
+    }
 
     public <T extends Component> T getComponent(Class<T> clazz) {
         for (Component c : components) {
