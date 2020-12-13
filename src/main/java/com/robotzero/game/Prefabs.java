@@ -27,7 +27,10 @@ public class Prefabs {
     Spritesheet jump_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_jump_sheet.png")).orElseThrow();
     Animation jump = new Animation("Jump", 1f, jump_spritesheet.sprites.subList(0, 1), false);
     Spritesheet climb_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_climb.png")).orElseThrow();
-    Animation climb = new Animation("Climb", 1f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
+    Animation climb = new Animation("Climb", 0.6f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
+
+    Animation jumpOffTheLine = new Animation("JumpOff", 1f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), walk_spritesheet.sprites.subList(0, 1).get(0)), false);
+
     AnimationMachine fredAnimation = new AnimationMachine();
     fredAnimation.setStartAnimation("Idle");
     idle.addStateTransfer("StartWalking", "Walk");
@@ -37,10 +40,13 @@ public class Prefabs {
     walk.addStateTransfer("StartIdling", "Idle");
     jump.addStateTransfer("StartIdling", "Idle");
 
+    climb.addStateTransfer("StartJumpOff", "JumpOff");
+
     fredAnimation.addAnimation(idle);
     fredAnimation.addAnimation(walk);
     fredAnimation.addAnimation(jump);
     fredAnimation.addAnimation(climb);
+    fredAnimation.addAnimation(jumpOffTheLine);
 
     RigidBody rigidBody = new RigidBody();
     BoxBounds boxBounds = new BoxBounds(32, 32, false, false);
@@ -52,6 +58,9 @@ public class Prefabs {
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
     walk.setGameObject(gameObject);
+    climb.setGameObject(gameObject);
+    jump.setGameObject(gameObject);
+    jumpOffTheLine.setGameObject(gameObject);
     fredAnimation.setGameObject(gameObject);
     SpriteRenderer spriteRenderer = new SpriteRenderer(fredAnimation.getPreviewSprite(), gameObject);
     spriteRenderer.setGameObject(gameObject);
@@ -92,8 +101,8 @@ public class Prefabs {
       stone.addComponent(spriteRenderer);
       stone.addComponent(boxBounds);
 
-      stone.getTransform().scale.x = 31;
-      stone.getTransform().scale.y = 39;
+      stone.getTransform().scale.x = 32;
+      stone.getTransform().scale.y = 40;
 
       return stone;
     }).collect(Collectors.toList());
@@ -116,8 +125,8 @@ public class Prefabs {
       line.addComponent(boxBounds);
       line.addComponent(lineComponent);
 
-      line.getTransform().scale.x = 31;
-      line.getTransform().scale.y = 39;
+      line.getTransform().scale.x = 32;
+      line.getTransform().scale.y = 40;
 
       return line;
     }).collect(Collectors.toList());

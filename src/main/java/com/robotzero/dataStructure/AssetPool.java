@@ -174,11 +174,11 @@ public class AssetPool {
                     byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
                     for (int i = 0; i < bytes.length; i++) {
                         if (bytes[i] == 49) {
-                            stoneTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 39)));
+                            stoneTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
                         }
 
                         if (bytes[i] == 50) {
-                            lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 39)));
+                            lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
                         }
                     }
                 });

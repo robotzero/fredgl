@@ -15,7 +15,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 public class FredController implements Component {
   private final List<Integer> walkingKeys = List.of(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_RIGHT, GLFW_KEY_LEFT);
@@ -45,7 +47,17 @@ public class FredController implements Component {
     }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
-      rigidBody.acceleration.x = runSpeed;
+      if (!isOnTheLine) {
+        rigidBody.acceleration.x = runSpeed;
+      } else {
+        rigidBody.acceleration.x = runSpeed;
+        rigidBody.acceleration.y = jumpSpeed;
+        rigidBody.velocity.x *= 2.2f;
+        isOnTheLine = false;
+        onGround = false;
+        machine.trigger("StartJumpOff");
+      }
+
       if (gameObject.getTransform().scale.x < 0) {
         gameObject.getTransform().scale.x *= -1;
       }
@@ -53,7 +65,17 @@ public class FredController implements Component {
         machine.trigger("StartWalking");
       }
     } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
-      rigidBody.acceleration.x = -runSpeed;
+      if (!isOnTheLine) {
+        rigidBody.acceleration.x = -runSpeed;
+      } else {
+        rigidBody.acceleration.x = -runSpeed;
+        rigidBody.acceleration.y = jumpSpeed;
+        rigidBody.velocity.x *= 2.2f;
+        isOnTheLine = false;
+        onGround = false;
+        machine.trigger("StartJumpOff");
+      }
+
       if (gameObject.getTransform().scale.x > 0) {
         gameObject.getTransform().scale.x *= -1;
       }
@@ -69,16 +91,26 @@ public class FredController implements Component {
 //      AssetPool.getSound("assets/sounds/jump-small.ogg").play();
       onGround = false;
       if (isOnTheLine) {
-        rigidBody.acceleration.y = jumpSpeed;
+        rigidBody.acceleration.y = 12000;
         machine.trigger("StartClimbing");
+        rigidBody.acceleration.x = 0;
       } else {
         rigidBody.acceleration.y = jumpSpeed;
         machine.trigger("StartJumping");
       }
+    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_W) && isOnTheLine && !onGround) {
+      rigidBody.acceleration.y = runSpeed;
+      rigidBody.velocity.y = 20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
+    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && isOnTheLine && !onGround) {
+      rigidBody.velocity.y = -20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
+      rigidBody.acceleration.y = -runSpeed;
     } else {
       rigidBody.acceleration.y = 0;
     }
 
+    if (isOnTheLine) {
+      //rigidBody.velocity.y += (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
+    }
 //    immunityLeft -= dt;
 //    flashLeft -= dt;
 //    fireballCooldownTime -= dt;
@@ -92,7 +124,7 @@ public class FredController implements Component {
 //      return;
 //    }
 
-    if (collision.side == Collision.CollisionSide.BOTTOM) {
+    if (collision.side == Collision.CollisionSide.BOTTOM && !isOnTheLine) {
       onGround = true;
     }
   }
