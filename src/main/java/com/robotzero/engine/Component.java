@@ -11,6 +11,8 @@ public interface Component {
 
   default void trigger(Trigger trigger) {}
 
+  default void unTrigger(Trigger trigger) {}
+
   void setGameObject(GameObject gameObject);
 
   void update(double dt);

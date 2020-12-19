@@ -54,6 +54,12 @@ public class GameObject {
         }
     }
 
+    public void unTrigger(Trigger trigger) {
+        for (Component c : components) {
+            c.unTrigger(trigger);
+        }
+    }
+
     public <T extends Component> T getComponent(Class<T> clazz) {
         for (Component c : components) {
             if (clazz.isAssignableFrom(c.getClass())) {

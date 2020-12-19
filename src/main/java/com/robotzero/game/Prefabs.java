@@ -29,7 +29,7 @@ public class Prefabs {
     Spritesheet climb_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_climb.png")).orElseThrow();
     Animation climb = new Animation("Climb", 0.6f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
 
-    Animation jumpOffTheLine = new Animation("JumpOff", 1f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), walk_spritesheet.sprites.subList(0, 1).get(0)), false);
+    Animation jumpOffTheLine = new Animation("JumpOff", 2f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), walk_spritesheet.sprites.subList(0, 1).get(0)), true);
 
     AnimationMachine fredAnimation = new AnimationMachine();
     fredAnimation.setStartAnimation("Idle");
@@ -41,6 +41,9 @@ public class Prefabs {
     jump.addStateTransfer("StartIdling", "Idle");
 
     climb.addStateTransfer("StartJumpOff", "JumpOff");
+
+//    jumpOffTheLine.addStateTransfer("StartWalking", "Walk");
+    jumpOffTheLine.addStateTransfer("StartIdling", "Idle");
 
     fredAnimation.addAnimation(idle);
     fredAnimation.addAnimation(walk);

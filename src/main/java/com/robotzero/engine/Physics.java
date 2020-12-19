@@ -35,7 +35,6 @@ public class Physics {
         this.dynamicObjects.add(go);
       }
     }
-//    this.dynamicObjects.add(go);
   }
 
   public void update(double dt) {
@@ -112,6 +111,12 @@ public class Physics {
           collision.flip(go);
 
           obj.collision(collision);
+        }
+      // Un-trigger
+      } else {
+        if (bounds.isTrigger() || otherBounds.isTrigger()) {
+          otherBounds.gameObject.unTrigger(new Trigger(go));
+          go.unTrigger(new Trigger(otherBounds.gameObject));
         }
       }
     }

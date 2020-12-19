@@ -4,7 +4,9 @@ import com.robotzero.engine.AnimationMachine;
 import com.robotzero.engine.Collision;
 import com.robotzero.engine.Component;
 import com.robotzero.engine.GameObject;
+import com.robotzero.engine.Line;
 import com.robotzero.engine.RigidBody;
+import com.robotzero.engine.Trigger;
 import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
 import com.robotzero.render.Camera;
@@ -25,11 +27,12 @@ public class FredController implements Component {
   private GameObject gameObject = null;
   private RigidBody rigidBody = null;
   private boolean onGround = true;
-  private boolean isOnTheLine = false;
+  private boolean collisionWithTheLine = false;
   private Camera camera;
 
   private float runSpeed = 1000;
   private float jumpSpeed = 15000;
+  private boolean onTheLine;
 
   @Override
   public void start() {
@@ -47,13 +50,14 @@ public class FredController implements Component {
     }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
-      if (!isOnTheLine) {
+      if (!onTheLine) {
         rigidBody.acceleration.x = runSpeed;
       } else {
         rigidBody.acceleration.x = runSpeed;
         rigidBody.acceleration.y = jumpSpeed;
         rigidBody.velocity.x *= 2.2f;
-        isOnTheLine = false;
+        collisionWithTheLine = false;
+        onTheLine = false;
         onGround = false;
         machine.trigger("StartJumpOff");
       }
@@ -65,13 +69,14 @@ public class FredController implements Component {
         machine.trigger("StartWalking");
       }
     } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
-      if (!isOnTheLine) {
+      if (!onTheLine) {
         rigidBody.acceleration.x = -runSpeed;
       } else {
         rigidBody.acceleration.x = -runSpeed;
         rigidBody.acceleration.y = jumpSpeed;
         rigidBody.velocity.x *= 2.2f;
-        isOnTheLine = false;
+        collisionWithTheLine = false;
+        onTheLine = false;
         onGround = false;
         machine.trigger("StartJumpOff");
       }
@@ -90,25 +95,26 @@ public class FredController implements Component {
     if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_SPACE) && onGround) {
 //      AssetPool.getSound("assets/sounds/jump-small.ogg").play();
       onGround = false;
-      if (isOnTheLine) {
+      if (collisionWithTheLine) {
         rigidBody.acceleration.y = 12000;
         machine.trigger("StartClimbing");
         rigidBody.acceleration.x = 0;
+        onTheLine = true;
       } else {
         rigidBody.acceleration.y = jumpSpeed;
         machine.trigger("StartJumping");
       }
-    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_W) && isOnTheLine && !onGround) {
+    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_W) && onTheLine && !onGround) {
       rigidBody.acceleration.y = runSpeed;
       rigidBody.velocity.y = 20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
-    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && isOnTheLine && !onGround) {
+    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && onTheLine && !onGround) {
       rigidBody.velocity.y = -20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
       rigidBody.acceleration.y = -runSpeed;
     } else {
       rigidBody.acceleration.y = 0;
     }
 
-    if (isOnTheLine) {
+    if (onTheLine) {
       //rigidBody.velocity.y += (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
     }
 //    immunityLeft -= dt;
@@ -123,8 +129,7 @@ public class FredController implements Component {
 //      slidingDown = false;
 //      return;
 //    }
-
-    if (collision.side == Collision.CollisionSide.BOTTOM && !isOnTheLine) {
+    if (collision.side == Collision.CollisionSide.BOTTOM && !collisionWithTheLine) {
       onGround = true;
     }
   }
@@ -143,7 +148,7 @@ public class FredController implements Component {
     return walkingKeys.stream().anyMatch(KeyListener::isKeyPressed);
   }
 
-  public void setOnTheLine() {
-    this.isOnTheLine = true;
+  public void setCollisionWithTheLine(boolean collisionWithTheLine) {
+    this.collisionWithTheLine = collisionWithTheLine;
   }
 }

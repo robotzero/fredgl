@@ -6,10 +6,26 @@ import java.util.Optional;
 
 public class Line implements Component {
   private GameObject gameObject;
+  private Trigger trigger = null;
 
   @Override
   public void trigger(Trigger trigger) {
-    Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).ifPresent(FredController::setOnTheLine);
+    if (this.trigger == null) {
+      Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).ifPresent(fredController -> {
+        this.trigger = trigger;
+        fredController.setCollisionWithTheLine(true);
+      });
+    }
+  }
+
+  @Override
+  public void unTrigger(Trigger trigger) {
+    if (this.trigger != null) {
+      Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).ifPresent(fredController -> {
+        this.trigger = null;
+        fredController.setCollisionWithTheLine(false);
+      });
+    }
   }
 
   @Override
