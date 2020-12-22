@@ -5,10 +5,12 @@ import java.util.List;
 public class MapAsset {
   private final List<Transform> stoneTransforms;
   private final List<Transform> lineTransforms;
+  private final List<Transform> jumpBoardTransforms;
 
-  public MapAsset(List<Transform> stoneTransforms, List<Transform> lineTransforms) {
+  public MapAsset(List<Transform> stoneTransforms, List<Transform> lineTransforms, List<Transform> jumpBoardTransforms) {
     this.stoneTransforms = stoneTransforms;
     this.lineTransforms = lineTransforms;
+    this.jumpBoardTransforms = jumpBoardTransforms;
   }
 
   public List<Transform> getStoneTransforms() {
@@ -17,5 +19,9 @@ public class MapAsset {
 
   public List<Transform> getLineTransforms() {
     return lineTransforms;
+  }
+
+  public List<Transform> getJumpBoardTransforms() {
+    return jumpBoardTransforms;
   }
 }

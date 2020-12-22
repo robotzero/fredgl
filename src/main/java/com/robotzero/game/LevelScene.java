@@ -3,9 +3,12 @@ package com.robotzero.game;
 import com.robotzero.dataStructure.AssetPool;
 import com.robotzero.dataStructure.Tuple;
 import com.robotzero.engine.BoxBounds;
+import com.robotzero.engine.DebugDraw;
 import com.robotzero.engine.GameObject;
 import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +25,7 @@ public class LevelScene extends Scene {
   public void init() {
     initAssetPool();
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
-    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map2.txt")).orElseThrow());
     stoneBlocks.forEach(stoneBlock -> {
       gameObjects.add(stoneBlock);
       renderer.add(stoneBlock);
@@ -31,13 +34,22 @@ public class LevelScene extends Scene {
       stoneBlock.start();
     });
 
-    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map2.txt")).orElseThrow());
     lineBlocks.forEach(lineBlock -> {
       gameObjects.add(lineBlock);
       renderer.add(lineBlock);
       physics.addGameObject(lineBlock);
       worldPartition.put(lineBlock.getGridCoords(), lineBlock);
       lineBlock.start();
+    });
+
+    List<GameObject> jumpBoards = Prefabs.JUMPBOARD(Optional.ofNullable(AssetPool.getMap("assets/maps/map2.txt")).orElseThrow());
+    jumpBoards.forEach(jumpBoard -> {
+      gameObjects.add(jumpBoard);
+      renderer.add(jumpBoard);
+      physics.addGameObject(jumpBoard);
+      worldPartition.put(jumpBoard.getGridCoords(), jumpBoard);
+      jumpBoard.start();
     });
 
     gameObjects.add(fredGameObject);
@@ -63,6 +75,7 @@ public class LevelScene extends Scene {
     AssetPool.addSpritesheet("assets/spritesheets/fred_jump_sheet.png", 32, 32, 0, 2, 2);
     AssetPool.addSpritesheet("assets/spritesheets/fred_climb.png", 32, 32, 0, 1, 1);
     AssetPool.addMap("assets/maps/map.txt");
+    AssetPool.addMap("assets/maps/map2.txt");
     // Engine Assets
     AssetPool.addSpritesheet("assets/spritesheets/defaultAssets.png", 24, 21, 0, 2, 2);
 
@@ -86,11 +99,12 @@ public class LevelScene extends Scene {
 
   @Override
   public void update(double dt) {
+    DebugDraw.addBox2D(new Vector2f(400, 200), new Vector2f(64, 32), 0, new Vector3f(0f, 1f, 0f));
     for (GameObject go : gameObjects) {
       if (go.getComponent(FredController.class) != null || go.getTransform().position.x > this.camera.position().x && go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x + 32.0f * 40f + 128) {
         go.update(dt);
       } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_2) {
-        deleteGameObject(go);
+        //deleteGameObject(go);
       }
     }
 

@@ -3,11 +3,9 @@ package com.robotzero.engine;
 public interface Component {
   // public GameObject gameObject;
 
-  default void collision(Collision coll) {
-  }
+  default void collision(Collision coll) {}
 
-  default void start() {
-  }
+  default void start() {}
 
   default void trigger(Trigger trigger) {}
 

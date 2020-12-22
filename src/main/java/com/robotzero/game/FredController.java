@@ -4,9 +4,7 @@ import com.robotzero.engine.AnimationMachine;
 import com.robotzero.engine.Collision;
 import com.robotzero.engine.Component;
 import com.robotzero.engine.GameObject;
-import com.robotzero.engine.Line;
 import com.robotzero.engine.RigidBody;
-import com.robotzero.engine.Trigger;
 import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
 import com.robotzero.render.Camera;
@@ -25,9 +23,10 @@ public class FredController implements Component {
   private final List<Integer> walkingKeys = List.of(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_RIGHT, GLFW_KEY_LEFT);
   private AnimationMachine machine = null;
   private GameObject gameObject = null;
-  private RigidBody rigidBody = null;
+  private RigidBody rigidBody;
   private boolean onGround = true;
   private boolean collisionWithTheLine = false;
+
   private Camera camera;
 
   private float runSpeed = 1000;
@@ -51,44 +50,52 @@ public class FredController implements Component {
 
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
       if (!onTheLine) {
-        rigidBody.acceleration.x = runSpeed;
+        this.rigidBody.acceleration.x = runSpeed;
+        if (gameObject.getTransform().scale.x < 0) {
+          gameObject.getTransform().scale.x *= -1;
+        }
       } else {
-        rigidBody.acceleration.x = runSpeed;
-        rigidBody.acceleration.y = jumpSpeed;
-        rigidBody.velocity.x *= 2.2f;
-        collisionWithTheLine = false;
-        onTheLine = false;
-        onGround = false;
-        machine.trigger("StartJumpOff");
+        if (gameObject.getTransform().scale.x < 0) {
+          this.rigidBody.acceleration.x = runSpeed;
+          this.rigidBody.acceleration.y = jumpSpeed;
+          this.rigidBody.velocity.x *= 2.2f;
+          collisionWithTheLine = false;
+          onTheLine = false;
+          onGround = false;
+          machine.trigger("StartJumpOff");
+        } else {
+          gameObject.getTransform().scale.x *= -1;
+        }
       }
 
-      if (gameObject.getTransform().scale.x < 0) {
-        gameObject.getTransform().scale.x *= -1;
-      }
       if (onGround) {
         machine.trigger("StartWalking");
       }
     } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
       if (!onTheLine) {
-        rigidBody.acceleration.x = -runSpeed;
+        this.rigidBody.acceleration.x = -runSpeed;
+        if (gameObject.getTransform().scale.x > 0) {
+          gameObject.getTransform().scale.x *= -1;
+        }
       } else {
-        rigidBody.acceleration.x = -runSpeed;
-        rigidBody.acceleration.y = jumpSpeed;
-        rigidBody.velocity.x *= 2.2f;
-        collisionWithTheLine = false;
-        onTheLine = false;
-        onGround = false;
-        machine.trigger("StartJumpOff");
+        if (gameObject.getTransform().scale.x > 0) {
+          this.rigidBody.acceleration.x = -runSpeed;
+          this.rigidBody.acceleration.y = jumpSpeed;
+          this.rigidBody.velocity.x *= 2.2f;
+          collisionWithTheLine = false;
+          onTheLine = false;
+          onGround = false;
+          machine.trigger("StartJumpOff");
+        } else {
+          gameObject.getTransform().scale.x *= -1;
+        }
       }
 
-      if (gameObject.getTransform().scale.x > 0) {
-        gameObject.getTransform().scale.x *= -1;
-      }
       if (onGround) {
         machine.trigger("StartWalking");
       }
     } else if (onGround) {
-      rigidBody.acceleration.x = 0;
+      this.rigidBody.acceleration.x = 0;
       machine.trigger("StartIdling");
     }
 
@@ -96,23 +103,26 @@ public class FredController implements Component {
 //      AssetPool.getSound("assets/sounds/jump-small.ogg").play();
       onGround = false;
       if (collisionWithTheLine) {
-        rigidBody.acceleration.y = 12000;
+        this.rigidBody.acceleration.y = jumpSpeed;
         machine.trigger("StartClimbing");
-        rigidBody.acceleration.x = 0;
+        this.rigidBody.acceleration.x = 0;
         onTheLine = true;
       } else {
-        rigidBody.acceleration.y = jumpSpeed;
+        this.rigidBody.acceleration.x = 0;
+        this.rigidBody.acceleration.y = jumpSpeed;
+//        rigidBody.velocity.y = (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
         machine.trigger("StartJumping");
       }
     } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_W) && onTheLine && !onGround) {
-      rigidBody.acceleration.y = runSpeed;
-      rigidBody.velocity.y = 20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
+      this.rigidBody.acceleration.y = runSpeed;
+//      rigidBody.velocity.y = 20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
     } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && onTheLine && !onGround) {
-      rigidBody.velocity.y = -20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
-      rigidBody.acceleration.y = -runSpeed;
+//      rigidBody.velocity.y = -20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
+      this.rigidBody.acceleration.y = -runSpeed;
     } else {
-      rigidBody.acceleration.y = 0;
+      this.rigidBody.acceleration.y = 0;
     }
+
 
     if (onTheLine) {
       //rigidBody.velocity.y += (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);

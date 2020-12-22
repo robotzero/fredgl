@@ -158,6 +158,7 @@ public class AssetPool {
                 String line = lineNumberReader.readLine();
                 List<Transform> stoneTransforms = new ArrayList<>();
                 List<Transform> lineTransforms = new ArrayList<>();
+                List<Transform> jumpBoardTransforms = new ArrayList<>();
                 while (line != null) {
                     lines.put(lineNumberReader.getLineNumber(), line);
                     line = lineNumberReader.readLine();
@@ -180,9 +181,14 @@ public class AssetPool {
                         if (bytes[i] == 50) {
                             lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
                         }
+
+                        if (bytes[i] == 51) {
+                            lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
+                            jumpBoardTransforms.add(new Transform(new Vector2f(32 * i, (Math.abs(key - linesReverseOrder.size()) * 40))));
+                        }
                     }
                 });
-                MapAsset map = new MapAsset(stoneTransforms, lineTransforms);
+                MapAsset map = new MapAsset(stoneTransforms, lineTransforms, jumpBoardTransforms);
                 maps.put(file.getAbsolutePath(), map);
             } catch (IOException e) {
                 e.printStackTrace();

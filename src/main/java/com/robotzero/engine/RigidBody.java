@@ -18,6 +18,7 @@ public class RigidBody implements Component {
     this.gameObject.getTransform().position.add(this.velocity.x * (float)dt, this.velocity.y * (float)dt);
 
     this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt) + (Window.GRAVITY * (float)dt));
+//    this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt));
     this.velocity.x *= 0.8f;
     this.velocity.y *= 0.99f;
   }

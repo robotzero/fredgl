@@ -20,6 +20,14 @@ public class BoxBounds extends Bounds {
     init(width, height, isStatic, isTrigger);
   }
 
+  public BoxBounds(float width, float height, boolean isStatic, boolean isTrigger, boolean shouldCheckTop, boolean shouldCheckBottom, boolean shouldCheckLeft, boolean shouldCheckRight) {
+    this.shouldCheckTop = shouldCheckTop;
+    this.shouldCheckBottom = shouldCheckBottom;
+    this.shouldCheckRight = shouldCheckRight;
+    this.shouldCheckLeft = shouldCheckLeft;
+    init(width, height, isStatic, isTrigger);
+  }
+
   public void init(float width, float height, boolean isStatic, boolean isTrigger) {
     this.width = width;
     this.height = height;

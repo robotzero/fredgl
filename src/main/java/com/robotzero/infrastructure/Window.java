@@ -1,5 +1,6 @@
 package com.robotzero.infrastructure;
 
+import com.robotzero.engine.DebugDraw;
 import com.robotzero.game.LevelScene;
 import com.robotzero.game.Scene;
 import com.robotzero.game.TestScene;
@@ -205,6 +206,7 @@ public class Window {
   }
 
   public void update(double dt) {
+    DebugDraw.draw();
     currentScene.update(dt);
     if (currentScene instanceof LevelScene) {
       currentScene.physics.update(dt);

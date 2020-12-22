@@ -52,12 +52,12 @@ public class Prefabs {
     fredAnimation.addAnimation(jumpOffTheLine);
 
     RigidBody rigidBody = new RigidBody();
-    BoxBounds boxBounds = new BoxBounds(32, 32, false, false);
+    BoxBounds boxBounds = new BoxBounds(30, 30, false, false);
     boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 
-    Transform transform = new Transform(new Vector2f(Window.SCREEN_WIDTH / 2f, 32.0f));
-    transform.scale = new Vector2f(32f, 32f);
+    Transform transform = new Transform(new Vector2f(400, 32.0f));
+    transform.scale = new Vector2f(30f, 30f);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
     walk.setGameObject(gameObject);
@@ -104,8 +104,8 @@ public class Prefabs {
       stone.addComponent(spriteRenderer);
       stone.addComponent(boxBounds);
 
-      stone.getTransform().scale.x = 32;
-      stone.getTransform().scale.y = 40;
+      stone.getTransform().scale.x = 31;
+      stone.getTransform().scale.y = 39;
 
       return stone;
     }).collect(Collectors.toList());
@@ -128,11 +128,33 @@ public class Prefabs {
       line.addComponent(boxBounds);
       line.addComponent(lineComponent);
 
-      line.getTransform().scale.x = 32;
-      line.getTransform().scale.y = 40;
+      line.getTransform().scale.x = 31;
+      line.getTransform().scale.y = 39;
 
       return line;
     }).collect(Collectors.toList());
+  }
 
+  public static List<GameObject> JUMPBOARD(MapAsset map) {
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    return map.getJumpBoardTransforms().stream().map(transform -> {
+      GameObject jumpBoard = new GameObject(String.format("JumpBoard_Block_Prefab_%s", transform.toString()), transform, 0);
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(0), jumpBoard);
+      spriteRenderer.color.x = 0.5f;
+      spriteRenderer.color.y = 0.2f;
+      spriteRenderer.color.z = 0.3f;
+      BoxBounds boxBounds = new BoxBounds(31, 39, true, false, true, false, false, false);
+//      Line lineComponent = new Line();
+//      lineComponent.setGameObject(line);
+      spriteRenderer.setGameObject(jumpBoard);
+      boxBounds.setGameObject(jumpBoard);
+      jumpBoard.addComponent(spriteRenderer);
+      jumpBoard.addComponent(boxBounds);
+
+      jumpBoard.getTransform().scale.x = 31;
+      jumpBoard.getTransform().scale.y = 39;
+
+      return jumpBoard;
+    }).collect(Collectors.toList());
   }
 }
