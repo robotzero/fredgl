@@ -29,7 +29,7 @@ public class FredController implements Component {
 
   private Camera camera;
 
-  private float runSpeed = 1800;
+  private float runSpeed = 1000;
   private float jumpSpeed = 17000;
   private boolean onTheLine;
   private boolean jumping = false;
@@ -50,47 +50,47 @@ public class FredController implements Component {
     }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
-//      if (!onTheLine) {
+      if (!onTheLine) {
         this.rigidBody.acceleration.x = runSpeed;
         if (gameObject.getTransform().scale.x < 0) {
           gameObject.getTransform().scale.x *= -1;
-//        }
-//      } else {
-//        if (gameObject.getTransform().scale.x < 0) {
-//          this.rigidBody.acceleration.x = runSpeed;
-//          this.rigidBody.acceleration.y = jumpSpeed;
-//          this.rigidBody.velocity.x *= 2.2f;
-//          collisionWithTheLine = false;
-//          onTheLine = false;
-//          onGround = false;
-//          machine.trigger("StartJumpOff");
-//        } else {
-//          gameObject.getTransform().scale.x *= -1;
-//        }
+        }
+      } else {
+        if (gameObject.getTransform().scale.x < 0) {
+          this.rigidBody.acceleration.x = runSpeed;
+          this.rigidBody.acceleration.y = 0;
+          this.gameObject.getTransform().position.x += 20;
+          collisionWithTheLine = false;
+          onTheLine = false;
+          onGround = false;
+          machine.trigger("StartJumpOff");
+        } else {
+          gameObject.getTransform().scale.x *= -1;
+        }
       }
       if (onGround) {
         machine.trigger("StartWalking");
         this.jumping = false;
       }
     } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
-//      if (!onTheLine) {
+      if (!onTheLine) {
         this.rigidBody.acceleration.x = -runSpeed;
         if (gameObject.getTransform().scale.x > 0) {
           gameObject.getTransform().scale.x *= -1;
         }
-//      } else {
-//        if (gameObject.getTransform().scale.x > 0) {
-//          this.rigidBody.acceleration.x = -runSpeed;
-//          this.rigidBody.acceleration.y = jumpSpeed;
-//          this.rigidBody.velocity.x *= 2.2f;
-//          collisionWithTheLine = false;
-//          onTheLine = false;
-//          onGround = false;
-//          machine.trigger("StartJumpOff");
-//        } else {
-//          gameObject.getTransform().scale.x *= -1;
-//        }
-//      }
+      } else {
+        if (gameObject.getTransform().scale.x > 0) {
+          this.rigidBody.acceleration.x = -runSpeed;
+          this.rigidBody.acceleration.y = 0;
+          this.gameObject.getTransform().position.x -= 20;
+          collisionWithTheLine = false;
+          onTheLine = false;
+          onGround = false;
+          machine.trigger("StartJumpOff");
+        } else {
+          gameObject.getTransform().scale.x *= -1;
+        }
+      }
 
       if (onGround) {
         machine.trigger("StartWalking");
@@ -108,7 +108,6 @@ public class FredController implements Component {
       this.rigidBody.acceleration.x = 0;
       if (collisionWithTheLine) {
         this.rigidBody.acceleration.y = jumpSpeed;
-        machine.trigger("StartClimbing");
         this.rigidBody.acceleration.x = 0;
         onTheLine = true;
         this.rigidBody.acceleration.y = 0;
@@ -121,10 +120,10 @@ public class FredController implements Component {
       }
     } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_W) && onTheLine && !onGround) {
       this.rigidBody.acceleration.y = runSpeed;
-//      rigidBody.velocity.y = 20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
-//    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && onTheLine && !onGround) {
-////      rigidBody.velocity.y = -20 + (float) Math.abs(dt * com.robotzero.infrastructure.constants.Window.GRAVITY);
-//      this.rigidBody.acceleration.y = -runSpeed;
+      this.rigidBody.acceleration.x = 0;
+    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && onTheLine && !onGround) {
+      this.rigidBody.acceleration.y = -runSpeed;
+      this.rigidBody.acceleration.x = 0;
     } else {
       this.rigidBody.acceleration.y = 0;
       this.jumping = false;
@@ -175,5 +174,9 @@ public class FredController implements Component {
 
   public boolean collisionWithTheLine() {
     return this.collisionWithTheLine;
+  }
+
+  public boolean isInTheLine() {
+    return this.onTheLine;
   }
 }

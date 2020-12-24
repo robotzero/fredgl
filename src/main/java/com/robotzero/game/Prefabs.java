@@ -51,7 +51,7 @@ public class Prefabs {
     fredAnimation.addAnimation(jumpOffTheLine);
 
     RigidBody rigidBody = new RigidBody();
-    BoxBounds boxBounds = new BoxBounds(30, 30, false, false);
+    BoxBounds boxBounds = new BoxBounds(28, 28, false, false);
     boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 
@@ -97,14 +97,14 @@ public class Prefabs {
     return map.getStoneTransforms().stream().map(transform -> {
       GameObject stone = new GameObject(String.format("Stone_Block_Prefab_%s", transform.toString()), transform, 0);
       SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(randomGen.nextInt(3)), stone);
-      BoxBounds boxBounds = new BoxBounds(31, 39, true, false);
+      BoxBounds boxBounds = new BoxBounds(32, 40, true, false);
       spriteRenderer.setGameObject(stone);
       boxBounds.setGameObject(stone);
       stone.addComponent(spriteRenderer);
       stone.addComponent(boxBounds);
 
-      stone.getTransform().scale.x = 31;
-      stone.getTransform().scale.y = 39;
+      stone.getTransform().scale.x = 32;
+      stone.getTransform().scale.y = 40;
 
       return stone;
     }).collect(Collectors.toList());
@@ -118,7 +118,7 @@ public class Prefabs {
       spriteRenderer.color.x = 1f;
       spriteRenderer.color.y = 0.4f;
       spriteRenderer.color.z = 0.8f;
-      BoxBounds boxBounds = new BoxBounds(5, 39, false, true);
+      BoxBounds boxBounds = new BoxBounds(10, 40, false, true);
       Line lineComponent = new Line();
       lineComponent.setGameObject(line);
       spriteRenderer.setGameObject(line);
@@ -127,8 +127,8 @@ public class Prefabs {
       line.addComponent(boxBounds);
       line.addComponent(lineComponent);
 
-      line.getTransform().scale.x = 31;
-      line.getTransform().scale.y = 39;
+      line.getTransform().scale.x = 32;
+      line.getTransform().scale.y = 40;
 
       return line;
     }).collect(Collectors.toList());

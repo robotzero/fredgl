@@ -184,7 +184,7 @@ public class AssetPool {
 
                         if (bytes[i] == 51) {
                             lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
-                            jumpBoardTransforms.add(new Transform(new Vector2f(32 * i, (Math.abs(key - linesReverseOrder.size()) * 40))));
+//                            jumpBoardTransforms.add(new Transform(new Vector2f(32 * i, (Math.abs(key - linesReverseOrder.size()) * 40))));
                         }
                     }
                 });
