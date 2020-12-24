@@ -4,6 +4,8 @@ import com.robotzero.engine.DebugDraw;
 import com.robotzero.game.LevelScene;
 import com.robotzero.game.Scene;
 import com.robotzero.game.TestScene;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -150,6 +152,7 @@ public class Window {
 
       glfwPollEvents();
 
+//      DebugDraw.beginFrame();
       this.update(deltaTime);
 
       // Set the clear color
@@ -206,7 +209,9 @@ public class Window {
   }
 
   public void update(double dt) {
-    DebugDraw.draw();
+//    DebugDraw.addBox2D(new Vector2f(400, 200), new Vector2f(200, 200), 0, new Vector3f(0.5f, 1f, 0.5f));
+//    DebugDraw.addLine2D(new Vector2f(400, 200), new Vector2f(500, 600), new Vector3f(1, 0, 0), 120);
+//    DebugDraw.draw();
     currentScene.update(dt);
     if (currentScene instanceof LevelScene) {
       currentScene.physics.update(dt);

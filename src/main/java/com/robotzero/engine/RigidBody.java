@@ -1,7 +1,10 @@
 package com.robotzero.engine;
 
+import com.robotzero.game.FredController;
 import com.robotzero.infrastructure.constants.Window;
 import org.joml.Vector2f;
+
+import java.util.Optional;
 
 public class RigidBody implements Component {
   public Vector2f velocity;
@@ -16,9 +19,16 @@ public class RigidBody implements Component {
   @Override
   public void update(double dt) {
     this.gameObject.getTransform().position.add(this.velocity.x * (float)dt, this.velocity.y * (float)dt);
+    Optional.ofNullable(this.gameObject.getComponent(FredController.class)).ifPresentOrElse(fredController -> {
+      if (fredController.isJumping() || (!fredController.isOnGround() && fredController.collisionWithTheLine())) {
+        this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt));
+      } else {
+        this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt) + (Window.GRAVITY * (float)dt));
+      }
+    }, () -> {
+      this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt) + (Window.GRAVITY * (float)dt));
+    });
 
-    this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt) + (Window.GRAVITY * (float)dt));
-//    this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt));
     this.velocity.x *= 0.8f;
     this.velocity.y *= 0.99f;
   }

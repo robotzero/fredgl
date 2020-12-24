@@ -1,17 +1,16 @@
 package com.robotzero.game;
 
 import com.robotzero.dataStructure.AssetPool;
+import com.robotzero.dataStructure.MapAsset;
 import com.robotzero.dataStructure.Transform;
 import com.robotzero.engine.Animation;
 import com.robotzero.engine.AnimationMachine;
 import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.GameObject;
-import com.robotzero.dataStructure.MapAsset;
 import com.robotzero.engine.Line;
 import com.robotzero.engine.RigidBody;
 import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.engine.Spritesheet;
-import com.robotzero.infrastructure.constants.Window;
 import org.joml.Vector2f;
 
 import java.util.List;
@@ -132,29 +131,6 @@ public class Prefabs {
       line.getTransform().scale.y = 39;
 
       return line;
-    }).collect(Collectors.toList());
-  }
-
-  public static List<GameObject> JUMPBOARD(MapAsset map) {
-    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
-    return map.getJumpBoardTransforms().stream().map(transform -> {
-      GameObject jumpBoard = new GameObject(String.format("JumpBoard_Block_Prefab_%s", transform.toString()), transform, 0);
-      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(0), jumpBoard);
-      spriteRenderer.color.x = 0.5f;
-      spriteRenderer.color.y = 0.2f;
-      spriteRenderer.color.z = 0.3f;
-      BoxBounds boxBounds = new BoxBounds(31, 39, true, false, true, false, false, false);
-//      Line lineComponent = new Line();
-//      lineComponent.setGameObject(line);
-      spriteRenderer.setGameObject(jumpBoard);
-      boxBounds.setGameObject(jumpBoard);
-      jumpBoard.addComponent(spriteRenderer);
-      jumpBoard.addComponent(boxBounds);
-
-      jumpBoard.getTransform().scale.x = 31;
-      jumpBoard.getTransform().scale.y = 39;
-
-      return jumpBoard;
     }).collect(Collectors.toList());
   }
 }

@@ -99,7 +99,7 @@ public class DebugDraw {
     glBindVertexArray(vaoID);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-
+    glLineWidth(4.0f);
     // Draw the batch
     glDrawArrays(GL_LINES, 0, lines.size() * 6 * 2);
 
