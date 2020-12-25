@@ -23,6 +23,8 @@ public class LevelScene extends Scene {
 
   @Override
   public void init() {
+     DebugDraw.addBox2D(new Vector2f(400, 200), new Vector2f(200, 200), 0, new Vector3f(0.5f, 1f, 0.5f));
+     DebugDraw.addLine2D(new Vector2f(400, 200), new Vector2f(500, 600), new Vector3f(1, 0, 0), 120);
     initAssetPool();
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
     List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
@@ -41,6 +43,15 @@ public class LevelScene extends Scene {
       physics.addGameObject(lineBlock);
       worldPartition.put(lineBlock.getGridCoords(), lineBlock);
       lineBlock.start();
+    });
+
+    List<GameObject> jumpboards = Prefabs.JUMPBOARDS(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+    jumpboards.forEach(jumpBoard -> {
+      gameObjects.add(jumpBoard);
+      renderer.add(jumpBoard);
+      physics.addGameObject(jumpBoard);
+      worldPartition.put(jumpBoard.getGridCoords(), jumpBoard);
+      jumpBoard.start();
     });
 
     gameObjects.add(fredGameObject);

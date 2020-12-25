@@ -209,9 +209,6 @@ public class Window {
   }
 
   public void update(double dt) {
-//    DebugDraw.addBox2D(new Vector2f(400, 200), new Vector2f(200, 200), 0, new Vector3f(0.5f, 1f, 0.5f));
-//    DebugDraw.addLine2D(new Vector2f(400, 200), new Vector2f(500, 600), new Vector3f(1, 0, 0), 120);
-//    DebugDraw.draw();
     currentScene.update(dt);
     if (currentScene instanceof LevelScene) {
       currentScene.physics.update(dt);

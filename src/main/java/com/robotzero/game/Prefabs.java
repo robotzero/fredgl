@@ -28,7 +28,8 @@ public class Prefabs {
     Spritesheet climb_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_climb.png")).orElseThrow();
     Animation climb = new Animation("Climb", 0.6f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
 
-    Animation jumpOffTheLine = new Animation("JumpOff", 2f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), walk_spritesheet.sprites.subList(0, 1).get(0)), true);
+    Animation jumpOnTheLine = new Animation("JumpOn", 2f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
+    Animation jumpOffTheLine = new Animation("JumpOff", 2f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), walk_spritesheet.sprites.subList(0, 1).get(0)), false);
 
     AnimationMachine fredAnimation = new AnimationMachine();
     fredAnimation.setStartAnimation("Idle");
@@ -41,21 +42,22 @@ public class Prefabs {
 
     climb.addStateTransfer("StartJumpOff", "JumpOff");
 
-//    jumpOffTheLine.addStateTransfer("StartWalking", "Walk");
     jumpOffTheLine.addStateTransfer("StartIdling", "Idle");
+    jumpOnTheLine.addStateTransfer("StarJumpOff", "JumpOff");
 
     fredAnimation.addAnimation(idle);
     fredAnimation.addAnimation(walk);
     fredAnimation.addAnimation(jump);
     fredAnimation.addAnimation(climb);
     fredAnimation.addAnimation(jumpOffTheLine);
+    fredAnimation.addAnimation(jumpOnTheLine);
 
     RigidBody rigidBody = new RigidBody();
-    BoxBounds boxBounds = new BoxBounds(28, 28, false, false);
+    BoxBounds boxBounds = new BoxBounds(28, 28, false, true);
     boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 
-    Transform transform = new Transform(new Vector2f(400, 32.0f));
+    Transform transform = new Transform(new Vector2f(650, 300.0f));
     transform.scale = new Vector2f(30f, 30f);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
@@ -131,6 +133,27 @@ public class Prefabs {
       line.getTransform().scale.y = 40;
 
       return line;
+    }).collect(Collectors.toList());
+  }
+
+  public static List<GameObject> JUMPBOARDS(MapAsset map) {
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    return map.getJumpBoardTransforms().stream().map(transform -> {
+      GameObject jumpBoard = new GameObject(String.format("JumpBoard_Block_Prefab_%s", transform.toString()), transform, 0);
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(0), jumpBoard);
+      spriteRenderer.color.x = 1f;
+      spriteRenderer.color.y = 0.6f;
+      spriteRenderer.color.z = 1.0f;
+      BoxBounds boxBounds = new BoxBounds(32, 40, false, true);
+      spriteRenderer.setGameObject(jumpBoard);
+      boxBounds.setGameObject(jumpBoard);
+      jumpBoard.addComponent(spriteRenderer);
+      jumpBoard.addComponent(boxBounds);
+
+      jumpBoard.getTransform().scale.x = 32;
+      jumpBoard.getTransform().scale.y = 40;
+
+      return jumpBoard;
     }).collect(Collectors.toList());
   }
 }

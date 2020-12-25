@@ -5,6 +5,7 @@ import com.robotzero.engine.Collision;
 import com.robotzero.engine.Component;
 import com.robotzero.engine.GameObject;
 import com.robotzero.engine.RigidBody;
+import com.robotzero.engine.Trigger;
 import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
 import com.robotzero.render.Camera;
@@ -26,6 +27,9 @@ public class FredController implements Component {
   private RigidBody rigidBody;
   private boolean onGround = true;
   private boolean collisionWithTheLine = false;
+  private float animTime = 0.4f;
+  private boolean jumpingOff = false;
+  private boolean jumpingOn = true;
 
   private Camera camera;
 
@@ -49,57 +53,94 @@ public class FredController implements Component {
       this.camera.position().x = this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X;
     }
 
+    if (jumpingOff) {
+      if (animTime > 0) {
+        if (gameObject.getTransform().scale.x < 0) {
+          this.rigidBody.acceleration.x = -900;
+        } else {
+          this.rigidBody.acceleration.x = 900;
+        }
+        this.rigidBody.acceleration.y = 0;
+        animTime -= dt;
+        return;
+      } else {
+        animTime = 0.4f;
+        jumpingOff = false;
+        collisionWithTheLine = false;
+        onTheLine = false;
+      }
+    }
+
+    if (jumpingOn) {
+      if (animTime > 0) {
+        if (gameObject.getTransform().scale.x < 0) {
+          this.rigidBody.acceleration.x = -900;
+        } else {
+          this.rigidBody.acceleration.x = 900;
+        }
+        this.rigidBody.acceleration.y = 0;
+        animTime -= dt;
+        return;
+      } else {
+        animTime = 0.4f;
+        jumpingOn = false;
+        collisionWithTheLine = true;
+        onTheLine = true;
+        onGround = false;
+      }
+    }
+
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
+      if (gameObject.getTransform().scale.x < 0) {
+        gameObject.getTransform().scale.x *= -1;
+      }
       if (!onTheLine) {
         this.rigidBody.acceleration.x = runSpeed;
-        if (gameObject.getTransform().scale.x < 0) {
-          gameObject.getTransform().scale.x *= -1;
-        }
       } else {
-        if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = runSpeed;
+//        if (gameObject.getTransform().scale.x < 0) {
+          this.rigidBody.acceleration.x = -900;
           this.rigidBody.acceleration.y = 0;
-          this.gameObject.getTransform().position.x += 20;
-          collisionWithTheLine = false;
-          onTheLine = false;
           onGround = false;
           machine.trigger("StartJumpOff");
-        } else {
-          gameObject.getTransform().scale.x *= -1;
-        }
+          jumpingOff = true;
+          return;
+//        } else {
+//          gameObject.getTransform().scale.x *= -1;
+//        }
       }
       if (onGround) {
         machine.trigger("StartWalking");
         this.jumping = false;
       }
     } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
+      if (gameObject.getTransform().scale.x > 0) {
+        gameObject.getTransform().scale.x *= -1;
+      }
       if (!onTheLine) {
         this.rigidBody.acceleration.x = -runSpeed;
-        if (gameObject.getTransform().scale.x > 0) {
-          gameObject.getTransform().scale.x *= -1;
-        }
       } else {
-        if (gameObject.getTransform().scale.x > 0) {
-          this.rigidBody.acceleration.x = -runSpeed;
+//        if (gameObject.getTransform().scale.x > 0) {
+          this.rigidBody.acceleration.x = 900;
           this.rigidBody.acceleration.y = 0;
-          this.gameObject.getTransform().position.x -= 20;
-          collisionWithTheLine = false;
-          onTheLine = false;
           onGround = false;
           machine.trigger("StartJumpOff");
-        } else {
-          gameObject.getTransform().scale.x *= -1;
-        }
+          jumpingOff = true;
+          return;
+//        } else {
+//          gameObject.getTransform().scale.x *= -1;
+//        }
       }
 
       if (onGround) {
         machine.trigger("StartWalking");
         this.jumping = false;
+        jumpingOff = false;
       }
     } else if (onGround) {
       this.rigidBody.acceleration.x = 0;
       machine.trigger("StartIdling");
       this.jumping = false;
+      this.jumpingOff = false;
     }
 
     if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_SPACE) && onGround) {
@@ -147,6 +188,14 @@ public class FredController implements Component {
   }
 
   @Override
+  public void trigger(Trigger trigger) {
+    if (trigger.gameObject.getName().contains("JumpBoard")) {
+      this.jumpingOn = true;
+      this.machine.trigger("JumpOnTheLine");
+    }
+  }
+
+  @Override
   public void setGameObject(GameObject gameObject) {
     this.gameObject = gameObject;
   }
@@ -178,5 +227,9 @@ public class FredController implements Component {
 
   public boolean isInTheLine() {
     return this.onTheLine;
+  }
+
+  public boolean isJumpingOn() {
+    return this.jumpingOn;
   }
 }
