@@ -75,8 +75,11 @@ public class Animation implements Component {
     }
 
     public Animation trigger(String trigger) {
-        if (machine.getAnimation(stateTransfers.get(trigger)) != null)
+        if (machine.getAnimation(stateTransfers.get(trigger)) != null) {
+            // Reset the sprite to the start
+            this.currentSprite = 0;
             return machine.getAnimation(stateTransfers.get(trigger));
+        }
         return this;
     }
 

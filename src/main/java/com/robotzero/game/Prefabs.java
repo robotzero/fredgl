@@ -40,8 +40,10 @@ public class Prefabs {
     idle.addStateTransfer("StartWalking", "Walk");
     idle.addStateTransfer("StartJumping", "Jump");
     idle.addStateTransfer("StartClimbing", "Climb");
+    idle.addStateTransfer("StartJumpOn", "JumpOn");
 
     walk.addStateTransfer("StartIdling", "Idle");
+    walk.addStateTransfer("StartJumpOn", "JumpOn");
     jump.addStateTransfer("StartIdling", "Idle");
 
     climb.addStateTransfer("StartJumpOff", "JumpOff");
@@ -58,10 +60,10 @@ public class Prefabs {
 
     RigidBody rigidBody = new RigidBody();
     BoxBounds boxBounds = new BoxBounds(28, 28, false, true);
-//    boxBounds.setXBuffer(1);
+    //boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 
-    //Transform transform = new Transform(new Vector2f(650, 300.0f));
+//    Transform transform = new Transform(new Vector2f(650, 300.0f));
     Transform transform = new Transform(new Vector2f(130f, 32f));
     transform.scale = new Vector2f(28f, 28f);
     GameObject gameObject = new GameObject("Fred", transform, 0);
