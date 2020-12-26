@@ -152,7 +152,7 @@ public class Window {
 
       glfwPollEvents();
 
-//      DebugDraw.beginFrame();
+      DebugDraw.beginFrame();
       this.update(deltaTime);
 
       // Set the clear color
@@ -160,12 +160,14 @@ public class Window {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
       glEnable(GL_DEPTH);
 
+      DebugDraw.draw();
       this.currentScene.render();
 
       glfwSwapBuffers(glfwWindow); // swap the color buffers
     }
 
     this.isRunning = false;
+    DebugDraw.clearAll();
 
     alcDestroyContext(audioContext);
     alcCloseDevice(audioDevice);

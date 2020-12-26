@@ -19,6 +19,10 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Prefabs {
+  public static final int LINEWIDTH = 10;
+  public static final int STONEWIDTH = 32;
+  public static final int STONEHEIGHT = 40;
+
   public static GameObject FRED_PREFAB() {
     Spritesheet walk_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_walking_sheet.png")).orElseThrow();
     Animation idle = new Animation("Idle", 0.1f, walk_spritesheet.sprites.subList(0, 1), false);
@@ -26,10 +30,10 @@ public class Prefabs {
     Spritesheet jump_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_jump_sheet.png")).orElseThrow();
     Animation jump = new Animation("Jump", 1f, jump_spritesheet.sprites.subList(0, 1), false);
     Spritesheet climb_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_climb.png")).orElseThrow();
-    Animation climb = new Animation("Climb", 0.6f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
+    Animation climb = new Animation("Climb", 1f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
 
-    Animation jumpOnTheLine = new Animation("JumpOn", 2f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
-    Animation jumpOffTheLine = new Animation("JumpOff", 2f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), walk_spritesheet.sprites.subList(0, 1).get(0)), false);
+    Animation jumpOnTheLine = new Animation("JumpOn", 1f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
+    Animation jumpOffTheLine = new Animation("JumpOff", 1f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), walk_spritesheet.sprites.subList(0, 1).get(0)), false);
 
     AnimationMachine fredAnimation = new AnimationMachine();
     fredAnimation.setStartAnimation("Idle");
@@ -43,7 +47,7 @@ public class Prefabs {
     climb.addStateTransfer("StartJumpOff", "JumpOff");
 
     jumpOffTheLine.addStateTransfer("StartIdling", "Idle");
-    jumpOnTheLine.addStateTransfer("StarJumpOff", "JumpOff");
+    jumpOnTheLine.addStateTransfer("StartJumpOff", "JumpOff");
 
     fredAnimation.addAnimation(idle);
     fredAnimation.addAnimation(walk);
@@ -54,11 +58,12 @@ public class Prefabs {
 
     RigidBody rigidBody = new RigidBody();
     BoxBounds boxBounds = new BoxBounds(28, 28, false, true);
-    boxBounds.setXBuffer(1);
+//    boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 
-    Transform transform = new Transform(new Vector2f(650, 300.0f));
-    transform.scale = new Vector2f(30f, 30f);
+    //Transform transform = new Transform(new Vector2f(650, 300.0f));
+    Transform transform = new Transform(new Vector2f(130f, 32f));
+    transform.scale = new Vector2f(28f, 28f);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
     walk.setGameObject(gameObject);
@@ -99,14 +104,14 @@ public class Prefabs {
     return map.getStoneTransforms().stream().map(transform -> {
       GameObject stone = new GameObject(String.format("Stone_Block_Prefab_%s", transform.toString()), transform, 0);
       SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(randomGen.nextInt(3)), stone);
-      BoxBounds boxBounds = new BoxBounds(32, 40, true, false);
+      BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, true, false);
       spriteRenderer.setGameObject(stone);
       boxBounds.setGameObject(stone);
       stone.addComponent(spriteRenderer);
       stone.addComponent(boxBounds);
 
-      stone.getTransform().scale.x = 32;
-      stone.getTransform().scale.y = 40;
+      stone.getTransform().scale.x = STONEWIDTH;
+      stone.getTransform().scale.y = STONEHEIGHT;
 
       return stone;
     }).collect(Collectors.toList());
@@ -120,7 +125,7 @@ public class Prefabs {
       spriteRenderer.color.x = 1f;
       spriteRenderer.color.y = 0.4f;
       spriteRenderer.color.z = 0.8f;
-      BoxBounds boxBounds = new BoxBounds(10, 40, false, true);
+      BoxBounds boxBounds = new BoxBounds(LINEWIDTH, 40, false, true);
       Line lineComponent = new Line();
       lineComponent.setGameObject(line);
       spriteRenderer.setGameObject(line);
@@ -129,8 +134,8 @@ public class Prefabs {
       line.addComponent(boxBounds);
       line.addComponent(lineComponent);
 
-      line.getTransform().scale.x = 32;
-      line.getTransform().scale.y = 40;
+      line.getTransform().scale.x = LINEWIDTH;
+      line.getTransform().scale.y = STONEHEIGHT;
 
       return line;
     }).collect(Collectors.toList());
@@ -144,14 +149,14 @@ public class Prefabs {
       spriteRenderer.color.x = 1f;
       spriteRenderer.color.y = 0.6f;
       spriteRenderer.color.z = 1.0f;
-      BoxBounds boxBounds = new BoxBounds(32, 40, false, true);
+      BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, false, true);
       spriteRenderer.setGameObject(jumpBoard);
       boxBounds.setGameObject(jumpBoard);
       jumpBoard.addComponent(spriteRenderer);
       jumpBoard.addComponent(boxBounds);
 
-      jumpBoard.getTransform().scale.x = 32;
-      jumpBoard.getTransform().scale.y = 40;
+      jumpBoard.getTransform().scale.x = STONEWIDTH;
+      jumpBoard.getTransform().scale.y = STONEHEIGHT;
 
       return jumpBoard;
     }).collect(Collectors.toList());

@@ -8,6 +8,7 @@ public class Line2D {
   private Vector2f to;
   private Vector3f color;
   private int lifetime;
+  private boolean isStatic = false;
 
   public Line2D(Vector2f from, Vector2f to) {
     this.from = from;
@@ -15,6 +16,9 @@ public class Line2D {
   }
 
   public Line2D(Vector2f from, Vector2f to, Vector3f color, int lifetime) {
+    if (lifetime == 0) {
+      isStatic = true;
+    }
     this.from = from;
     this.to = to;
     this.color = color;
@@ -22,6 +26,9 @@ public class Line2D {
   }
 
   public int beginFrame() {
+    if (this.isStatic) {
+      return lifetime;
+    }
     this.lifetime--;
     return this.lifetime;
   }

@@ -13,22 +13,32 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.Optional;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_0;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 
 public class LevelScene extends Scene {
-
+  private boolean debug = false;
   public LevelScene(String name) {
     super.Scene(name);
   }
 
   @Override
   public void init() {
-     DebugDraw.addBox2D(new Vector2f(400, 200), new Vector2f(200, 200), 0, new Vector3f(0.5f, 1f, 0.5f));
-     DebugDraw.addLine2D(new Vector2f(400, 200), new Vector2f(500, 600), new Vector3f(1, 0, 0), 120);
     initAssetPool();
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
     List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     stoneBlocks.forEach(stoneBlock -> {
+      BoxBounds boxBounds = stoneBlock.getComponent(BoxBounds.class);
+      DebugDraw.addBox2D(
+          new Vector2f(
+              stoneBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+              stoneBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+          ),
+          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+          0,
+          new Vector3f(1f, 0f, 0f),
+          0
+      );
       gameObjects.add(stoneBlock);
       renderer.add(stoneBlock);
       physics.addGameObject(stoneBlock);
@@ -38,6 +48,17 @@ public class LevelScene extends Scene {
 
     List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     lineBlocks.forEach(lineBlock -> {
+      BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
+      DebugDraw.addBox2D(
+          new Vector2f(
+              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+          ),
+          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+          0,
+          new Vector3f(1f, 0f, 0f),
+          0
+      );
       gameObjects.add(lineBlock);
       renderer.add(lineBlock);
       physics.addGameObject(lineBlock);
@@ -47,6 +68,19 @@ public class LevelScene extends Scene {
 
     List<GameObject> jumpboards = Prefabs.JUMPBOARDS(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     jumpboards.forEach(jumpBoard -> {
+      BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
+
+      DebugDraw.addBox2D(
+          new Vector2f(
+              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+          ),
+          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+          0,
+          new Vector3f(1f, 0f, 0f),
+          0
+      );
+
       gameObjects.add(jumpBoard);
       renderer.add(jumpBoard);
       physics.addGameObject(jumpBoard);
@@ -103,6 +137,18 @@ public class LevelScene extends Scene {
     for (GameObject go : gameObjects) {
       if (go.getComponent(FredController.class) != null || go.getTransform().position.x > this.camera.position().x && go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x + 32.0f * 40f + 128) {
         go.update(dt);
+        Optional.ofNullable(go.getComponent(FredController.class)).ifPresent(_notUsed -> {
+          BoxBounds fredBoxBounds = go.getComponent(BoxBounds.class);
+          DebugDraw.addBox2DDynamic(
+              new Vector2f(
+                  fredBoxBounds.getCenterX(),
+                  fredBoxBounds.getCenterY()
+              ),
+              new Vector2f(fredBoxBounds.getWidth(), fredBoxBounds.getHeight()),
+              0,
+              new Vector3f(1f, 0f, 0f)
+          );
+        });
       } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_2) {
         //deleteGameObject(go);
       }
@@ -112,6 +158,10 @@ public class LevelScene extends Scene {
       Window.getWindow().changeScene(0);
     }
 
+    if (KeyListener.isKeyPressed(GLFW_KEY_0)) {
+      this.debug = !this.debug;
+
+    }
     if (objsToDelete.size() > 0) {
       for (GameObject obj : objsToDelete) {
         Tuple<Integer> gridCoords = obj.getGridCoords();

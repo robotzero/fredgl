@@ -2,6 +2,7 @@ package com.robotzero.dataStructure;
 
 import com.robotzero.engine.Sprite;
 import com.robotzero.engine.Spritesheet;
+import com.robotzero.game.Prefabs;
 import com.robotzero.render.Shader;
 import com.robotzero.render.Texture;
 import org.joml.Vector2f;
@@ -175,20 +176,21 @@ public class AssetPool {
                     byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
                     for (int i = 0; i < bytes.length; i++) {
                         if (bytes[i] == 49) {
-                            stoneTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
+                            stoneTransforms.add(new Transform(new Vector2f(Prefabs.STONEWIDTH * i, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
                         }
 
+                        int offset = (int) ((Prefabs.STONEWIDTH * 0.5f) - (Prefabs.LINEWIDTH * 0.5f));
                         if (bytes[i] == 50) {
-                            lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
+                            lineTransforms.add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
                         }
 
                         if (bytes[i] == 51) {
-                            lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
+                            lineTransforms.add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
                         }
 
                         if (bytes[i] == 52) {
-                            lineTransforms.add(new Transform(new Vector2f(32 * i, Math.abs(key - linesReverseOrder.size()) * 40)));
-                            jumpBoardTransforms.add(new Transform(new Vector2f(32 * i, (Math.abs(key - linesReverseOrder.size()) * 40))));
+                            lineTransforms.add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
+                            jumpBoardTransforms.add(new Transform(new Vector2f(Prefabs.STONEWIDTH * i, (Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT))));
                         }
                     }
                 });
