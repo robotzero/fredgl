@@ -22,12 +22,13 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 public class FredController implements Component {
   private final List<Integer> walkingKeys = List.of(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_RIGHT, GLFW_KEY_LEFT);
+  private final static float time = 0.4f;
   private AnimationMachine machine = null;
   private GameObject gameObject = null;
   private RigidBody rigidBody;
   private boolean onGround = true;
   private boolean collisionWithTheLine = false;
-  private float animTime = 0.4f;
+  private float animTime = time;
   private boolean jumpingOff = false;
   private boolean jumpingOn = false;
 
@@ -64,7 +65,7 @@ public class FredController implements Component {
         animTime -= dt;
         return;
       } else {
-        animTime = 0.4f;
+        animTime = time;
         jumpingOff = false;
         this.jumping = false;
         this.onGround = true;
@@ -75,18 +76,21 @@ public class FredController implements Component {
     if (jumpingOn) {
       if (animTime > 0) {
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -900;
+          this.rigidBody.acceleration.x = -100;
         } else {
-          this.rigidBody.acceleration.x = 900;
+          this.rigidBody.acceleration.x = 100;
         }
-        this.rigidBody.acceleration.y = 0;
+//        this.rigidBody.acceleration.y = 90;
         animTime -= dt;
         return;
       } else {
-        animTime = 0.4f;
+        animTime = time;
         jumpingOn = false;
         this.onGround = false;
         this.onTheLine = true;
+        this.collisionWithTheLine = true;
+        this.rigidBody.acceleration.x = 0;
+        this.rigidBody.acceleration.y = 0;
       }
     }
 
@@ -96,7 +100,7 @@ public class FredController implements Component {
       }
       if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = runSpeed;
-      } else if (onTheLine) {
+      } else if (onTheLine && !jumpingOn) {
 //        if (gameObject.getTransform().scale.x < 0) {
           this.rigidBody.acceleration.x = -900;
           this.rigidBody.acceleration.y = 0;
@@ -106,12 +110,13 @@ public class FredController implements Component {
 //        } else {
 //          gameObject.getTransform().scale.x *= -1;
 //        }
-      } else {
-        this.rigidBody.acceleration.x = 900;
-        this.rigidBody.acceleration.y = 0;
-        machine.trigger("StartJumpOn");
-        return;
       }
+//      else {
+//        this.rigidBody.acceleration.x = 900;
+//        this.rigidBody.acceleration.y = 0;
+//        machine.trigger("StartJumpOn");
+//        return;
+//      }
       if (onGround) {
         machine.trigger("StartWalking");
         this.jumping = false;
@@ -141,12 +146,14 @@ public class FredController implements Component {
         machine.trigger("StartWalking");
         this.jumping = false;
         jumpingOff = false;
+        this.jumpingOn = false;
       }
     } else if (onGround) {
       this.rigidBody.acceleration.x = 0;
       machine.trigger("StartIdling");
       this.jumping = false;
       this.jumpingOff = false;
+      this.jumpingOn = false;
     }
 
     if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_SPACE) && onGround) {
@@ -186,14 +193,14 @@ public class FredController implements Component {
 //      slidingDown = false;
 //      return;
 //    }
-    if (collision.side == Collision.CollisionSide.BOTTOM && !collisionWithTheLine) {
+    if (collision.side == Collision.CollisionSide.BOTTOM && !onTheLine && !jumpingOn) {
       onGround = true;
     }
   }
 
   @Override
   public void trigger(Trigger trigger) {
-    if (trigger.gameObject.getName().contains("JumpBoard")) {
+    if (trigger.gameObject.getName().contains("JumpBoard") && !jumpingOn) {
       this.jumpingOn = true;
       this.machine.trigger("StartJumpOn");
     }

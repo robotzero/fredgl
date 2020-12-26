@@ -19,7 +19,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Prefabs {
-  public static final int LINEWIDTH = 10;
+  public static final int LINEWIDTH = 4;
   public static final int STONEWIDTH = 32;
   public static final int STONEHEIGHT = 40;
 
@@ -63,8 +63,8 @@ public class Prefabs {
     //boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 
-//    Transform transform = new Transform(new Vector2f(650, 300.0f));
-    Transform transform = new Transform(new Vector2f(130f, 32f));
+    Transform transform = new Transform(new Vector2f(650, 300.0f));
+    //Transform transform = new Transform(new Vector2f(130f, 32f));
     transform.scale = new Vector2f(28f, 28f);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
@@ -152,6 +152,7 @@ public class Prefabs {
       spriteRenderer.color.y = 0.6f;
       spriteRenderer.color.z = 1.0f;
       BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, false, true);
+      boxBounds.setXBuffer(5);
       spriteRenderer.setGameObject(jumpBoard);
       boxBounds.setGameObject(jumpBoard);
       jumpBoard.addComponent(spriteRenderer);
