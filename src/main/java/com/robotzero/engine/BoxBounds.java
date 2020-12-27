@@ -129,6 +129,10 @@ public class BoxBounds extends Bounds {
   }
 
   public Collision resolveCollision(BoxBounds otherBounds) {
+    return resolveCollision(otherBounds, false);
+  }
+
+  public Collision resolveCollision(BoxBounds otherBounds, boolean dryRun) {
     float dx = this.center.x - otherBounds.center.x;
     float dy = this.center.y - otherBounds.center.y;
 
@@ -144,9 +148,12 @@ public class BoxBounds extends Bounds {
           return null;
         }
 
-        // Collision on the bottom of this
-        this.gameObject.getTransform().position.y = otherBounds.gameObject.getTransform().position.y + otherBounds.getHeight();
-        if (this.gameObject.getComponent(RigidBody.class) != null && this.gameObject.getComponent(RigidBody.class).velocity.y < 0)
+        if (!dryRun) {
+          // Collision on the bottom of this
+          this.gameObject.getTransform().position.y = otherBounds.gameObject.getTransform().position.y + otherBounds.getHeight();
+        }
+
+        if (this.gameObject.getComponent(RigidBody.class) != null && this.gameObject.getComponent(RigidBody.class).velocity.y < 0 && !dryRun)
           this.gameObject.getComponent(RigidBody.class).velocity.y = 0;
 
         // Top of other bounds
@@ -157,9 +164,11 @@ public class BoxBounds extends Bounds {
           return null;
         }
 
-        // Collision on the top of this
-        this.gameObject.getTransform().position.y = otherBounds.gameObject.getTransform().position.y - this.getHeight();
-        if (this.gameObject.getComponent(RigidBody.class) != null && this.gameObject.getComponent(RigidBody.class).velocity.y > 0)
+        if (!dryRun) {
+          // Collision on the top of this
+          this.gameObject.getTransform().position.y = otherBounds.gameObject.getTransform().position.y - this.getHeight();
+        }
+        if (this.gameObject.getComponent(RigidBody.class) != null && this.gameObject.getComponent(RigidBody.class).velocity.y > 0 && !dryRun)
           this.gameObject.getComponent(RigidBody.class).velocity.y = 0;
 
         // Bottom of other bounds
@@ -172,8 +181,10 @@ public class BoxBounds extends Bounds {
           return null;
         }
 
-        // Collision on the right of this
-        this.gameObject.getTransform().position.x = otherBounds.gameObject.getTransform().position.x - this.getWidth();
+        if (!dryRun) {
+          // Collision on the right of this
+          this.gameObject.getTransform().position.x = otherBounds.gameObject.getTransform().position.x - this.getWidth();
+        }
 
         // Left of other bounds
         Vector2f contactPoint = new Vector2f(otherBounds.gameObject.getTransform().position.x, otherBounds.center.y);
@@ -183,8 +194,10 @@ public class BoxBounds extends Bounds {
           return null;
         }
 
-        // Collision on the left of this
-        this.gameObject.getTransform().position.x = otherBounds.gameObject.getTransform().position.x + otherBounds.getWidth();
+        if (!dryRun) {
+          // Collision on the left of this
+          this.gameObject.getTransform().position.x = otherBounds.gameObject.getTransform().position.x + otherBounds.getWidth();
+        }
 
         // Right of other bounds
         Vector2f contactPoint = new Vector2f(otherBounds.gameObject.getTransform().position.x + otherBounds.getWidth(), otherBounds.center.y);

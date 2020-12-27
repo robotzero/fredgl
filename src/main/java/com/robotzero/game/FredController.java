@@ -1,6 +1,8 @@
 package com.robotzero.game;
 
 import com.robotzero.engine.AnimationMachine;
+import com.robotzero.engine.Bounds;
+import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.Collision;
 import com.robotzero.engine.Component;
 import com.robotzero.engine.GameObject;
@@ -11,6 +13,7 @@ import com.robotzero.infrastructure.Window;
 import com.robotzero.render.Camera;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
@@ -75,12 +78,16 @@ public class FredController implements Component {
 
     if (jumpingOn) {
       if (animTime > 0) {
+        this.onGround = false;
+        this.onTheLine = true;
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -100;
+          this.rigidBody.acceleration.x = 0;
+          this.rigidBody.velocity.x = -1;
         } else {
-          this.rigidBody.acceleration.x = 100;
+          this.rigidBody.acceleration.x = 0;
+          this.rigidBody.velocity.x = 1;
         }
-//        this.rigidBody.acceleration.y = 90;
+        this.rigidBody.acceleration.y = 2500;
         animTime -= dt;
         return;
       } else {
@@ -88,9 +95,10 @@ public class FredController implements Component {
         jumpingOn = false;
         this.onGround = false;
         this.onTheLine = true;
-        this.collisionWithTheLine = true;
         this.rigidBody.acceleration.x = 0;
         this.rigidBody.acceleration.y = 0;
+        this.rigidBody.velocity.x = 0;
+        this.rigidBody.velocity.y = 0;
       }
     }
 
@@ -162,7 +170,6 @@ public class FredController implements Component {
       this.rigidBody.acceleration.x = 0;
       if (collisionWithTheLine) {
         this.rigidBody.acceleration.y = jumpSpeed;
-        this.rigidBody.acceleration.x = 0;
         this.onTheLine = true;
         this.jumping = true;
         machine.trigger("StartClimbing");
@@ -200,9 +207,15 @@ public class FredController implements Component {
 
   @Override
   public void trigger(Trigger trigger) {
-    if (trigger.gameObject.getName().contains("JumpBoard") && !jumpingOn) {
-      this.jumpingOn = true;
-      this.machine.trigger("StartJumpOn");
+    if (trigger.gameObject.getName().contains("JumpBoard")) {
+      BoxBounds thisBounds = gameObject.getComponent(BoxBounds.class);
+      BoxBounds otherBounds = trigger.gameObject.getComponent(BoxBounds.class);
+      Optional.ofNullable(thisBounds.resolveCollision(otherBounds, true)).filter(collision -> {
+        return collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT;
+      }).ifPresent(collision -> {
+          this.jumpingOn = true;
+          this.machine.trigger("StartJumpOn");
+      });
     }
   }
 
