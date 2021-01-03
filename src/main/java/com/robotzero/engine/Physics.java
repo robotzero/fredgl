@@ -42,7 +42,7 @@ public class Physics {
       for (GameObject go : dynamicObjects) {
         RigidBody rb = go.getComponent(RigidBody.class);
         if (rb != null) {
-          rb.update(tickSpeed);
+          rb.update(dt);
         }
         resolveCollisions(go);
       }

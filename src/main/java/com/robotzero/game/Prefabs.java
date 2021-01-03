@@ -19,7 +19,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Prefabs {
-  public static final int LINEWIDTH = 4;
+  public static final int LINEWIDTH = 2;
   public static final int STONEWIDTH = 32;
   public static final int STONEHEIGHT = 40;
 
