@@ -247,27 +247,7 @@ public class FredController implements Component {
     this.collisionWithTheLine = collisionWithTheLine;
   }
 
-  public boolean isJumping() {
-    return this.jumping;
-  }
-
   public boolean isOnGround() {
     return this.onGround;
-  }
-
-  public boolean collisionWithTheLine() {
-    return this.collisionWithTheLine;
-  }
-
-  public boolean isOnTheLine() {
-    return this.onTheLine;
-  }
-
-  public boolean isJumpingOn() {
-    return this.jumpingOn;
-  }
-
-  public boolean isJumpingOff() {
-    return this.jumpingOff;
   }
 }

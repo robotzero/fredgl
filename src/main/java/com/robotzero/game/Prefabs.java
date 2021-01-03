@@ -49,6 +49,7 @@ public class Prefabs {
     climb.addStateTransfer("StartJumpOff", "JumpOff");
 
     jumpOffTheLine.addStateTransfer("StartIdling", "Idle");
+    jumpOffTheLine.addStateTransfer("StartWalking", "Walk");
     jumpOnTheLine.addStateTransfer("StartJumpOff", "JumpOff");
 
     fredAnimation.addAnimation(idle);
@@ -59,7 +60,7 @@ public class Prefabs {
     fredAnimation.addAnimation(jumpOnTheLine);
 
     RigidBody rigidBody = new RigidBody();
-    BoxBounds boxBounds = new BoxBounds(28, 28, false, true);
+    BoxBounds boxBounds = new BoxBounds(24, 28, false, true);
     //boxBounds.setXBuffer(1);
     FredController fredController = new FredController();
 

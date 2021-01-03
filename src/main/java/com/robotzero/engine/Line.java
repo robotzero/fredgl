@@ -11,9 +11,16 @@ public class Line implements Component {
   @Override
   public void trigger(Trigger trigger) {
     if (this.trigger == null) {
+
       Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).ifPresent(fredController -> {
-        this.trigger = trigger;
-        fredController.setCollisionWithTheLine(true);
+        BoxBounds thisBounds = gameObject.getComponent(BoxBounds.class);
+        BoxBounds otherBounds = trigger.gameObject.getComponent(BoxBounds.class);
+        Optional.ofNullable(thisBounds.resolveCollision(otherBounds, true)).filter(collision -> {
+          return collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT;
+        }).ifPresent(collision -> {
+          this.trigger = trigger;
+          fredController.setCollisionWithTheLine(true);
+        });
       });
     }
   }
@@ -22,8 +29,14 @@ public class Line implements Component {
   public void unTrigger(Trigger trigger) {
     if (this.trigger != null) {
       Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).ifPresent(fredController -> {
-        this.trigger = null;
-        fredController.setCollisionWithTheLine(false);
+        BoxBounds thisBounds = gameObject.getComponent(BoxBounds.class);
+        BoxBounds otherBounds = trigger.gameObject.getComponent(BoxBounds.class);
+        Optional.ofNullable(thisBounds.resolveCollision(otherBounds, true)).filter(collision -> {
+          return collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT;
+        }).ifPresent(collision -> {
+          this.trigger = null;
+          fredController.setCollisionWithTheLine(false);
+        });
       });
     }
   }

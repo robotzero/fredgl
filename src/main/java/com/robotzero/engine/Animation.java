@@ -78,6 +78,7 @@ public class Animation implements Component {
         if (machine.getAnimation(stateTransfers.get(trigger)) != null) {
             // Reset the sprite to the start
             this.currentSprite = 0;
+            this.timeLeft = this.waitTimes.get(this.currentSprite);
             return machine.getAnimation(stateTransfers.get(trigger));
         }
         return this;
