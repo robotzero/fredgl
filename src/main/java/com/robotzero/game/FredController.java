@@ -41,6 +41,7 @@ public class FredController implements Component {
   private float jumpSpeed = 20;
   private boolean onTheLine;
   private boolean jumping = false;
+  private int lastKeyPressed = 0;
 
   @Override
   public void start() {
@@ -111,11 +112,17 @@ public class FredController implements Component {
     }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
+      boolean turnAroundOnly = false;
       if (gameObject.getTransform().scale.x < 0) {
+        turnAroundOnly = true;
         gameObject.getTransform().scale.x *= -1;
+        return;
       }
       if (!onTheLine && !jumpingOn) {
-        this.rigidBody.acceleration.x = runSpeed;
+        if (!turnAroundOnly) {
+          this.rigidBody.acceleration.x = runSpeed;
+        }
+        lastKeyPressed = GLFW_KEY_RIGHT;
       } else if (onTheLine && !jumpingOn) {
 //        if (gameObject.getTransform().scale.x < 0) {
           this.rigidBody.acceleration.x = -100;
@@ -133,18 +140,24 @@ public class FredController implements Component {
 //        machine.trigger("StartJumpOn");
 //        return;
 //      }
-      if (onGround) {
+      if (onGround && !turnAroundOnly) {
         machine.trigger("StartWalking");
         this.jumping = false;
         this.jumpingOff = false;
         this.jumpingOn = false;
       }
     } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
+      boolean turnAroundOnly = false;
       if (gameObject.getTransform().scale.x > 0) {
+        turnAroundOnly = true;
         gameObject.getTransform().scale.x *= -1;
+        return;
       }
       if (!onTheLine && !jumpingOn) {
-        this.rigidBody.acceleration.x = -runSpeed;
+        if (!turnAroundOnly) {
+          this.rigidBody.acceleration.x = -runSpeed;
+        }
+        lastKeyPressed = GLFW_KEY_LEFT;
       } else {
 //        if (gameObject.getTransform().scale.x > 0) {
           this.rigidBody.acceleration.x = 100;
@@ -158,7 +171,7 @@ public class FredController implements Component {
 //        }
       }
 
-      if (onGround) {
+      if (onGround && !turnAroundOnly) {
         machine.trigger("StartWalking");
         this.jumping = false;
         jumpingOff = false;

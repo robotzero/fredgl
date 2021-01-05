@@ -77,9 +77,13 @@ public class Animation implements Component {
     public Animation trigger(String trigger) {
         if (machine.getAnimation(stateTransfers.get(trigger)) != null) {
             // Reset the sprite to the start
-            this.currentSprite = 0;
-            this.timeLeft = this.waitTimes.get(this.currentSprite);
-            return machine.getAnimation(stateTransfers.get(trigger));
+            Animation nextAnimation = machine.getAnimation(stateTransfers.get(trigger));
+            if (!nextAnimation.animationName.equals(machine.current.animationName)) {
+                this.currentSprite = 0;
+                this.timeLeft = this.waitTimes.get(this.currentSprite);
+            }
+
+            return nextAnimation;
         }
         return this;
     }

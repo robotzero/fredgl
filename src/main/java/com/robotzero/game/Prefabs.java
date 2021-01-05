@@ -153,7 +153,6 @@ public class Prefabs {
       spriteRenderer.color.y = 0.6f;
       spriteRenderer.color.z = 1.0f;
       BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, false, true);
-      boxBounds.setXBuffer(5);
       spriteRenderer.setGameObject(jumpBoard);
       boxBounds.setGameObject(jumpBoard);
       jumpBoard.addComponent(spriteRenderer);
