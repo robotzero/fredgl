@@ -29,16 +29,16 @@ public class LevelScene extends Scene {
     List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     stoneBlocks.forEach(stoneBlock -> {
       BoxBounds boxBounds = stoneBlock.getComponent(BoxBounds.class);
-      DebugDraw.addBox2D(
-          new Vector2f(
-              stoneBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-              stoneBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-          ),
-          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-          0,
-          new Vector3f(1f, 0f, 0f),
-          0
-      );
+//      DebugDraw.addBox2D(
+//          new Vector2f(
+//              stoneBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+//              stoneBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+//          ),
+//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+//          0,
+//          new Vector3f(1f, 0f, 0f),
+//          0
+//      );
       gameObjects.add(stoneBlock);
       renderer.add(stoneBlock);
       physics.addGameObject(stoneBlock);
@@ -49,16 +49,16 @@ public class LevelScene extends Scene {
     List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     lineBlocks.forEach(lineBlock -> {
       BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
-      DebugDraw.addBox2D(
-          new Vector2f(
-              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-          ),
-          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-          0,
-          new Vector3f(1f, 0f, 0f),
-          0
-      );
+//      DebugDraw.addBox2D(
+//          new Vector2f(
+//              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+//              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+//          ),
+//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+//          0,
+//          new Vector3f(1f, 0f, 0f),
+//          0
+//      );
       gameObjects.add(lineBlock);
       renderer.add(lineBlock);
       physics.addGameObject(lineBlock);
@@ -113,6 +113,7 @@ public class LevelScene extends Scene {
     AssetPool.addMap("assets/maps/map.txt");
     // Engine Assets
     AssetPool.addSpritesheet("assets/spritesheets/defaultAssets.png", 24, 21, 0, 2, 2);
+    AssetPool.addSpritesheet("assets/spritesheets/line.png", 7, 39, 0, 3, 3);
 
     // Sounds
 //    AssetPool.addSound("assets/sounds/main-theme-overworld.ogg", true);

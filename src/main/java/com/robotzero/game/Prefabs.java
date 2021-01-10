@@ -9,6 +9,7 @@ import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.GameObject;
 import com.robotzero.engine.Line;
 import com.robotzero.engine.RigidBody;
+import com.robotzero.engine.Sprite;
 import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.engine.Spritesheet;
 import org.joml.Vector2f;
@@ -19,7 +20,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Prefabs {
-  public static final int LINEWIDTH = 2;
+  public static final int LINEWIDTH = 7;
   public static final int STONEWIDTH = 32;
   public static final int STONEHEIGHT = 40;
 
@@ -121,26 +122,27 @@ public class Prefabs {
   }
 
   public static List<GameObject> LINES(MapAsset map) {
-    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
-    return map.getLineTransforms().stream().map(transform -> {
-      GameObject line = new GameObject(String.format("Line_Block_Prefab_%s", transform.toString()), transform, 0);
-      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(0), line);
-      spriteRenderer.color.x = 1f;
-      spriteRenderer.color.y = 0.4f;
-      spriteRenderer.color.z = 0.8f;
-      BoxBounds boxBounds = new BoxBounds(LINEWIDTH, 40, false, true);
-      Line lineComponent = new Line();
-      lineComponent.setGameObject(line);
-      spriteRenderer.setGameObject(line);
-      boxBounds.setGameObject(line);
-      line.addComponent(spriteRenderer);
-      line.addComponent(boxBounds);
-      line.addComponent(lineComponent);
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/line.png")).orElseThrow();
+    return map.getLineTransforms().entrySet().stream().flatMap(entrySet -> {
+      int mappedAsciCode = entrySet.getKey();
+      List<Transform> transforms = entrySet.getValue();
+      return transforms.stream().map(transform -> {
+        GameObject line = new GameObject(String.format("Line_Block_Prefab_%s", transform.toString()), transform, 0);
+        SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(mappedAsciCode), line);
+        BoxBounds boxBounds = new BoxBounds(2, 39, false, true);
+        Line lineComponent = new Line();
+        lineComponent.setGameObject(line);
+        spriteRenderer.setGameObject(line);
+        boxBounds.setGameObject(line);
+        line.addComponent(spriteRenderer);
+        line.addComponent(boxBounds);
+        line.addComponent(lineComponent);
 
-      line.getTransform().scale.x = LINEWIDTH;
-      line.getTransform().scale.y = STONEHEIGHT;
+        line.getTransform().scale.x = LINEWIDTH;
+        line.getTransform().scale.y = STONEHEIGHT;
 
-      return line;
+        return line;
+      });
     }).collect(Collectors.toList());
   }
 
@@ -155,7 +157,7 @@ public class Prefabs {
       BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, false, true);
       spriteRenderer.setGameObject(jumpBoard);
       boxBounds.setGameObject(jumpBoard);
-      jumpBoard.addComponent(spriteRenderer);
+//      jumpBoard.addComponent(spriteRenderer);
       jumpBoard.addComponent(boxBounds);
 
       jumpBoard.getTransform().scale.x = STONEWIDTH;

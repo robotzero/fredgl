@@ -12,12 +12,14 @@ import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
 import com.robotzero.render.Camera;
 
+import java.security.Key;
 import java.util.List;
 import java.util.Optional;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
@@ -41,7 +43,7 @@ public class FredController implements Component {
   private float jumpSpeed = 20;
   private boolean onTheLine;
   private boolean jumping = false;
-  private int lastKeyPressed = 0;
+  private int currentRunSpeed = 0;
 
   @Override
   public void start() {
@@ -57,13 +59,22 @@ public class FredController implements Component {
     } else {
       this.camera.position().x = this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X;
     }
+
+    if (KeyListener.isKeyPressed(GLFW_KEY_P)) {
+      if (!(runSpeed == 100 * 4f)) {
+        runSpeed = runSpeed * 4f;
+      }
+    } else {
+      runSpeed = 100;
+    }
+
     rigidBody.gravity = 0;
     if (jumpingOff && onTheLine) {
       if (animTime > 0) {
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -100;
+          this.rigidBody.acceleration.x = -runSpeed;
         } else {
-          this.rigidBody.acceleration.x = 100;
+          this.rigidBody.acceleration.x = runSpeed;
         }
         animTime -= dt;
         return;
@@ -122,10 +133,9 @@ public class FredController implements Component {
         if (!turnAroundOnly) {
           this.rigidBody.acceleration.x = runSpeed;
         }
-        lastKeyPressed = GLFW_KEY_RIGHT;
       } else if (onTheLine && !jumpingOn) {
 //        if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -100;
+          this.rigidBody.acceleration.x = -runSpeed;
           this.rigidBody.acceleration.y = 0;
           machine.trigger("StartJumpOff");
           jumpingOff = true;
@@ -157,10 +167,9 @@ public class FredController implements Component {
         if (!turnAroundOnly) {
           this.rigidBody.acceleration.x = -runSpeed;
         }
-        lastKeyPressed = GLFW_KEY_LEFT;
       } else {
 //        if (gameObject.getTransform().scale.x > 0) {
-          this.rigidBody.acceleration.x = 100;
+          this.rigidBody.acceleration.x = runSpeed;
           this.rigidBody.acceleration.y = 0;
           onGround = false;
           machine.trigger("StartJumpOff");

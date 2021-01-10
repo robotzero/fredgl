@@ -1,13 +1,14 @@
 package com.robotzero.dataStructure;
 
 import java.util.List;
+import java.util.Map;
 
 public class MapAsset {
   private final List<Transform> stoneTransforms;
-  private final List<Transform> lineTransforms;
+  private final Map<Integer, List<Transform>> lineTransforms;
   private final List<Transform> jumpBoardTransforms;
 
-  public MapAsset(List<Transform> stoneTransforms, List<Transform> lineTransforms, List<Transform> jumpBoardTransforms) {
+  public MapAsset(List<Transform> stoneTransforms, Map<Integer, List<Transform>> lineTransforms, List<Transform> jumpBoardTransforms) {
     this.stoneTransforms = stoneTransforms;
     this.lineTransforms = lineTransforms;
     this.jumpBoardTransforms = jumpBoardTransforms;
@@ -17,7 +18,7 @@ public class MapAsset {
     return stoneTransforms;
   }
 
-  public List<Transform> getLineTransforms() {
+  public Map<Integer, List<Transform>> getLineTransforms() {
     return lineTransforms;
   }
 

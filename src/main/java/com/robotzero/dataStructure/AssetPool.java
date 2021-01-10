@@ -158,13 +158,16 @@ public class AssetPool {
             try (LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(file))) {
                 String line = lineNumberReader.readLine();
                 List<Transform> stoneTransforms = new ArrayList<>();
-                List<Transform> lineTransforms = new ArrayList<>();
                 List<Transform> jumpBoardTransforms = new ArrayList<>();
+                Map<Integer, List<Transform>> lineTransforms = new HashMap<>();
+
                 while (line != null) {
                     lines.put(lineNumberReader.getLineNumber(), line);
                     line = lineNumberReader.readLine();
                 }
-
+                lineTransforms.put(0, new ArrayList<>());
+                lineTransforms.put(1, new ArrayList<>());
+                lineTransforms.put(2, new ArrayList<>());
                 Map<Integer, String> linesReverseOrder = lines.entrySet().stream()
                     .sorted(Comparator.comparingInt(value -> {
                         Map.Entry<Integer, String> entry = (Map.Entry<Integer, String>) value;
@@ -181,15 +184,24 @@ public class AssetPool {
 
                         int offset = (int) ((Prefabs.STONEWIDTH * 0.5f) - (Prefabs.LINEWIDTH * 0.5f));
                         if (bytes[i] == 50) {
-                            lineTransforms.add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
+                            lineTransforms.get(1).add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
                         }
 
                         if (bytes[i] == 51) {
-                            lineTransforms.add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
+                            lineTransforms.get(2).add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
                         }
 
                         if (bytes[i] == 52) {
-                            lineTransforms.add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
+                            lineTransforms.get(2).add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
+                            jumpBoardTransforms.add(new Transform(new Vector2f(Prefabs.STONEWIDTH * i, (Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT))));
+                        }
+
+                        if (bytes[i] == 53) {
+                            lineTransforms.get(0).add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
+                        }
+
+                        if (bytes[i] == 54) {
+                            lineTransforms.get(1).add(new Transform(new Vector2f((Prefabs.STONEWIDTH * i) + offset, Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT)));
                             jumpBoardTransforms.add(new Transform(new Vector2f(Prefabs.STONEWIDTH * i, (Math.abs(key - linesReverseOrder.size()) * Prefabs.STONEHEIGHT))));
                         }
                     }
