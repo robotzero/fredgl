@@ -107,8 +107,11 @@ public class BoxBounds extends Bounds {
   }
 
   public void calculateCenter() {
-    this.center.x = this.gameObject.getTransform().position.x + this.halfWidth + this.xBuffer;
-    this.center.y = this.gameObject.getTransform().position.y + this.halfHeight + this.yBuffer;
+    float diffX = (Math.abs(this.gameObject.getTransform().scale.x) - this.width) * 0.5f;
+    float diffY = 0;
+
+    this.center.x = this.gameObject.getTransform().position.x + this.halfWidth + this.xBuffer + diffX;
+    this.center.y = this.gameObject.getTransform().position.y + this.halfHeight + this.yBuffer + diffY;
   }
 
   public static boolean checkCollision(BoxBounds b1, BoxBounds b2) {

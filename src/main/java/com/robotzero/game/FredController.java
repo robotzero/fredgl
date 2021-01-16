@@ -105,9 +105,9 @@ public class FredController implements Component {
       if (animTime > 0) {
         this.onGround = false;
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -60;
+          this.rigidBody.acceleration.x = -50;
         } else {
-          this.rigidBody.acceleration.x = 60;
+          this.rigidBody.acceleration.x = 50;
         }
         this.rigidBody.acceleration.y = 15;
         animTime -= dt;

@@ -61,8 +61,8 @@ public class Prefabs {
     fredAnimation.addAnimation(jumpOnTheLine);
 
     RigidBody rigidBody = new RigidBody();
-    BoxBounds boxBounds = new BoxBounds(24, 28, false, true);
-    //boxBounds.setXBuffer(1);
+    BoxBounds boxBounds = new BoxBounds(20, 28, false, true);
+    boxBounds.setYBuffer(2);
     FredController fredController = new FredController();
 
     //Transform transform = new Transform(new Vector2f(650, 300.0f));

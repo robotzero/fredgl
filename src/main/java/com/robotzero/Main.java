@@ -10,10 +10,16 @@ import java.io.StringWriter;
 
 public class Main {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     String[] customArgs = {
         "-Dorg.lwjgl.util.Debug=true"
     };
+
+    //MazeController mazeController = new MazeController(Order.Builder.Kruskal);
+    //mazeController.init();
+    //final var conf = mazeController.getMazeConfiguration();
+
+//    MazeFileWriter.store("blah", conf.getWidth(), conf.getHeight(), 0, 0, conf.getRootnode(), conf.getMazecells(), conf.getMazedists().getDists(), conf.getStartingPosition()[0], conf.getStartingPosition()[1]);
 
     try {
       Window window = Window.getWindow();

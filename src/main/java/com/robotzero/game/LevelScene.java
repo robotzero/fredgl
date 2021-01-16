@@ -49,16 +49,16 @@ public class LevelScene extends Scene {
     List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     lineBlocks.forEach(lineBlock -> {
       BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
-//      DebugDraw.addBox2D(
-//          new Vector2f(
-//              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-//              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-//          ),
-//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-//          0,
-//          new Vector3f(1f, 0f, 0f),
-//          0
-//      );
+      DebugDraw.addBox2D(
+          new Vector2f(
+              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+          ),
+          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+          0,
+          new Vector3f(1f, 0f, 0f),
+          0
+      );
       gameObjects.add(lineBlock);
       renderer.add(lineBlock);
       physics.addGameObject(lineBlock);
@@ -70,16 +70,16 @@ public class LevelScene extends Scene {
     jumpboards.forEach(jumpBoard -> {
       BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
 
-      DebugDraw.addBox2D(
-          new Vector2f(
-              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-          ),
-          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-          0,
-          new Vector3f(1f, 0f, 0f),
-          0
-      );
+//      DebugDraw.addBox2D(
+//          new Vector2f(
+//              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+//              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+//          ),
+//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+//          0,
+//          new Vector3f(1f, 0f, 0f),
+//          0
+//      );
 
       gameObjects.add(jumpBoard);
       renderer.add(jumpBoard);
