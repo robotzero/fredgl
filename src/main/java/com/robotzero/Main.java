@@ -1,5 +1,7 @@
 package com.robotzero;
 
+import com.robotzero.dataStructure.maze.MazeController;
+import com.robotzero.dataStructure.maze.Order;
 import com.robotzero.infrastructure.Window;
 
 import java.io.BufferedWriter;
@@ -15,9 +17,10 @@ public class Main {
         "-Dorg.lwjgl.util.Debug=true"
     };
 
-    //MazeController mazeController = new MazeController(Order.Builder.Kruskal);
-    //mazeController.init();
-    //final var conf = mazeController.getMazeConfiguration();
+//    MazeController mazeController = new MazeController(Order.Builder.Kruskal);
+//    mazeController.init();
+//    final var conf = mazeController.getMazeConfiguration();
+
 
 //    MazeFileWriter.store("blah", conf.getWidth(), conf.getHeight(), 0, 0, conf.getRootnode(), conf.getMazecells(), conf.getMazedists().getDists(), conf.getStartingPosition()[0], conf.getStartingPosition()[1]);
 

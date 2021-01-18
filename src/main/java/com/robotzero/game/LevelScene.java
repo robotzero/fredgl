@@ -2,6 +2,11 @@ package com.robotzero.game;
 
 import com.robotzero.dataStructure.AssetPool;
 import com.robotzero.dataStructure.Tuple;
+import com.robotzero.dataStructure.maze.Cells;
+import com.robotzero.dataStructure.maze.Constants;
+import com.robotzero.dataStructure.maze.MapDrawer;
+import com.robotzero.dataStructure.maze.MazeController;
+import com.robotzero.dataStructure.maze.Order;
 import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.DebugDraw;
 import com.robotzero.engine.GameObject;
@@ -25,22 +30,30 @@ public class LevelScene extends Scene {
   @Override
   public void init() {
     initAssetPool();
+    MazeController mazeController = new MazeController(Order.Builder.Kruskal);
+    mazeController.init();
+    final var conf = mazeController.getMazeConfiguration();
+    final Cells seencells = new Cells(conf.getWidth() + 1,conf.getHeight() + 1) ;
+    MapDrawer mapDrawer = new MapDrawer(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, Constants.MAP_UNIT, Constants.STEP_SIZE, seencells, 10, mazeController);
+    mapDrawer.draw_map(null, 0, 0, 0, 65536, 0, false, false);
+
+
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
     List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     stoneBlocks.forEach(stoneBlock -> {
       BoxBounds boxBounds = stoneBlock.getComponent(BoxBounds.class);
-//      DebugDraw.addBox2D(
-//          new Vector2f(
-//              stoneBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-//              stoneBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-//          ),
-//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-//          0,
-//          new Vector3f(1f, 0f, 0f),
-//          0
-//      );
+      DebugDraw.addBox2D(
+          new Vector2f(
+              stoneBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+              stoneBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+          ),
+          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+          0,
+          new Vector3f(1f, 0f, 0f),
+          0
+      );
       gameObjects.add(stoneBlock);
-      renderer.add(stoneBlock);
+//      renderer.add(stoneBlock);
       physics.addGameObject(stoneBlock);
       worldPartition.put(stoneBlock.getGridCoords(), stoneBlock);
       stoneBlock.start();
@@ -140,15 +153,15 @@ public class LevelScene extends Scene {
         go.update(dt);
         Optional.ofNullable(go.getComponent(FredController.class)).ifPresent(_notUsed -> {
           BoxBounds fredBoxBounds = go.getComponent(BoxBounds.class);
-          DebugDraw.addBox2DDynamic(
-              new Vector2f(
-                  fredBoxBounds.getCenterX(),
-                  fredBoxBounds.getCenterY()
-              ),
-              new Vector2f(fredBoxBounds.getWidth(), fredBoxBounds.getHeight()),
-              0,
-              new Vector3f(1f, 0f, 0f)
-          );
+//          DebugDraw.addBox2DDynamic(
+//              new Vector2f(
+//                  fredBoxBounds.getCenterX(),
+//                  fredBoxBounds.getCenterY()
+//              ),
+//              new Vector2f(fredBoxBounds.getWidth(), fredBoxBounds.getHeight()),
+//              0,
+//              new Vector3f(1f, 0f, 0f)
+//          );
         });
       } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_2) {
         //deleteGameObject(go);

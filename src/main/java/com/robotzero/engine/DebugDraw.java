@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class DebugDraw {
-  private static int MAX_LINES = 15500;
+  private static int MAX_LINES = 55500;
 
   private static List<Line2D> lines = new ArrayList<>();
   private static List<Line2D> dynamicLines = new ArrayList<>();
@@ -38,7 +38,7 @@ public class DebugDraw {
     // Create the vbo and buffer some memory
     vboID = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
-    glBufferData(GL_ARRAY_BUFFER, (long) vertexArray.length * Float.BYTES, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (long) vertexArray.length * Float.BYTES, GL_STATIC_DRAW);
 
     // Enable the vertex array attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * Float.BYTES, 0);

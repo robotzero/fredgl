@@ -3,6 +3,12 @@
  */
 package com.robotzero.dataStructure.maze;
 
+import com.robotzero.engine.DebugDraw;
+import com.robotzero.infrastructure.constants.Window;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
 import java.awt.*;
 
 /**
@@ -101,7 +107,7 @@ public class MapDrawer {
 		final int mazew = mazeConfig.getWidth() ;
 		final int mazeh = mazeConfig.getHeight() ;
 
-		gc.setColor(Color.white);
+//		gc.setColor(Color.white);
 
 		// determine offsets for x and y
 		int vx = px*map_unit+map_unit/2;
@@ -134,22 +140,24 @@ public class MapDrawer {
 						mazeConfig.hasWall(x,y, CardinalDirection.North) :
 							mazeConfig.hasWall(x,y-1, CardinalDirection.South));
 
-				gc.setColor(seencells.hasWall(x,y, CardinalDirection.North) ? Color.white : Color.gray);
+//				gc.setColor(seencells.hasWall(x,y, CardinalDirection.North) ? Color.white : Color.gray);
 				if ((seencells.hasWall(x,y, CardinalDirection.North) || showMaze) && theCondition)
-					gc.drawLine(nx1, ny1, nx2, ny1);
+					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx2, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
+//					gc.drawLine(nx1, ny1, nx2, ny1);
 
 				theCondition = (y >= mazeh) ? false : ((x < mazew) ?
 						mazeConfig.hasWall(x,y, CardinalDirection.West) :
 							mazeConfig.hasWall((x-1),y, CardinalDirection.East));
 
-				gc.setColor(seencells.hasWall(x,y, CardinalDirection.West) ? Color.white : Color.gray);
+//				gc.setColor(seencells.hasWall(x,y, CardinalDirection.West) ? Color.white : Color.gray);
 				if ((seencells.hasWall(x,y, CardinalDirection.West) || showMaze) && theCondition)
-					gc.drawLine(nx1, ny1, nx1, ny2);
+					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx2, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
+//					gc.drawLine(nx1, ny1, nx1, ny2);
 			}
 
-		if (showSolution) {
-			draw_solution(gc, offx, offy, px, py) ;
-		}
+//		if (showSolution) {
+//			draw_solution(gc, offx, offy, px, py) ;
+//		}
 	}
 	/**
 	 * Draws an oval red shape with and arrow for the current position and direction on the maze.

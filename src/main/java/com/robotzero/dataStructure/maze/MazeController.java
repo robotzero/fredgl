@@ -111,7 +111,7 @@ public class MazeController implements Order {
 		setPerfect(true);
 		factory.order(this);
 		factory.waitTillDelivered();
-		mapDrawer = new MapDrawer(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, Constants.MAP_UNIT, Constants.STEP_SIZE, seencells, 10, this);
+//		mapDrawer = new MapDrawer(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, Constants.MAP_UNIT, Constants.STEP_SIZE, seencells, 10, this);
 	}
 	/**
 	 * Constructor to read maze with default builder and a robot driver
