@@ -66,4 +66,11 @@ public class Renderer {
             batch.render();
         }
     }
+
+    public void cleanUp() {
+        for (RenderBatch batch : batches) {
+            batch.cleanUp();
+        }
+        batches.clear();
+    }
 }

@@ -109,7 +109,9 @@ public class MazeController implements Order {
 		factory = new MazeFactory() ;
 		filename = null;
 		setPerfect(true);
+		setSkillLevel(5);
 		factory.order(this);
+		//mazeConfig
 		factory.waitTillDelivered();
 //		mapDrawer = new MapDrawer(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, Constants.MAP_UNIT, Constants.STEP_SIZE, seencells, 10, this);
 	}

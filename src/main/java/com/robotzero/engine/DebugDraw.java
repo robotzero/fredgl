@@ -14,10 +14,12 @@ import java.util.List;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glClearBufferiv;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class DebugDraw {
-  private static int MAX_LINES = 55500;
+  private static int MAX_LINES = 555500;
 
   private static List<Line2D> lines = new ArrayList<>();
   private static List<Line2D> dynamicLines = new ArrayList<>();
@@ -31,6 +33,7 @@ public class DebugDraw {
   private static boolean started = false;
 
   public static void start() {
+    Arrays.fill(vertexArray, 0);
     // Generate the vao
     vaoID = glGenVertexArrays();
     glBindVertexArray(vaoID);
@@ -47,7 +50,7 @@ public class DebugDraw {
     glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
     glEnableVertexAttribArray(1);
 
-    glLineWidth(1.0f);
+    glLineWidth(10.0f);
   }
 
   public static void beginFrame() {
@@ -68,6 +71,7 @@ public class DebugDraw {
 
 
   public static void draw() {
+    Arrays.fill(vertexArray, 0);
     if (lines.size() <= 0 && dynamicLines.size() <= 0) return;
 
     if (lines.size() > 0) {
@@ -125,7 +129,7 @@ public class DebugDraw {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     // Draw the batch
-    glDrawArrays(GL_LINES, 0, lines.size() * 6 * 2);
+    glDrawArrays(GL_LINES, 0, (lines.size() * 6 * 2) + (dynamicLines.size() * 6 * 2));
 
     // Disable Location
     glDisableVertexAttribArray(0);
@@ -202,12 +206,14 @@ public class DebugDraw {
     addLine2DDynamic(vertices[2], vertices[3], color);
   }
 
-  public static void clearStatic() {
-    lines.clear();
-  }
-
   public static void clearAll() {
+    Arrays.fill(vertexArray, 0);
     lines.clear();
     dynamicLines.clear();
+    shader.delete();
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDeleteBuffers(vboID);
+    glDeleteVertexArrays(vaoID);
   }
 }

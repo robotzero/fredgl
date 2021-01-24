@@ -1,4 +1,7 @@
 package com.robotzero.dataStructure.maze;
+
+import com.robotzero.infrastructure.constants.Window;
+
 /**
  * This class contains all constants that are used in the maze package and shared among several classes.
  * TODO: localize CW_* settings in generation package.
@@ -30,8 +33,8 @@ public class Constants {
 	public static final int[] MASKS = { CW_RIGHT, CW_BOT, CW_LEFT,  CW_TOP };
 
 	// The panel used to display the maze has a fixed dimension
-	public static final int VIEW_WIDTH = 400;
-	public static final int VIEW_HEIGHT = 400;
+	public static final int VIEW_WIDTH = Window.SCREEN_WIDTH;
+	public static final int VIEW_HEIGHT = Window.SCREEN_HEIGHT;
 	public static final int MAP_UNIT = 128;
 	public static final int VIEW_OFFSET = MAP_UNIT/8;
 	public static final int STEP_SIZE = MAP_UNIT/4;

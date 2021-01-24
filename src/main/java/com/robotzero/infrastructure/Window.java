@@ -168,9 +168,11 @@ public class Window {
 
     this.isRunning = false;
     DebugDraw.clearAll();
+    this.currentScene.cleanUp();
 
     alcDestroyContext(audioContext);
     alcCloseDevice(audioDevice);
+//    glfwDestroyWindow(glfwWindow);
   }
 
   public void changeScene(int scene) {

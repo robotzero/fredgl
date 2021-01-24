@@ -34,44 +34,47 @@ public class LevelScene extends Scene {
     mazeController.init();
     final var conf = mazeController.getMazeConfiguration();
     final Cells seencells = new Cells(conf.getWidth() + 1,conf.getHeight() + 1) ;
-    MapDrawer mapDrawer = new MapDrawer(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, Constants.MAP_UNIT, Constants.STEP_SIZE, seencells, 10, mazeController);
-    mapDrawer.draw_map(null, 0, 0, 0, 65536, 0, false, false);
+    MapDrawer mapDrawer = new MapDrawer(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, Constants.MAP_UNIT, Constants.STEP_SIZE, seencells, Prefabs.STONEWIDTH, mazeController);
+    mapDrawer.draw_map(null, 0, 0, 0, 65536, 0, true, true);
+//    mapDrawer.generateGraphicMaze(0, 0, 0, 65536, 0, true, false);
 
 
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
-    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+//    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+    List<GameObject> stoneBlocks = Prefabs.STONES_MAP_DRAWER();
     stoneBlocks.forEach(stoneBlock -> {
       BoxBounds boxBounds = stoneBlock.getComponent(BoxBounds.class);
-      DebugDraw.addBox2D(
-          new Vector2f(
-              stoneBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-              stoneBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-          ),
-          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-          0,
-          new Vector3f(1f, 0f, 0f),
-          0
-      );
+//      DebugDraw.addBox2D(
+//          new Vector2f(
+//              stoneBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+//              stoneBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+//          ),
+//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+//          0,
+//          new Vector3f(1f, 0f, 0f),
+//          0
+//      );
       gameObjects.add(stoneBlock);
-//      renderer.add(stoneBlock);
+      renderer.add(stoneBlock);
       physics.addGameObject(stoneBlock);
       worldPartition.put(stoneBlock.getGridCoords(), stoneBlock);
       stoneBlock.start();
     });
 
-    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+//    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+      List<GameObject> lineBlocks = Prefabs.LINES_MAP_DRAWER();
     lineBlocks.forEach(lineBlock -> {
-      BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
-      DebugDraw.addBox2D(
-          new Vector2f(
-              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-          ),
-          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-          0,
-          new Vector3f(1f, 0f, 0f),
-          0
-      );
+//      BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
+//      DebugDraw.addBox2D(
+//          new Vector2f(
+//              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+//              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+//          ),
+//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+//          0,
+//          new Vector3f(1f, 0f, 0f),
+//          0
+//      );
       gameObjects.add(lineBlock);
       renderer.add(lineBlock);
       physics.addGameObject(lineBlock);
@@ -79,9 +82,9 @@ public class LevelScene extends Scene {
       lineBlock.start();
     });
 
-    List<GameObject> jumpboards = Prefabs.JUMPBOARDS(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
-    jumpboards.forEach(jumpBoard -> {
-      BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
+//    List<GameObject> jumpboards = Prefabs.JUMPBOARDS(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+//    jumpboards.forEach(jumpBoard -> {
+//      BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
 
 //      DebugDraw.addBox2D(
 //          new Vector2f(
@@ -94,12 +97,12 @@ public class LevelScene extends Scene {
 //          0
 //      );
 
-      gameObjects.add(jumpBoard);
-      renderer.add(jumpBoard);
-      physics.addGameObject(jumpBoard);
-      worldPartition.put(jumpBoard.getGridCoords(), jumpBoard);
-      jumpBoard.start();
-    });
+//      gameObjects.add(jumpBoard);
+//      renderer.add(jumpBoard);
+//      physics.addGameObject(jumpBoard);
+//      worldPartition.put(jumpBoard.getGridCoords(), jumpBoard);
+//      jumpBoard.start();
+//    });
 
     gameObjects.add(fredGameObject);
     renderer.add(fredGameObject);

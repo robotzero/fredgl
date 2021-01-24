@@ -3,13 +3,18 @@
  */
 package com.robotzero.dataStructure.maze;
 
+import com.robotzero.dataStructure.Transform;
 import com.robotzero.engine.DebugDraw;
+import com.robotzero.game.Prefabs;
 import com.robotzero.infrastructure.constants.Window;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class encapsulates all functionality to draw a map of the overall maze, the set of visible walls, the solution.
@@ -32,6 +37,8 @@ public class MapDrawer {
 	int map_unit = 128;
 	int map_scale = 10 ;
 	int step_size = map_unit/4;
+	public static List<Transform> stoneTransforms;
+	public static Map<Integer, List<Transform>> lineTransforms = new HashMap<>();
 	Cells seencells ;
 
 	// contains all necessary information about current maze, i.e.
@@ -63,6 +70,9 @@ public class MapDrawer {
 		controller = c ;
 		mazeConfig = controller.getMazeConfiguration() ;
 		assert mazeConfig != null : "MapDrawer: maze configuration is null in given maze object!" ;
+		lineTransforms.put(0, new ArrayList<>());
+		lineTransforms.put(1, new ArrayList<>());
+		lineTransforms.put(2, new ArrayList<>());
 	}
 	///////////////////// Methods to implement Viewer interface //////////////////////////////////////
 
@@ -95,7 +105,7 @@ public class MapDrawer {
 			}
 		}
 	}
-	//////////////////////////////// private, internal methods //////////////////////////////
+
 	/**
 	 * Helper method for redraw, called if map_mode is true, i.e. the users wants to see the overall map.
 	 * The map is drawn only on a small rectangle inside the maze area such that only a part of the map is actually shown.
@@ -104,10 +114,99 @@ public class MapDrawer {
 	 */
 	public void draw_map(Graphics gc, int px, int py, int walk_step, int view_dx, int view_dy, boolean showMaze, boolean showSolution) {
 		// dimensions of the maze
-		final int mazew = mazeConfig.getWidth() ;
-		final int mazeh = mazeConfig.getHeight() ;
+		final int mazew = mazeConfig.getWidth();
+		final int mazeh = mazeConfig.getHeight();
+		int step_size_y = Prefabs.STONEHEIGHT;
+		int map_scale_width = Prefabs.STONEWIDTH * 2;
+		int map_scale_height = Prefabs.STONEHEIGHT * 2;
+		int offset = (int) ((Prefabs.STONEWIDTH * 0.5f) - (Prefabs.LINEWIDTH * 0.5f));
 
 //		gc.setColor(Color.white);
+
+		// determine offsets for x and y
+		int vx = px * map_unit + map_unit / 2;
+		vx += viewd_unscale(view_dx * (step_size * walk_step));
+		int vy = py * map_unit + map_unit / 2;
+		vy += viewd_unscale(view_dy * (step_size_y * walk_step));
+		int offx = -vx * map_scale / map_unit + view_width / 2;
+		int offy = -vy * map_scale / map_unit + view_height / 2;
+		offx = 0;
+		offy = (view_height - (mazeConfig.getHeight() * map_scale_height)) - Prefabs.STONEHEIGHT;
+
+		// compute minimum for x,y
+		int xmin = -offx / map_scale_width;
+		int ymin = -offy / map_scale_height;
+		ymin = 0;
+		xmin = 0;
+		if (xmin < 0) xmin = 0;
+		if (ymin < 0) ymin = 0;
+
+		// compute maximum for x,y
+		int xmax = (view_width - offx) / map_scale_width + 1;
+		int ymax = (view_height - offy) / map_scale_height + 1;
+		if (xmax >= mazew) xmax = mazew;
+		if (ymax >= mazeh) ymax = mazeh;
+		stoneTransforms = new ArrayList<>();
+		// iterate over integer grid between min and max of x,y
+		boolean Condition3 = false;
+		boolean Condition4 = false;
+		for (int y = ymin; y <= ymax; y++) {
+			for (int x = xmin; x <= xmax; x++) {
+				int nx1 = x * map_scale_width + offx;
+				int ny1 = view_height - 0 - (y * map_scale_height + offy);
+				int nx2 = nx1 + map_scale_width;
+				int ny2 = ny1 - map_scale_height;
+				boolean theCondition1 = (x >= mazew) ? false : ((y < mazeh) ?
+						mazeConfig.hasWall(x, y, CardinalDirection.North) :
+						mazeConfig.hasWall(x, y - 1, CardinalDirection.South));
+
+//				gc.setColor(seencells.hasWall(x,y, CardinalDirection.North) ? Color.white : Color.gray);
+				if ((seencells.hasWall(x, y, CardinalDirection.North) || showMaze) && theCondition1) {
+					Condition3 = true;
+					stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
+					stoneTransforms.add(new Transform(new Vector2f(nx1, ny1 - Prefabs.STONEHEIGHT)));
+					stoneTransforms.add(new Transform(new Vector2f(nx2 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
+					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx2, ny1), new Vector3f(Window.COLOR_RED.x, Window.COLOR_RED.y, Window.COLOR_RED.z), 0);
+				}
+//					gc.drawLine(nx1, ny1, nx2, ny1);
+
+				boolean theCondition2 = (y >= mazeh) ? false : ((x < mazew) ?
+						mazeConfig.hasWall(x, y, CardinalDirection.West) :
+						mazeConfig.hasWall((x - 1), y, CardinalDirection.East));
+
+//				gc.setColor(seencells.hasWall(x,y, CardinalDirection.West) ? Color.white : Color.gray);
+				if ((seencells.hasWall(x, y, CardinalDirection.West) || showMaze) && theCondition2) {
+					Condition4 = true;
+					stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
+					stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny2)));
+					stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny2 - Prefabs.STONEHEIGHT)));
+					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx1, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
+				}
+
+				if (Condition3 && Condition4) {
+//					lineTransforms.get(2).add(new Transform(new Vector2f(nx2 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
+				}
+
+				Condition3 = false;
+				Condition4 = false;
+			}
+		}
+
+//		if (showSolution) {
+//			draw_solution(gc, offx, offy, px, py) ;
+//		}
+	}
+
+	/**
+	 * Helper method for redraw, called if map_mode is true, i.e. the users wants to see the overall map.
+	 * The map is drawn only on a small rectangle inside the maze area such that only a part of the map is actually shown.
+	 * Of course a part covering the current location needs to be displayed.
+	 */
+	public void generateGraphicMaze(int px, int py, int walk_step, int view_dx, int view_dy, boolean showMaze, boolean showSolution) {
+		// dimensions of the maze
+		final int mazew = mazeConfig.getWidth() ;
+		final int mazeh = mazeConfig.getHeight() ;
+		final int map_scale = 1;
 
 		// determine offsets for x and y
 		int vx = px*map_unit+map_unit/2;
@@ -116,6 +215,8 @@ public class MapDrawer {
 		vy += viewd_unscale(view_dy*(step_size*walk_step));
 		int offx = -vx*map_scale/map_unit + view_width/2;
 		int offy = -vy*map_scale/map_unit + view_height/2;
+		offx = 0;
+		offy = 0;
 
 		// compute minimum for x,y
 		int xmin = -offx/map_scale;
@@ -138,20 +239,20 @@ public class MapDrawer {
 				int ny2 = ny1 - map_scale;
 				boolean theCondition = (x >= mazew) ? false : ((y < mazeh) ?
 						mazeConfig.hasWall(x,y, CardinalDirection.North) :
-							mazeConfig.hasWall(x,y-1, CardinalDirection.South));
+						mazeConfig.hasWall(x,y-1, CardinalDirection.South));
 
 //				gc.setColor(seencells.hasWall(x,y, CardinalDirection.North) ? Color.white : Color.gray);
 				if ((seencells.hasWall(x,y, CardinalDirection.North) || showMaze) && theCondition)
-					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx2, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
+					//DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx2, ny1), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
 //					gc.drawLine(nx1, ny1, nx2, ny1);
 
 				theCondition = (y >= mazeh) ? false : ((x < mazew) ?
 						mazeConfig.hasWall(x,y, CardinalDirection.West) :
-							mazeConfig.hasWall((x-1),y, CardinalDirection.East));
+						mazeConfig.hasWall((x-1),y, CardinalDirection.East));
 
 //				gc.setColor(seencells.hasWall(x,y, CardinalDirection.West) ? Color.white : Color.gray);
-				if ((seencells.hasWall(x,y, CardinalDirection.West) || showMaze) && theCondition)
-					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx2, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
+				if ((seencells.hasWall(x,y, CardinalDirection.West) || showMaze) && theCondition) {}
+//					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx1, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
 //					gc.drawLine(nx1, ny1, nx1, ny2);
 			}
 
@@ -159,6 +260,7 @@ public class MapDrawer {
 //			draw_solution(gc, offx, offy, px, py) ;
 //		}
 	}
+
 	/**
 	 * Draws an oval red shape with and arrow for the current position and direction on the maze.
 	 * It always reside on the center of the screen. The map drawing moves if the user changes location.

@@ -107,6 +107,10 @@ public abstract class Scene {
     renderer.render();
   }
 
+  public void cleanUp() {
+    renderer.cleanUp();
+  }
+
 //  public void importLevel(String filename) {
 //    if (gameObjects.size() > 0) {
 //      objsToAdd.clear();

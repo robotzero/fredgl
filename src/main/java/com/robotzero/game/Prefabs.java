@@ -3,6 +3,7 @@ package com.robotzero.game;
 import com.robotzero.dataStructure.AssetPool;
 import com.robotzero.dataStructure.MapAsset;
 import com.robotzero.dataStructure.Transform;
+import com.robotzero.dataStructure.maze.MapDrawer;
 import com.robotzero.engine.Animation;
 import com.robotzero.engine.AnimationMachine;
 import com.robotzero.engine.BoxBounds;
@@ -61,13 +62,13 @@ public class Prefabs {
     fredAnimation.addAnimation(jumpOnTheLine);
 
     RigidBody rigidBody = new RigidBody();
-    BoxBounds boxBounds = new BoxBounds(20, 28, false, true);
+    BoxBounds boxBounds = new BoxBounds(26, 26, false, true);
     boxBounds.setYBuffer(2);
     FredController fredController = new FredController();
 
     //Transform transform = new Transform(new Vector2f(650, 300.0f));
-    Transform transform = new Transform(new Vector2f(130f, 32f));
-    transform.scale = new Vector2f(28f, 28f);
+    Transform transform = new Transform(new Vector2f(130f, Prefabs.STONEHEIGHT));
+    transform.scale = new Vector2f(26f, 26f);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
     walk.setGameObject(gameObject);
@@ -121,9 +122,53 @@ public class Prefabs {
     }).collect(Collectors.toList());
   }
 
+  public static List<GameObject> STONES_MAP_DRAWER() {
+    final Random randomGen = new Random();
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    return MapDrawer.stoneTransforms.stream().map(transform -> {
+      GameObject stone = new GameObject(String.format("Stone_Block_Prefab_%s", transform.toString()), transform, 0);
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(randomGen.nextInt(3)), stone);
+      BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, true, false);
+      spriteRenderer.setGameObject(stone);
+      boxBounds.setGameObject(stone);
+      stone.addComponent(spriteRenderer);
+      stone.addComponent(boxBounds);
+
+      stone.getTransform().scale.x = STONEWIDTH;
+      stone.getTransform().scale.y = STONEHEIGHT;
+
+      return stone;
+    }).collect(Collectors.toList());
+  }
+
   public static List<GameObject> LINES(MapAsset map) {
     Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/line.png")).orElseThrow();
     return map.getLineTransforms().entrySet().stream().flatMap(entrySet -> {
+      int mappedAsciCode = entrySet.getKey();
+      List<Transform> transforms = entrySet.getValue();
+      return transforms.stream().map(transform -> {
+        GameObject line = new GameObject(String.format("Line_Block_Prefab_%s", transform.toString()), transform, 0);
+        SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(mappedAsciCode), line);
+        BoxBounds boxBounds = new BoxBounds(2, 39, false, true);
+        Line lineComponent = new Line();
+        lineComponent.setGameObject(line);
+        spriteRenderer.setGameObject(line);
+        boxBounds.setGameObject(line);
+        line.addComponent(spriteRenderer);
+        line.addComponent(boxBounds);
+        line.addComponent(lineComponent);
+
+        line.getTransform().scale.x = LINEWIDTH;
+        line.getTransform().scale.y = STONEHEIGHT;
+
+        return line;
+      });
+    }).collect(Collectors.toList());
+  }
+
+  public static List<GameObject> LINES_MAP_DRAWER() {
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/line.png")).orElseThrow();
+    return MapDrawer.lineTransforms.entrySet().stream().flatMap(entrySet -> {
       int mappedAsciCode = entrySet.getKey();
       List<Transform> transforms = entrySet.getValue();
       return transforms.stream().map(transform -> {

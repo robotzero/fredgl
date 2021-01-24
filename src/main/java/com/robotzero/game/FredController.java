@@ -122,16 +122,11 @@ public class FredController implements Component {
     }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
-      boolean turnAroundOnly = false;
       if (gameObject.getTransform().scale.x < 0) {
-        turnAroundOnly = true;
         gameObject.getTransform().scale.x *= -1;
-        return;
       }
       if (!onTheLine && !jumpingOn) {
-        if (!turnAroundOnly) {
-          this.rigidBody.acceleration.x = runSpeed;
-        }
+        this.rigidBody.acceleration.x = runSpeed;
       } else if (onTheLine && !jumpingOn) {
 //        if (gameObject.getTransform().scale.x < 0) {
           this.rigidBody.acceleration.x = -runSpeed;
@@ -149,23 +144,18 @@ public class FredController implements Component {
 //        machine.trigger("StartJumpOn");
 //        return;
 //      }
-      if (onGround && !turnAroundOnly) {
+      if (onGround) {
         machine.trigger("StartWalking");
         this.jumping = false;
         this.jumpingOff = false;
         this.jumpingOn = false;
       }
     } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
-      boolean turnAroundOnly = false;
       if (gameObject.getTransform().scale.x > 0) {
-        turnAroundOnly = true;
         gameObject.getTransform().scale.x *= -1;
-        return;
       }
       if (!onTheLine && !jumpingOn) {
-        if (!turnAroundOnly) {
-          this.rigidBody.acceleration.x = -runSpeed;
-        }
+        this.rigidBody.acceleration.x = -runSpeed;
       } else {
 //        if (gameObject.getTransform().scale.x > 0) {
           this.rigidBody.acceleration.x = runSpeed;
@@ -179,7 +169,7 @@ public class FredController implements Component {
 //        }
       }
 
-      if (onGround && !turnAroundOnly) {
+      if (onGround) {
         machine.trigger("StartWalking");
         this.jumping = false;
         jumpingOff = false;
