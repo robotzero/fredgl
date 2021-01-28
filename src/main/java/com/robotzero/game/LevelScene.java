@@ -82,27 +82,27 @@ public class LevelScene extends Scene {
       lineBlock.start();
     });
 
-//    List<GameObject> jumpboards = Prefabs.JUMPBOARDS(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
-//    jumpboards.forEach(jumpBoard -> {
-//      BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
+    List<GameObject> jumpboards = Prefabs.JUMPBOARDS_MAP_DRAWER();
+    jumpboards.forEach(jumpBoard -> {
+      BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
 
-//      DebugDraw.addBox2D(
-//          new Vector2f(
-//              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-//              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-//          ),
-//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-//          0,
-//          new Vector3f(1f, 0f, 0f),
-//          0
-//      );
+      DebugDraw.addBox2D(
+          new Vector2f(
+              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+          ),
+          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+          0,
+          new Vector3f(1f, 0f, 0f),
+          0
+      );
 
-//      gameObjects.add(jumpBoard);
-//      renderer.add(jumpBoard);
-//      physics.addGameObject(jumpBoard);
-//      worldPartition.put(jumpBoard.getGridCoords(), jumpBoard);
-//      jumpBoard.start();
-//    });
+      gameObjects.add(jumpBoard);
+      renderer.add(jumpBoard);
+      physics.addGameObject(jumpBoard);
+      worldPartition.put(jumpBoard.getGridCoords(), jumpBoard);
+      jumpBoard.start();
+    });
 
     gameObjects.add(fredGameObject);
     renderer.add(fredGameObject);

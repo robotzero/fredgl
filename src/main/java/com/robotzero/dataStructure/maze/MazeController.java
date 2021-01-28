@@ -109,7 +109,7 @@ public class MazeController implements Order {
 		factory = new MazeFactory() ;
 		filename = null;
 		setPerfect(true);
-		setSkillLevel(5);
+		setSkillLevel(1);
 		factory.order(this);
 		//mazeConfig
 		factory.waitTillDelivered();

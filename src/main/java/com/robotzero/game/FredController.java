@@ -59,6 +59,12 @@ public class FredController implements Component {
       this.camera.position().x = this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X;
     }
 
+    if (this.camera.position().y < this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3) {
+      this.camera.position().y = this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
+    } else {
+      this.camera.position().y = this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
+    }
+
     if (KeyListener.isKeyPressed(GLFW_KEY_P)) {
       if (!(runSpeed == 100 * 4f)) {
         runSpeed = runSpeed * 4f;

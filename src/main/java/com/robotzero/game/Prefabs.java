@@ -211,4 +211,25 @@ public class Prefabs {
       return jumpBoard;
     }).collect(Collectors.toList());
   }
+
+  public static List<GameObject> JUMPBOARDS_MAP_DRAWER() {
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    return MapDrawer.jumpBoards.stream().map(transform -> {
+      GameObject jumpBoard = new GameObject(String.format("JumpBoard_Block_Prefab_%s", transform.toString()), transform, 0);
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(0), jumpBoard);
+      spriteRenderer.color.x = 1f;
+      spriteRenderer.color.y = 0.6f;
+      spriteRenderer.color.z = 1.0f;
+      BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, false, true);
+      spriteRenderer.setGameObject(jumpBoard);
+      boxBounds.setGameObject(jumpBoard);
+//      jumpBoard.addComponent(spriteRenderer);
+      jumpBoard.addComponent(boxBounds);
+
+      jumpBoard.getTransform().scale.x = STONEWIDTH;
+      jumpBoard.getTransform().scale.y = STONEHEIGHT;
+
+      return jumpBoard;
+    }).collect(Collectors.toList());
+  }
 }

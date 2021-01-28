@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class encapsulates all functionality to draw a map of the overall maze, the set of visible walls, the solution.
@@ -38,6 +39,7 @@ public class MapDrawer {
 	int map_scale = 10 ;
 	int step_size = map_unit/4;
 	public static List<Transform> stoneTransforms;
+	public static List<Transform> jumpBoards;
 	public static Map<Integer, List<Transform>> lineTransforms = new HashMap<>();
 	Cells seencells ;
 
@@ -147,9 +149,8 @@ public class MapDrawer {
 		if (xmax >= mazew) xmax = mazew;
 		if (ymax >= mazeh) ymax = mazeh;
 		stoneTransforms = new ArrayList<>();
+		jumpBoards = new ArrayList<>();
 		// iterate over integer grid between min and max of x,y
-		boolean Condition3 = false;
-		boolean Condition4 = false;
 		for (int y = ymin; y <= ymax; y++) {
 			for (int x = xmin; x <= xmax; x++) {
 				int nx1 = x * map_scale_width + offx;
@@ -160,13 +161,59 @@ public class MapDrawer {
 						mazeConfig.hasWall(x, y, CardinalDirection.North) :
 						mazeConfig.hasWall(x, y - 1, CardinalDirection.South));
 
+				if (x < mazew && y > 0 && y < mazeh && mazeConfig.hasWall(x, y - 1, CardinalDirection.North) && !mazeConfig.hasWall(x, y, CardinalDirection.North)) {
+					final var t = new Transform(new Vector2f(nx1 + offset, ny1));
+					final var j = new Transform(new Vector2f(nx1, ny1));
+					if (!lineTransforms.get(2).contains(t)) {
+						lineTransforms.get(2).add(t);
+					}
+					if (!jumpBoards.contains(j)) {
+						jumpBoards.add(j);
+					}
+					int y2 = y + 1;
+					while (y2 < mazeh && !mazeConfig.hasWall(x, y2, CardinalDirection.North)) {
+						int ny11 = view_height - 0 - (y2 * map_scale_height + offy);
+						int ny12 = view_height - 0 - (y2 * map_scale_height + offy) - Prefabs.STONEHEIGHT;
+						int ny13 = view_height - 0 - (y2 * map_scale_height + offy) + Prefabs.STONEHEIGHT;
+						final var t2 = new Transform(new Vector2f(nx1 + offset, ny11));
+						final var t3 = new Transform(new Vector2f(nx1 + offset, ny12));
+						final var t4 = new Transform(new Vector2f(nx1 + offset, ny13));
+						if (!lineTransforms.get(1).contains(t2)) {
+							lineTransforms.get(1).add(t2);
+						}
+						if (!lineTransforms.get(1).contains(t3)) {
+							lineTransforms.get(1).add(t3);
+						}
+						if (!lineTransforms.get(1).contains(t4)) {
+							lineTransforms.get(1).add(t4);
+						}
+						y2 = y2 + 1;
+					}
+					int ny14 = view_height - 0 - (y2 * map_scale_height + offy);
+					final var t4 = new Transform(new Vector2f(nx1 + offset, ny14));
+					if (!lineTransforms.get(0).contains(t4)) {
+						lineTransforms.get(0).add(t4);
+					}
+
+					int ny15 = view_height - 0 - (y2 * map_scale_height + offy) + Prefabs.STONEHEIGHT;
+					final var t5 = new Transform(new Vector2f(nx1 + offset, ny15));
+					if (!lineTransforms.get(1).contains(t5)) {
+						lineTransforms.get(1).add(t5);
+					}
+				}
 //				gc.setColor(seencells.hasWall(x,y, CardinalDirection.North) ? Color.white : Color.gray);
 				if ((seencells.hasWall(x, y, CardinalDirection.North) || showMaze) && theCondition1) {
-					Condition3 = true;
-					stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
-					stoneTransforms.add(new Transform(new Vector2f(nx1, ny1 - Prefabs.STONEHEIGHT)));
-					stoneTransforms.add(new Transform(new Vector2f(nx2 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
-					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx2, ny1), new Vector3f(Window.COLOR_RED.x, Window.COLOR_RED.y, Window.COLOR_RED.z), 0);
+					if (!stoneTransforms.contains(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)))) {
+						stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
+					}
+					if (!stoneTransforms.contains(new Transform(new Vector2f(nx1, ny1 - Prefabs.STONEHEIGHT)))) {
+						stoneTransforms.add(new Transform(new Vector2f(nx1, ny1 - Prefabs.STONEHEIGHT)));
+					}
+
+					if (!stoneTransforms.contains(new Transform(new Vector2f(nx2 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)))) {
+						stoneTransforms.add(new Transform(new Vector2f(nx2 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
+					}
+//					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx2, ny1), new Vector3f(Window.COLOR_RED.x, Window.COLOR_RED.y, Window.COLOR_RED.z), 0);
 				}
 //					gc.drawLine(nx1, ny1, nx2, ny1);
 
@@ -176,22 +223,19 @@ public class MapDrawer {
 
 //				gc.setColor(seencells.hasWall(x,y, CardinalDirection.West) ? Color.white : Color.gray);
 				if ((seencells.hasWall(x, y, CardinalDirection.West) || showMaze) && theCondition2) {
-					Condition4 = true;
-					stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
-					stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny2)));
-					stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny2 - Prefabs.STONEHEIGHT)));
-					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx1, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
+					if (!stoneTransforms.contains(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)))) {
+						stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
+					}
+					if (!stoneTransforms.contains(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny2)))) {
+						stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny2)));
+					}
+					if (!stoneTransforms.contains(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny2 - Prefabs.STONEHEIGHT)))) {
+						stoneTransforms.add(new Transform(new Vector2f(nx1 - Prefabs.STONEWIDTH, ny2 - Prefabs.STONEHEIGHT)));
+					}
+//					DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx1, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
 				}
-
-				if (Condition3 && Condition4) {
-//					lineTransforms.get(2).add(new Transform(new Vector2f(nx2 - Prefabs.STONEWIDTH, ny1 - Prefabs.STONEHEIGHT)));
-				}
-
-				Condition3 = false;
-				Condition4 = false;
 			}
 		}
-
 //		if (showSolution) {
 //			draw_solution(gc, offx, offy, px, py) ;
 //		}
