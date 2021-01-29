@@ -146,52 +146,37 @@ public class FredController implements Component {
       }
     }
 
-    if ((KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) && !(jumpingUp || jumpingDown)) {
+    if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D) && !jumpingUp && !jumpingDown) {
       if (gameObject.getTransform().scale.x < 0) {
         gameObject.getTransform().scale.x *= -1;
       }
       if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = runSpeed;
       } else if (onTheLine && !jumpingOn) {
-//        if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -runSpeed;
-          this.rigidBody.acceleration.y = 0;
-          machine.trigger("StartJumpOff");
-          jumpingOff = true;
-          return;
-//        } else {
-//          gameObject.getTransform().scale.x *= -1;
-//        }
+        this.rigidBody.acceleration.x = -runSpeed;
+        this.rigidBody.acceleration.y = 0;
+        machine.trigger("StartJumpOff");
+        jumpingOff = true;
+        return;
       }
-//      else {
-//        this.rigidBody.acceleration.x = 900;
-//        this.rigidBody.acceleration.y = 0;
-//        machine.trigger("StartJumpOn");
-//        return;
-//      }
       if (onGround) {
         machine.trigger("StartWalking");
         this.jumpingUp = false;
         this.jumpingOff = false;
         this.jumpingOn = false;
       }
-    } else if ((KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) && !(jumpingUp || jumpingDown)) {
+    } else if ((KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) && !jumpingUp && !jumpingDown) {
       if (gameObject.getTransform().scale.x > 0) {
         gameObject.getTransform().scale.x *= -1;
       }
       if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = -runSpeed;
-      } else {
-//        if (gameObject.getTransform().scale.x > 0) {
-          this.rigidBody.acceleration.x = runSpeed;
-          this.rigidBody.acceleration.y = 0;
-          onGround = false;
-          machine.trigger("StartJumpOff");
-          jumpingOff = true;
-          return;
-//        } else {
-//          gameObject.getTransform().scale.x *= -1;
-//        }
+      } else if (onTheLine && !jumpingOn) {
+        this.rigidBody.acceleration.x = runSpeed;
+        this.rigidBody.acceleration.y = 0;
+        machine.trigger("StartJumpOff");
+        jumpingOff = true;
+        return;
       }
 
       if (onGround) {
