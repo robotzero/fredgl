@@ -23,10 +23,6 @@ public class MazeContainer implements MazeConfiguration {
 	/**
 	 *
 	 */
-	public MazeContainer() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public void setWidth(int width) {
 		this.width = width;
 	}

@@ -187,6 +187,21 @@ public class MapDrawer {
 						if (!lineTransforms.get(1).contains(t4)) {
 							lineTransforms.get(1).add(t4);
 						}
+						if (!mazeConfig.hasWall(x, y2, CardinalDirection.West)) {
+							final var j1 = new Transform(new Vector2f(nx1, ny11));
+							if (!jumpBoards.contains(j1)) {
+								jumpBoards.add(j1);
+							}
+//							DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx1, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
+						}
+
+						if (!mazeConfig.hasWall(x, y2, CardinalDirection.East)) {
+							final var j1 = new Transform(new Vector2f(nx1, ny11));
+							if (!jumpBoards.contains(j1)) {
+								jumpBoards.add(j1);
+							}
+//							DebugDraw.addLine2D(new Vector2f(nx1, ny1), new Vector2f(nx1, ny2), new Vector3f(Window.COLOR_BLUE.x, Window.COLOR_BLUE.y, Window.COLOR_BLUE.z), 0);
+						}
 						y2 = y2 + 1;
 					}
 					int ny14 = view_height - 0 - (y2 * map_scale_height + offy);

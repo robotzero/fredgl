@@ -10,7 +10,6 @@ import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.GameObject;
 import com.robotzero.engine.Line;
 import com.robotzero.engine.RigidBody;
-import com.robotzero.engine.Sprite;
 import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.engine.Spritesheet;
 import org.joml.Vector2f;
@@ -26,8 +25,9 @@ public class Prefabs {
   public static final int STONEHEIGHT = 40;
 
   public static GameObject FRED_PREFAB() {
+    Spritesheet idle_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_idle.png")).orElseThrow();
+    Animation idle = new Animation("Idle", 0.1f, idle_spritesheet.sprites.subList(0, 1), false);
     Spritesheet walk_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_walking_sheet.png")).orElseThrow();
-    Animation idle = new Animation("Idle", 0.1f, walk_spritesheet.sprites.subList(0, 1), false);
     Animation walk = new Animation("Walk", 0.1f, walk_spritesheet.sprites.subList(1, 11), true);
     Spritesheet jump_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_jump_sheet.png")).orElseThrow();
     Animation jump = new Animation("Jump", 1f, jump_spritesheet.sprites.subList(0, 1), false);

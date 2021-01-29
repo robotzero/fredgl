@@ -20,7 +20,7 @@ public class Window {
   public static final int CAMERA_OFFSET_X = (32 * 32) / 2;
   public static final int CAMERA_OFFSET_Y_1 = 0;
   public static final int CAMERA_OFFSET_Y_2 = 0 - (32 * 21);
-  public static final int CAMERA_OFFSET_Y_3 = 0;
+  public static final int CAMERA_OFFSET_Y_3 = (32 * 21) / 2 ;
 
   public static final Vector4f BG_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 0.5f);
   public static final Vector4f TITLE_BG_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);

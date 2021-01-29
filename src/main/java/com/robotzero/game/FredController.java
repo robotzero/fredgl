@@ -39,9 +39,10 @@ public class FredController implements Component {
   private Camera camera;
 
   private float runSpeed = 100;
-  private float jumpSpeed = 20;
+  private float jumpSpeed = 15;
   private boolean onTheLine;
-  private boolean jumping = false;
+  private boolean jumpingUp = false;
+  private boolean jumpingDown = false;
   private int currentRunSpeed = 0;
 
   @Override
@@ -61,8 +62,10 @@ public class FredController implements Component {
 
     if (this.camera.position().y < this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3) {
       this.camera.position().y = this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
-    } else {
-      this.camera.position().y = this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
+    } else if (this.camera.position().y > com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 - this.gameObject.getTransform().position.y) {
+      if (this.camera.position().y > com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 - this.gameObject.getTransform().position.y) {
+        this.camera.position().y = this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
+      }
     }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_P)) {
@@ -77,9 +80,9 @@ public class FredController implements Component {
     if (jumpingOff && onTheLine) {
       if (animTime > 0) {
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -runSpeed;
+          this.rigidBody.acceleration.x = -80;
         } else {
-          this.rigidBody.acceleration.x = runSpeed;
+          this.rigidBody.acceleration.x = 80;
         }
         animTime -= dt;
         return;
@@ -92,17 +95,33 @@ public class FredController implements Component {
       }
     }
 
-    if (jumping) {
+    if (jumpingUp) {
       if (animTime > 0) {
         this.onGround = false;
         animTime -= dt;
         return;
       } else {
         animTime = time;
-        jumping = false;
+        jumpingUp = false;
+        this.onGround = false;
+        this.rigidBody.acceleration.y = 0;
+        this.jumpingDown = true;
+      }
+    }
+
+    if (jumpingDown) {
+      if (animTime > 0) {
+        this.onGround = false;
+        animTime -= dt;
+        this.rigidBody.acceleration.y = -jumpSpeed;
+        return;
+      } else {
+        animTime = time;
+        jumpingUp = false;
         this.onGround = true;
         this.rigidBody.acceleration.y = 0;
         this.rigidBody.gravity = -550;
+        this.jumpingDown = false;
       }
     }
 
@@ -110,11 +129,11 @@ public class FredController implements Component {
       if (animTime > 0) {
         this.onGround = false;
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -50;
+          this.rigidBody.acceleration.x = -60;
         } else {
-          this.rigidBody.acceleration.x = 50;
+          this.rigidBody.acceleration.x = 60;
         }
-        this.rigidBody.acceleration.y = 15;
+        this.rigidBody.acceleration.y = 27;
         animTime -= dt;
         return;
       } else {
@@ -127,7 +146,7 @@ public class FredController implements Component {
       }
     }
 
-    if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
+    if ((KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) && !(jumpingUp || jumpingDown)) {
       if (gameObject.getTransform().scale.x < 0) {
         gameObject.getTransform().scale.x *= -1;
       }
@@ -152,11 +171,11 @@ public class FredController implements Component {
 //      }
       if (onGround) {
         machine.trigger("StartWalking");
-        this.jumping = false;
+        this.jumpingUp = false;
         this.jumpingOff = false;
         this.jumpingOn = false;
       }
-    } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) {
+    } else if ((KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) && !(jumpingUp || jumpingDown)) {
       if (gameObject.getTransform().scale.x > 0) {
         gameObject.getTransform().scale.x *= -1;
       }
@@ -177,14 +196,14 @@ public class FredController implements Component {
 
       if (onGround) {
         machine.trigger("StartWalking");
-        this.jumping = false;
+        this.jumpingUp = false;
         jumpingOff = false;
         this.jumpingOn = false;
       }
     } else if (onGround) {
       this.rigidBody.acceleration.x = 0;
       machine.trigger("StartIdling");
-      this.jumping = false;
+      this.jumpingUp = false;
       this.jumpingOff = false;
       this.jumpingOn = false;
     }
@@ -199,7 +218,7 @@ public class FredController implements Component {
         this.rigidBody.gravity = 0;
         machine.trigger("StartClimbing");
       } else {
-        this.jumping = true;
+        this.jumpingUp = true;
         this.rigidBody.acceleration.y = jumpSpeed;
         machine.trigger("StartJumping");
       }
