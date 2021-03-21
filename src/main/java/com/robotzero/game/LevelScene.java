@@ -122,14 +122,15 @@ public class LevelScene extends Scene {
     AssetPool.addSpritesheet("assets/spritesheets/icons.png", 32, 32, 0, 7, 15);
     AssetPool.addSpritesheet("assets/spritesheets/turtle.png", 16, 24, 0, 4, 4);
     AssetPool.addSpritesheet("assets/spritesheets/fred_walking_sheet.png", 32, 32, 0, 11, 11);
-    AssetPool.addSpritesheet("assets/spritesheets/stone_sheet.png", 31, 39, 0, 3, 3);
+//    AssetPool.addSpritesheet("assets/spritesheets/stone_sheet.png", 31, 39, 0, 3, 3);
+    AssetPool.addSpritesheet("assets/spritesheets/stones_sprites_better.png", 32, 40, 0, 8, 8);
     AssetPool.addSpritesheet("assets/spritesheets/fred_jump_sheet.png", 32, 32, 0, 2, 2);
     AssetPool.addSpritesheet("assets/spritesheets/fred_climb.png", 32, 32, 0, 1, 1);
     AssetPool.addSpritesheet("assets/spritesheets/fred_idle.png", 32, 32, 0, 1, 1);
     AssetPool.addMap("assets/maps/map.txt");
     // Engine Assets
     AssetPool.addSpritesheet("assets/spritesheets/defaultAssets.png", 24, 21, 0, 2, 2);
-    AssetPool.addSpritesheet("assets/spritesheets/line.png", 7, 39, 0, 3, 3);
+    AssetPool.addSpritesheet("assets/spritesheets/line.png", 7, 40, 0, 3, 3);
 
     // Sounds
 //    AssetPool.addSound("assets/sounds/main-theme-overworld.ogg", true);
@@ -152,7 +153,7 @@ public class LevelScene extends Scene {
   @Override
   public void update(double dt) {
     for (GameObject go : gameObjects) {
-      if (go.getComponent(FredController.class) != null || go.getTransform().position.x > this.camera.position().x && go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x + 32.0f * 40f + 128) {
+      if (go.getComponent(FredController.class) != null || go.getTransform().position.x > this.camera.position().x && go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x + com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH + 128) {
         go.update(dt);
         Optional.ofNullable(go.getComponent(FredController.class)).ifPresent(_notUsed -> {
           BoxBounds fredBoxBounds = go.getComponent(BoxBounds.class);
@@ -166,7 +167,7 @@ public class LevelScene extends Scene {
               new Vector3f(1f, 0f, 0f)
           );
         });
-      } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_2) {
+      } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3) {
         //deleteGameObject(go);
       }
     }

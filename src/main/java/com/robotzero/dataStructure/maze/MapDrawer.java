@@ -163,7 +163,7 @@ public class MapDrawer {
 
 				if (x < mazew && y > 0 && y < mazeh && mazeConfig.hasWall(x, y - 1, CardinalDirection.North) && !mazeConfig.hasWall(x, y, CardinalDirection.North)) {
 					final var t = new Transform(new Vector2f(nx1 + offset, ny1));
-					final var j = new Transform(new Vector2f(nx1, ny1));
+					final var j = new Transform(new Vector2f(nx1 + 3, ny1));
 					if (!lineTransforms.get(2).contains(t)) {
 						lineTransforms.get(2).add(t);
 					}
@@ -188,7 +188,7 @@ public class MapDrawer {
 							lineTransforms.get(1).add(t4);
 						}
 						if (!mazeConfig.hasWall(x, y2, CardinalDirection.West)) {
-							final var j1 = new Transform(new Vector2f(nx1, ny11));
+							final var j1 = new Transform(new Vector2f(nx1 + 3, ny11));
 							if (!jumpBoards.contains(j1)) {
 								jumpBoards.add(j1);
 							}
@@ -196,7 +196,7 @@ public class MapDrawer {
 						}
 
 						if (!mazeConfig.hasWall(x, y2, CardinalDirection.East)) {
-							final var j1 = new Transform(new Vector2f(nx1, ny11));
+							final var j1 = new Transform(new Vector2f(nx1 + 3, ny11));
 							if (!jumpBoards.contains(j1)) {
 								jumpBoards.add(j1);
 							}

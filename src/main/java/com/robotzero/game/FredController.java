@@ -1,7 +1,6 @@
 package com.robotzero.game;
 
 import com.robotzero.engine.AnimationMachine;
-import com.robotzero.engine.Bounds;
 import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.Collision;
 import com.robotzero.engine.Component;
@@ -26,7 +25,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 public class FredController implements Component {
   private final List<Integer> walkingKeys = List.of(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_RIGHT, GLFW_KEY_LEFT);
-  private final static float time = 0.4f;
+  private final static float time = 0.6f;
+  private final static int jumpHeight = (int) (Prefabs.STONEHEIGHT * 0.15);
   private AnimationMachine machine = null;
   private GameObject gameObject = null;
   private RigidBody rigidBody;
@@ -73,21 +73,22 @@ public class FredController implements Component {
         runSpeed = runSpeed * 4f;
       }
     } else {
-      runSpeed = 100;
+      runSpeed = this.runSpeed;
     }
 
     rigidBody.gravity = 0;
     if (jumpingOff && onTheLine) {
       if (animTime > 0) {
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -80;
+          this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f - 4;
         } else {
-          this.rigidBody.acceleration.x = 80;
+          this.rigidBody.acceleration.x = Prefabs.STONEWIDTH * 1.5f + 4;
         }
         animTime -= dt;
         return;
       } else {
-        this.rigidBody.gravity = -1250;
+        this.rigidBody.velocity.y = -jumpHeight * 2 * 2;
+        this.rigidBody.velocity.x = 0;
         animTime = time;
         jumpingOff = false;
         this.onTheLine = false;
@@ -105,35 +106,28 @@ public class FredController implements Component {
         jumpingUp = false;
         this.onGround = false;
         this.rigidBody.acceleration.y = 0;
+        this.rigidBody.acceleration.x = 0;
         this.jumpingDown = true;
       }
     }
 
     if (jumpingDown) {
-      if (animTime > 0) {
-        this.onGround = false;
-        animTime -= dt;
-        this.rigidBody.acceleration.y = -jumpSpeed;
-        return;
-      } else {
-        animTime = time;
-        jumpingUp = false;
-        this.onGround = true;
-        this.rigidBody.acceleration.y = 0;
-        this.rigidBody.gravity = -550;
-        this.jumpingDown = false;
-      }
+      animTime = time;
+      jumpingUp = false;
+      this.onGround = true;
+      this.rigidBody.velocity.y = -jumpHeight;
+      this.jumpingDown = false;
     }
 
     if (jumpingOn) {
       if (animTime > 0) {
         this.onGround = false;
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -60;
+          this.rigidBody.acceleration.x = -(Prefabs.STONEWIDTH + (int) (Prefabs.STONEWIDTH * 0.5));
         } else {
-          this.rigidBody.acceleration.x = 60;
+          this.rigidBody.acceleration.x = Prefabs.STONEWIDTH + (int) (Prefabs.STONEWIDTH * 0.5);
         }
-        this.rigidBody.acceleration.y = 27;
+        this.rigidBody.acceleration.y = jumpHeight;
         animTime -= dt;
         return;
       } else {
@@ -198,13 +192,16 @@ public class FredController implements Component {
       onGround = false;
       this.rigidBody.acceleration.x = 0;
       if (collisionWithTheLine) {
-        this.rigidBody.acceleration.y = 200;
+        this.rigidBody.acceleration.y = 0;
+        this.rigidBody.velocity.y = jumpHeight;
         this.onTheLine = true;
         this.rigidBody.gravity = 0;
         machine.trigger("StartClimbing");
       } else {
         this.jumpingUp = true;
-        this.rigidBody.acceleration.y = jumpSpeed;
+        this.rigidBody.acceleration.y = 0;
+        this.rigidBody.gravity = 0;
+        this.rigidBody.velocity.y = jumpHeight;
         machine.trigger("StartJumping");
       }
     } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_W) && onTheLine && !onGround) {
@@ -243,8 +240,13 @@ public class FredController implements Component {
         return collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT;
       }).ifPresent(collision -> {
         if (isOnGround()) {
-          this.jumpingOn = true;
-          this.machine.trigger("StartJumpOn");
+          if (this.gameObject.getTransform().scale.x > 0 && collision.side == Collision.CollisionSide.RIGHT) {
+            this.jumpingOn = true;
+            this.machine.trigger("StartJumpOn");
+          } else if (this.gameObject.getTransform().scale.x < 0 && collision.side == Collision.CollisionSide.LEFT) {
+            this.jumpingOn = true;
+            this.machine.trigger("StartJumpOn");
+          }
         }
       });
     }

@@ -28,9 +28,9 @@ public class Prefabs {
     Spritesheet idle_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_idle.png")).orElseThrow();
     Animation idle = new Animation("Idle", 0.1f, idle_spritesheet.sprites.subList(0, 1), false);
     Spritesheet walk_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_walking_sheet.png")).orElseThrow();
-    Animation walk = new Animation("Walk", 0.1f, walk_spritesheet.sprites.subList(1, 11), true);
+    Animation walk = new Animation("Walk", 0.1f, walk_spritesheet.sprites.subList(1, 10), true);
     Spritesheet jump_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_jump_sheet.png")).orElseThrow();
-    Animation jump = new Animation("Jump", 1f, jump_spritesheet.sprites.subList(0, 1), false);
+    Animation jump = new Animation("Jump", 0.6f, jump_spritesheet.sprites.subList(0, 1), false);
     Spritesheet climb_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_climb.png")).orElseThrow();
     Animation climb = new Animation("Climb", 0.6f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
 
@@ -62,13 +62,13 @@ public class Prefabs {
     fredAnimation.addAnimation(jumpOnTheLine);
 
     RigidBody rigidBody = new RigidBody();
-    BoxBounds boxBounds = new BoxBounds(26, 26, false, true);
-    boxBounds.setYBuffer(2);
+    BoxBounds boxBounds = new BoxBounds(32, 32, false, true);
+    //boxBounds.setYBuffer(2);
     FredController fredController = new FredController();
 
     //Transform transform = new Transform(new Vector2f(650, 300.0f));
     Transform transform = new Transform(new Vector2f(130f, Prefabs.STONEHEIGHT));
-    transform.scale = new Vector2f(26f, 26f);
+    transform.scale = new Vector2f(32f, 32f);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
     walk.setGameObject(gameObject);
@@ -124,10 +124,10 @@ public class Prefabs {
 
   public static List<GameObject> STONES_MAP_DRAWER() {
     final Random randomGen = new Random();
-    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stones_sprites_better.png")).orElseThrow();
     return MapDrawer.stoneTransforms.stream().map(transform -> {
       GameObject stone = new GameObject(String.format("Stone_Block_Prefab_%s", transform.toString()), transform, 0);
-      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(randomGen.nextInt(3)), stone);
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(randomGen.nextInt(8)), stone);
       BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, true, false);
       spriteRenderer.setGameObject(stone);
       boxBounds.setGameObject(stone);
@@ -174,7 +174,7 @@ public class Prefabs {
       return transforms.stream().map(transform -> {
         GameObject line = new GameObject(String.format("Line_Block_Prefab_%s", transform.toString()), transform, 0);
         SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(mappedAsciCode), line);
-        BoxBounds boxBounds = new BoxBounds(2, 39, false, true);
+        BoxBounds boxBounds = new BoxBounds(6, 40, false, true);
         Line lineComponent = new Line();
         lineComponent.setGameObject(line);
         spriteRenderer.setGameObject(line);
@@ -192,7 +192,7 @@ public class Prefabs {
   }
 
   public static List<GameObject> JUMPBOARDS(MapAsset map) {
-    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stones_sprites_better.png")).orElseThrow();
     return map.getJumpBoardTransforms().stream().map(transform -> {
       GameObject jumpBoard = new GameObject(String.format("JumpBoard_Block_Prefab_%s", transform.toString()), transform, 0);
       SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(0), jumpBoard);
@@ -213,14 +213,14 @@ public class Prefabs {
   }
 
   public static List<GameObject> JUMPBOARDS_MAP_DRAWER() {
-    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stones_sprites_better.png")).orElseThrow();
     return MapDrawer.jumpBoards.stream().map(transform -> {
       GameObject jumpBoard = new GameObject(String.format("JumpBoard_Block_Prefab_%s", transform.toString()), transform, 0);
       SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(0), jumpBoard);
       spriteRenderer.color.x = 1f;
       spriteRenderer.color.y = 0.6f;
       spriteRenderer.color.z = 1.0f;
-      BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, false, true);
+      BoxBounds boxBounds = new BoxBounds(STONEWIDTH - 6, STONEHEIGHT, false, true);
       spriteRenderer.setGameObject(jumpBoard);
       boxBounds.setGameObject(jumpBoard);
 //      jumpBoard.addComponent(spriteRenderer);
