@@ -34,7 +34,7 @@ public class Prefabs {
     Spritesheet climb_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_climb.png")).orElseThrow();
     Animation climb = new Animation("Climb", 0.6f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
 
-    Animation jumpOnTheLine = new Animation("JumpOn", 0.25f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
+    Animation jumpOnTheLine = new Animation("JumpOn", 0.6f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), climb_spritesheet.sprites.get(0)), false);
     Animation jumpOffTheLine = new Animation("JumpOff", 0.6f, List.of(jump_spritesheet.sprites.subList(0, 1).get(0), walk_spritesheet.sprites.subList(0, 1).get(0)), false);
 
     AnimationMachine fredAnimation = new AnimationMachine();

@@ -35,15 +35,19 @@ public class FredController implements Component {
   private float animTime = time;
   private boolean jumpingOff = false;
   private boolean jumpingOn = false;
+  private boolean canJumpOff = true;
+  private int lineOffsetPosition = 12;
+  private int jumpBoardPositionOffset = 3;
 
   private Camera camera;
 
   private float runSpeed = 100;
-  private float jumpSpeed = 15;
   private boolean onTheLine;
   private boolean jumpingUp = false;
   private boolean jumpingDown = false;
   private int currentRunSpeed = 0;
+  private float linePositionX = 0;
+  private float jumpBoardPositionX = 0;
 
   @Override
   public void start() {
@@ -137,6 +141,7 @@ public class FredController implements Component {
         this.onTheLine = true;
         this.rigidBody.acceleration.x = 0;
         this.rigidBody.acceleration.y = 0;
+        this.gameObject.getTransform().position.x = jumpBoardPositionX - jumpBoardPositionOffset;
       }
     }
 
@@ -165,7 +170,7 @@ public class FredController implements Component {
       }
       if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = -runSpeed;
-      } else if (onTheLine && !jumpingOn) {
+      } else if (onTheLine && !jumpingOn && canJumpOff) {
         this.rigidBody.acceleration.x = runSpeed;
         this.rigidBody.acceleration.y = 0;
         machine.trigger("StartJumpOff");
@@ -196,6 +201,7 @@ public class FredController implements Component {
         this.rigidBody.velocity.y = jumpHeight;
         this.onTheLine = true;
         this.rigidBody.gravity = 0;
+        this.gameObject.getTransform().position.x = linePositionX - lineOffsetPosition;
         machine.trigger("StartClimbing");
       } else {
         this.jumpingUp = true;
@@ -226,9 +232,12 @@ public class FredController implements Component {
 //      slidingDown = false;
 //      return;
 //    }
-    if (collision.side == Collision.CollisionSide.BOTTOM && !onTheLine && !jumpingOn) {
+    if (collision.side == Collision.CollisionSide.BOTTOM && collision.gameObject.getName().contains("Stone_Block_Prefab") && !onTheLine && !jumpingOn) {
       onGround = true;
     }
+//    } else if (collision.side == Collision.CollisionSide.TOP && collision.gameObject.getName().contains("Stone_Block_Prefab") && !canJumpOff) {
+//      canJumpOff = true;
+//    };
   }
 
   @Override
@@ -247,6 +256,7 @@ public class FredController implements Component {
             this.jumpingOn = true;
             this.machine.trigger("StartJumpOn");
           }
+          this.jumpBoardPositionX = trigger.gameObject.getTransform().position.x;
         }
       });
     }
@@ -272,5 +282,9 @@ public class FredController implements Component {
 
   public boolean isOnGround() {
     return this.onGround;
+  }
+
+  public void setCollisionObjectXPosition(float linePositionX) {
+    this.linePositionX = linePositionX;
   }
 }

@@ -20,6 +20,7 @@ public class Line implements Component {
         }).ifPresent(collision -> {
           this.trigger = trigger;
           fredController.setCollisionWithTheLine(true);
+          fredController.setCollisionObjectXPosition(this.gameObject.getTransform().position.x);
         });
       });
     }
@@ -36,6 +37,7 @@ public class Line implements Component {
         }).ifPresent(collision -> {
           this.trigger = null;
           fredController.setCollisionWithTheLine(false);
+          fredController.setCollisionObjectXPosition(0);
         });
       });
     }
