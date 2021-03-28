@@ -5,8 +5,8 @@ import org.joml.Vector4f;
 import java.awt.*;
 
 public class Window {
-  public static final int SCREEN_WIDTH = 480;
-  public static final int SCREEN_HEIGHT = 252;
+  public static final int SCREEN_WIDTH = 1280;
+  public static final int SCREEN_HEIGHT = 672;
   public static final String SCREEN_TITLE = "FredGL";
 
   public static final int TILE_WIDTH = 32;
@@ -16,7 +16,7 @@ public class Window {
   public static FontMetrics FONT_METRICS;
   public static String CURRENT_LEVEL = "Default";
   public static int Z_INDEX = 0;
-//  public static final int CAMERA_OFFSET_X = 32 * 12;
+  //public static final int CAMERA_OFFSET_X = 32 * 12;
   //public static final int CAMERA_OFFSET_X = (32 * 32) / 2;
   public static final int CAMERA_OFFSET_X = SCREEN_WIDTH / 2;
   public static final int CAMERA_OFFSET_Y_1 = 0;

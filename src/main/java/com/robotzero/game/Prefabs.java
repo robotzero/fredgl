@@ -23,6 +23,8 @@ public class Prefabs {
   public static final int LINEWIDTH = 7;
   public static final int STONEWIDTH = 32;
   public static final int STONEHEIGHT = 40;
+  public static final int FREDWIDTH = 32;
+  public static final int FREDHEIGHT = 32;
 
   public static GameObject FRED_PREFAB() {
     Spritesheet idle_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_idle.png")).orElseThrow();
@@ -68,7 +70,7 @@ public class Prefabs {
 
     //Transform transform = new Transform(new Vector2f(650, 300.0f));
     Transform transform = new Transform(new Vector2f(130f, Prefabs.STONEHEIGHT));
-    transform.scale = new Vector2f(32f, 32f);
+    transform.scale = new Vector2f(FREDWIDTH, FREDHEIGHT);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
     walk.setGameObject(gameObject);

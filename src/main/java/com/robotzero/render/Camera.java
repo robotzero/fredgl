@@ -10,6 +10,7 @@ public class Camera {
   private Matrix4f projectionMatrix, viewMatrix, inverseProjection;
   private float fov = 45;
   private float aspect = 0.0f;
+  private float zoomAspect = 0.5f;
 
   private Vector2f position;
   public Vector3f vec3Position;
@@ -38,8 +39,7 @@ public class Camera {
           0.1f, 100.0f);
     } else {
       projectionMatrix.identity();
-      //projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f, 0.0f, 100.0f);
-      projectionMatrix.ortho(0.0f, 480, 0.0f, 252, 0.0f, 100.0f);
+      projectionMatrix.ortho(0.0f, 32.0f * 40.0f * zoomAspect, 0.0f, 32.0f * 21.0f * zoomAspect, 0.0f, 100.0f);
       inverseProjection.identity();
       projectionMatrix.invert(inverseProjection);
     }
@@ -65,7 +65,7 @@ public class Camera {
     Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
     Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
     this.viewMatrix.identity();
-    this.viewMatrix = viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f), cameraFront.add(position.x, position.y, 0.0f), cameraUp);
+    this.viewMatrix = viewMatrix.lookAt(new Vector3f(position.x * zoomAspect, position.y * zoomAspect, 20.0f), cameraFront.add(position.x * zoomAspect, position.y * zoomAspect, 0.0f), cameraUp);
 
     return this.viewMatrix;
   }
@@ -81,5 +81,9 @@ public class Camera {
 
   public Matrix4f getProjectionMatrix() {
     return projectionMatrix;
+  }
+
+  public float getZoomAspect() {
+    return zoomAspect;
   }
 }

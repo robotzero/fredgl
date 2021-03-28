@@ -10,6 +10,7 @@ import com.robotzero.engine.Trigger;
 import com.robotzero.infrastructure.KeyListener;
 import com.robotzero.infrastructure.Window;
 import com.robotzero.render.Camera;
+import org.joml.Vector2f;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 public class FredController implements Component {
   private final List<Integer> walkingKeys = List.of(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_RIGHT, GLFW_KEY_LEFT);
+  // @TODO match the time frames ticks
   private final static float time = 0.6f;
   private final static int jumpHeight = (int) (Prefabs.STONEHEIGHT * 0.15);
   private AnimationMachine machine = null;
@@ -58,16 +60,16 @@ public class FredController implements Component {
 
   @Override
   public void update(double dt) {
-    if (this.camera.position().x < this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X) {
-      this.camera.position().x = this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X;
+    if (this.camera.position().x < this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X * camera.getZoomAspect())) {
+      this.camera.position().x = this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X * camera.getZoomAspect());
     } else {
-      this.camera.position().x = this.gameObject.getTransform().position.x - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X;
+      this.camera.position().x = this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X * camera.getZoomAspect());
     }
 
-    if (this.camera.position().y < this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3) {
-      this.camera.position().y = this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
-    } else if (this.camera.position().y > com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 - this.gameObject.getTransform().position.y) {
-      if (this.camera.position().y > com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 - this.gameObject.getTransform().position.y) {
+    if (this.camera.position().y < this.gameObject.getTransform().position.y - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect())) {
+      this.camera.position().y = this.gameObject.getTransform().position.y - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect());
+    } else if (this.camera.position().y > (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect()) - this.gameObject.getTransform().position.y) {
+      if (this.camera.position().y > (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect()) - this.gameObject.getTransform().position.y) {
         this.camera.position().y = this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
       }
     }
@@ -196,7 +198,7 @@ public class FredController implements Component {
 //      AssetPool.getSound("assets/sounds/jump-small.ogg").play();
       onGround = false;
       this.rigidBody.acceleration.x = 0;
-      if (collisionWithTheLine) {
+      if (collisionWithTheLine && new Vector2f(this.gameObject.getTransform().position.x, 0).distance(new Vector2f(linePositionX, 0)) < Prefabs.FREDHEIGHT * 0.5f) {
         this.rigidBody.acceleration.y = 0;
         this.rigidBody.velocity.y = jumpHeight;
         this.onTheLine = true;
@@ -210,10 +212,10 @@ public class FredController implements Component {
         this.rigidBody.velocity.y = jumpHeight;
         machine.trigger("StartJumping");
       }
-    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_W) && onTheLine && !onGround) {
+    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_W) && onTheLine && !onGround && !jumpingOn && !jumpingDown && !jumpingOff) {
       this.rigidBody.acceleration.y = runSpeed;
       this.rigidBody.acceleration.x = 0;
-    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && onTheLine && !onGround) {
+    } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && onTheLine && !onGround && !jumpingOn && !jumpingDown && !jumpingOff) {
       this.rigidBody.acceleration.y = -runSpeed;
       this.rigidBody.acceleration.x = 0;
     } else {
