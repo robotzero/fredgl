@@ -60,10 +60,10 @@ public class FredController implements Component {
 
   @Override
   public void update(double dt) {
-    if (this.camera.position().x < this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X * camera.getZoomAspect())) {
-      this.camera.position().x = this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X * camera.getZoomAspect());
+    if (this.camera.position().x < this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X)) {
+      this.camera.position().x = this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
     } else {
-      this.camera.position().x = this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X * camera.getZoomAspect());
+      this.camera.position().x = this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
     }
 
     if (this.camera.position().y < this.gameObject.getTransform().position.y - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect())) {

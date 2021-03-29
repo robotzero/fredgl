@@ -10,7 +10,7 @@ public class Camera {
   private Matrix4f projectionMatrix, viewMatrix, inverseProjection;
   private float fov = 45;
   private float aspect = 0.0f;
-  private float zoomAspect = 0.5f;
+  private float zoomAspect = 1f;
 
   private Vector2f position;
   public Vector3f vec3Position;
