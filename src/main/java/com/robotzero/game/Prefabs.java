@@ -30,7 +30,7 @@ public class Prefabs {
     Spritesheet idle_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_idle.png")).orElseThrow();
     Animation idle = new Animation("Idle", 0.1f, idle_spritesheet.sprites.subList(0, 1), false);
     Spritesheet walk_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_walking_sheet.png")).orElseThrow();
-    Animation walk = new Animation("Walk", 0.1f, walk_spritesheet.sprites.subList(1, 10), true);
+    Animation walk = new Animation("Walk", 0.1f, walk_spritesheet.sprites.subList(1, 11), true);
     Spritesheet jump_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_jump_sheet.png")).orElseThrow();
     Animation jump = new Animation("Jump", 0.6f, jump_spritesheet.sprites.subList(0, 1), false);
     Spritesheet climb_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_climb.png")).orElseThrow();
