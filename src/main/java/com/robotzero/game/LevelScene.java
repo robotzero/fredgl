@@ -40,7 +40,8 @@ public class LevelScene extends Scene {
 
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
 //    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
-    List<GameObject> stoneBlocks = Prefabs.STONES_MAP_DRAWER();
+//    List<GameObject> stoneBlocks = Prefabs.STONES_MAP_DRAWER();
+    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     stoneBlocks.forEach(stoneBlock -> {
       BoxBounds boxBounds = stoneBlock.getComponent(BoxBounds.class);
 //      DebugDraw.addBox2D(
@@ -61,7 +62,8 @@ public class LevelScene extends Scene {
     });
 
 //    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
-      List<GameObject> lineBlocks = Prefabs.LINES_MAP_DRAWER();
+//      List<GameObject> lineBlocks = Prefabs.LINES_MAP_DRAWER();
+      List<GameObject> lineBlocks = List.of();
     lineBlocks.forEach(lineBlock -> {
 //      BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
 //      DebugDraw.addBox2D(
@@ -81,7 +83,8 @@ public class LevelScene extends Scene {
       lineBlock.start();
     });
 
-    List<GameObject> jumpboards = Prefabs.JUMPBOARDS_MAP_DRAWER();
+//    List<GameObject> jumpboards = Prefabs.JUMPBOARDS_MAP_DRAWER();
+    List<GameObject> jumpboards = List.of();
     jumpboards.forEach(jumpBoard -> {
       BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
 

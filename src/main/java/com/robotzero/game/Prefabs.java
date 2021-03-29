@@ -107,10 +107,10 @@ public class Prefabs {
 
   public static List<GameObject> STONES(MapAsset map) {
     final Random randomGen = new Random();
-    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stone_sheet.png")).orElseThrow();
+    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/stones_sprites_better.png")).orElseThrow();
     return map.getStoneTransforms().stream().map(transform -> {
       GameObject stone = new GameObject(String.format("Stone_Block_Prefab_%s", transform.toString()), transform, 0);
-      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(randomGen.nextInt(3)), stone);
+      SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(randomGen.nextInt(8)), stone);
       BoxBounds boxBounds = new BoxBounds(STONEWIDTH, STONEHEIGHT, true, false);
       spriteRenderer.setGameObject(stone);
       boxBounds.setGameObject(stone);
@@ -151,7 +151,7 @@ public class Prefabs {
       return transforms.stream().map(transform -> {
         GameObject line = new GameObject(String.format("Line_Block_Prefab_%s", transform.toString()), transform, 0);
         SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(mappedAsciCode), line);
-        BoxBounds boxBounds = new BoxBounds(2, 39, false, true);
+        BoxBounds boxBounds = new BoxBounds(6, 40, false, true);
         Line lineComponent = new Line();
         lineComponent.setGameObject(line);
         spriteRenderer.setGameObject(line);
