@@ -68,6 +68,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     public int zIndex;
     public boolean hasRoom = true;
+    public int drawCalls = 0;
 
     public RenderBatch(int maxBatchSize, Renderer renderer, int zIndex) {
         this.shader = AssetPool.getShader("assets/shaders/default.glsl");
@@ -212,6 +213,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
         // Un-bind our program
         shader.detach();
+        drawCalls++;
     }
 
     public void deleteVertexProperties(int index) {

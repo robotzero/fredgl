@@ -64,6 +64,8 @@ public class Renderer {
     public void render() {
         for (RenderBatch batch : batches) {
             batch.render();
+            //System.out.println("DRAW CALLS PER BATCH " + batch.drawCalls);
+            batch.drawCalls = 0;
         }
     }
 

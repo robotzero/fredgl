@@ -124,7 +124,7 @@ public class LevelScene extends Scene {
     AssetPool.addSpritesheet("assets/spritesheets/character_and_enemies_64.png", 16, 32, 0, 21, 21 * 2);
     AssetPool.addSpritesheet("assets/spritesheets/icons.png", 32, 32, 0, 7, 15);
     AssetPool.addSpritesheet("assets/spritesheets/turtle.png", 16, 24, 0, 4, 4);
-    AssetPool.addSpritesheet("assets/spritesheets/fred_walking_sheet.png", 32, 32, 0, 11, 11);
+    AssetPool.addSpritesheet("assets/spritesheets/fred_walking_sheet.png", 32, 32, 0, 4, 4);
 //    AssetPool.addSpritesheet("assets/spritesheets/stone_sheet.png", 31, 39, 0, 3, 3);
     AssetPool.addSpritesheet("assets/spritesheets/stones_sprites_better.png", 32, 40, 0, 8, 8);
     AssetPool.addSpritesheet("assets/spritesheets/fred_jump_sheet.png", 32, 32, 0, 2, 2);

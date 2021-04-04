@@ -18,10 +18,10 @@ public class Window {
   public static int Z_INDEX = 0;
   //public static final int CAMERA_OFFSET_X = 32 * 12;
   //public static final int CAMERA_OFFSET_X = (32 * 32) / 2;
-  public static final int CAMERA_OFFSET_X = SCREEN_WIDTH / 2;
+  public static final float CAMERA_OFFSET_X = SCREEN_WIDTH / 2f;
   public static final int CAMERA_OFFSET_Y_1 = 0;
   //public static final int CAMERA_OFFSET_Y_2 = 0 - (32 * 21);
-  public static final int CAMERA_OFFSET_Y_3 = SCREEN_HEIGHT / 2 ;
+  public static final float CAMERA_OFFSET_Y_3 = SCREEN_HEIGHT / 2f ;
   //public static final int CAMERA_OFFSET_Y_3 = (32 * 21) / 2 ;
 
   public static final Vector4f BG_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 0.5f);
