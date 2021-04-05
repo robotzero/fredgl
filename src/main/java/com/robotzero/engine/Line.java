@@ -1,6 +1,7 @@
 package com.robotzero.engine;
 
 import com.robotzero.game.FredController;
+import com.robotzero.game.Prefabs;
 
 import java.util.Optional;
 
@@ -11,7 +12,6 @@ public class Line implements Component {
   @Override
   public void trigger(Trigger trigger) {
     if (this.trigger == null) {
-
       Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).ifPresent(fredController -> {
         BoxBounds thisBounds = gameObject.getComponent(BoxBounds.class);
         BoxBounds otherBounds = trigger.gameObject.getComponent(BoxBounds.class);
@@ -29,16 +29,24 @@ public class Line implements Component {
   @Override
   public void unTrigger(Trigger trigger) {
     if (this.trigger != null) {
-      Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).ifPresent(fredController -> {
-        BoxBounds thisBounds = gameObject.getComponent(BoxBounds.class);
-        BoxBounds otherBounds = trigger.gameObject.getComponent(BoxBounds.class);
-        Optional.ofNullable(thisBounds.resolveCollision(otherBounds, true)).filter(collision -> {
-          return collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT;
-        }).ifPresent(collision -> {
-          this.trigger = null;
-          fredController.setCollisionWithTheLine(false);
-          fredController.setCollisionObjectXPosition(0);
-        });
+      Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).filter(FredController::isOnGround).ifPresent(fredController -> {
+        // Fred facing left
+        if (trigger.gameObject.getTransform().scale.x < 0) {
+          if (gameObject.getTransform().position.distance(trigger.gameObject.getTransform().position) > Prefabs.FREDHEIGHT) {
+            this.trigger = null;
+            fredController.setCollisionWithTheLine(false);
+            fredController.setCollisionObjectXPosition(0);
+          }
+        }
+
+        // Fred facing right
+        if (trigger.gameObject.getTransform().scale.x > 0) {
+          if (gameObject.getTransform().position.distance(trigger.gameObject.getTransform().position) > Prefabs.LINEWIDTH) {
+            this.trigger = null;
+            fredController.setCollisionWithTheLine(false);
+            fredController.setCollisionObjectXPosition(0);
+          }
+        }
       });
     }
   }

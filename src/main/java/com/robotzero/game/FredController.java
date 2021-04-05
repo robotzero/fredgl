@@ -60,17 +60,19 @@ public class FredController implements Component {
 
   @Override
   public void update(double dt) {
-    if (this.camera.position().x < this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X)) {
-      this.camera.position().x = this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
+    final var posXmiddle = this.gameObject.getTransform().position.x + Prefabs.FREDHEIGHT / 2f;
+    if (this.camera.position().x < posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X)) {
+      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
     } else {
-      this.camera.position().x = this.gameObject.getTransform().position.x - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
+      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
     }
 
-    if (this.camera.position().y < this.gameObject.getTransform().position.y - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect())) {
+    final var posYmiddle = this.gameObject.getTransform().position.y + Prefabs.FREDHEIGHT;
+    if (this.camera.position().y < posYmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect())) {
       this.camera.position().y = this.gameObject.getTransform().position.y - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect());
-    } else if (this.camera.position().y > (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect()) - this.gameObject.getTransform().position.y) {
-      if (this.camera.position().y > (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect()) - this.gameObject.getTransform().position.y) {
-        this.camera.position().y = this.gameObject.getTransform().position.y - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
+    } else if (this.camera.position().y > (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect()) - posYmiddle) {
+      if (this.camera.position().y > (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect()) - posYmiddle) {
+        this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
       }
     }
 
@@ -198,7 +200,14 @@ public class FredController implements Component {
 //      AssetPool.getSound("assets/sounds/jump-small.ogg").play();
       onGround = false;
       this.rigidBody.acceleration.x = 0;
-      if (collisionWithTheLine && new Vector2f(this.gameObject.getTransform().position.x, 0).distance(new Vector2f(linePositionX, 0)) < Prefabs.FREDHEIGHT * 0.5f) {
+      if (collisionWithTheLine && this.gameObject.getTransform().scale.x > 0 && new Vector2f(this.gameObject.getTransform().position.x, 0).distance(new Vector2f(linePositionX + Prefabs.LINEWIDTH / 2f, 0)) < (Prefabs.FREDHEIGHT * 0.5f) + 8) {
+        this.rigidBody.acceleration.y = 0;
+        this.rigidBody.velocity.y = jumpHeight;
+        this.onTheLine = true;
+        this.rigidBody.gravity = 0;
+        this.gameObject.getTransform().position.x = linePositionX - lineOffsetPosition;
+        machine.trigger("StartClimbing");
+      } else if (collisionWithTheLine && this.gameObject.getTransform().scale.x < 0 && new Vector2f(this.gameObject.getTransform().position.x + Prefabs.FREDHEIGHT, 0).distance(new Vector2f(linePositionX + Prefabs.LINEWIDTH / 2f, 0)) < (Prefabs.FREDHEIGHT * 0.5f) + 8) {
         this.rigidBody.acceleration.y = 0;
         this.rigidBody.velocity.y = jumpHeight;
         this.onTheLine = true;
@@ -236,6 +245,7 @@ public class FredController implements Component {
 //    }
     if (collision.side == Collision.CollisionSide.BOTTOM && collision.gameObject.getName().contains("Stone_Block_Prefab") && !onTheLine && !jumpingOn) {
       onGround = true;
+      return;
     }
 //    } else if (collision.side == Collision.CollisionSide.TOP && collision.gameObject.getName().contains("Stone_Block_Prefab") && !canJumpOff) {
 //      canJumpOff = true;

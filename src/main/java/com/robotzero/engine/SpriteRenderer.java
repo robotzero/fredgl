@@ -105,23 +105,4 @@ public class SpriteRenderer implements Component {
     public GameObject getGameObject() {
         return this.gameObject;
     }
-
-//    @Override
-//    public String serialize(int tabSize) {
-//        StringBuilder builder = new StringBuilder();
-//
-//        builder.append(beginObjectProperty("SpriteRenderer", tabSize));
-//        builder.append(sprite.serialize(tabSize + 1));
-//        builder.append(addEnding(true, false));
-//        builder.append(closeObjectProperty(tabSize));
-//
-//        return builder.toString();
-//    }
-
-//    public static SpriteRenderer deserialize() {
-//        com.component.Sprite sprite = (com.component.Sprite) Parser.parseComponent();
-//        Parser.consumeEndObjectProperty();
-//
-//        return new SpriteRenderer(sprite);
-//    }
 }

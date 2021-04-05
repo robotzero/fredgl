@@ -69,7 +69,7 @@ public class Prefabs {
     FredController fredController = new FredController();
 
     //Transform transform = new Transform(new Vector2f(650, 300.0f));
-    Transform transform = new Transform(new Vector2f(130f, Prefabs.STONEHEIGHT));
+    Transform transform = new Transform(new Vector2f(830f, Prefabs.STONEHEIGHT));
     transform.scale = new Vector2f(FREDWIDTH, FREDHEIGHT);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);

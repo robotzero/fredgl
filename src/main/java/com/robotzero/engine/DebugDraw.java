@@ -14,7 +14,6 @@ import java.util.List;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glClearBufferiv;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
@@ -41,7 +40,7 @@ public class DebugDraw {
     // Create the vbo and buffer some memory
     vboID = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
-    glBufferData(GL_ARRAY_BUFFER, (long) vertexArray.length * Float.BYTES, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (long) vertexArray.length * Float.BYTES, GL_DYNAMIC_DRAW);
 
     // Enable the vertex array attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * Float.BYTES, 0);
@@ -74,8 +73,8 @@ public class DebugDraw {
     Arrays.fill(vertexArray, 0);
     if (lines.size() <= 0 && dynamicLines.size() <= 0) return;
 
+    int index = 0;
     if (lines.size() > 0) {
-      int index = 0;
       for (Line2D line : lines) {
         for (int i = 0; i < 2; i++) {
           Vector2f position = i == 0 ? line.getFrom() : line.getTo();
@@ -96,7 +95,6 @@ public class DebugDraw {
     }
 
     if (dynamicLines.size() > 0) {
-      int index = 0;
       for (Line2D line : dynamicLines) {
         for (int i = 0; i < 2; i++) {
           Vector2f position = i == 0 ? line.getFrom() : line.getTo();

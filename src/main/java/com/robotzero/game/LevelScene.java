@@ -61,21 +61,21 @@ public class LevelScene extends Scene {
       stoneBlock.start();
     });
 
-//    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
 //      List<GameObject> lineBlocks = Prefabs.LINES_MAP_DRAWER();
-      List<GameObject> lineBlocks = List.of();
+//      List<GameObject> lineBlocks = List.of();
     lineBlocks.forEach(lineBlock -> {
-//      BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
-//      DebugDraw.addBox2D(
-//          new Vector2f(
-//              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-//              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-//          ),
-//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-//          0,
-//          new Vector3f(1f, 0f, 0f),
-//          0
-//      );
+      BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
+      DebugDraw.addBox2D(
+          new Vector2f(
+              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+          ),
+          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+          0,
+          new Vector3f(1f, 0f, 0f),
+          0
+      );
       gameObjects.add(lineBlock);
       renderer.add(lineBlock);
       physics.addGameObject(lineBlock);
@@ -160,15 +160,15 @@ public class LevelScene extends Scene {
         go.update(dt);
         Optional.ofNullable(go.getComponent(FredController.class)).ifPresent(_notUsed -> {
           BoxBounds fredBoxBounds = go.getComponent(BoxBounds.class);
-//          DebugDraw.addBox2DDynamic(
-//              new Vector2f(
-//                  fredBoxBounds.getCenterX(),
-//                  fredBoxBounds.getCenterY()
-//              ),
-//              new Vector2f(fredBoxBounds.getWidth(), fredBoxBounds.getHeight()),
-//              0,
-//              new Vector3f(1f, 0f, 0f)
-//          );
+          DebugDraw.addBox2DDynamic(
+              new Vector2f(
+                  fredBoxBounds.getCenterX(),
+                  fredBoxBounds.getCenterY()
+              ),
+              new Vector2f(fredBoxBounds.getWidth(), fredBoxBounds.getHeight()),
+              0,
+              new Vector3f(1f, 0f, 0f)
+          );
         });
       } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3) {
         //deleteGameObject(go);

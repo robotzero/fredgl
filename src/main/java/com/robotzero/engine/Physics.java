@@ -10,7 +10,7 @@ public class Physics {
   List<GameObject> staticObjects;
   List<GameObject> dynamicObjects;
 
-  private float tickSpeed = 1 / 60f;
+  private final float tickSpeed = 1 / 60f;
   private float tickSpeedLeft = 0f;
 
   private Tuple<Integer> tuple;
