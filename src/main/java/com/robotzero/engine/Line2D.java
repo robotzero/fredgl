@@ -25,6 +25,10 @@ public class Line2D {
     this.lifetime = lifetime;
   }
 
+  public boolean isStatic() {
+    return isStatic;
+  }
+
   public int beginFrame() {
     if (this.isStatic) {
       return lifetime;

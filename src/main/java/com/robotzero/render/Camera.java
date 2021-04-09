@@ -39,7 +39,7 @@ public class Camera {
           0.1f, 100.0f);
     } else {
       projectionMatrix.identity();
-      projectionMatrix.ortho(0.0f, 32.0f * 40.0f * zoomAspect, 0.0f, 32.0f * 21.0f * zoomAspect, 0.0f, 100.0f);
+      projectionMatrix.ortho(0.0f, com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH * zoomAspect, 0.0f, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT * zoomAspect, 0.0f, 100.0f);
       inverseProjection.identity();
       projectionMatrix.invert(inverseProjection);
     }

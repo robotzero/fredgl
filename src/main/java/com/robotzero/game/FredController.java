@@ -60,21 +60,35 @@ public class FredController implements Component {
 
   @Override
   public void update(double dt) {
-    final var posXmiddle = this.gameObject.getTransform().position.x + Prefabs.FREDHEIGHT / 2f;
-    if (this.camera.position().x < posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X)) {
-      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
-    } else {
-      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
+    final var posXmiddle = this.gameObject.getTransform().position.x + (Prefabs.FREDWIDTH / 2f);
+    if (posXmiddle < com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f &&  posXmiddle < this.camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1) {
+      this.camera.position().x = posXmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1;
     }
 
-    final var posYmiddle = this.gameObject.getTransform().position.y + Prefabs.FREDHEIGHT;
-    if (this.camera.position().y < posYmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect())) {
-      this.camera.position().y = this.gameObject.getTransform().position.y - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect());
-    } else if (this.camera.position().y > (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect()) - posYmiddle) {
-      if (this.camera.position().y > (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 * camera.getZoomAspect()) - posYmiddle) {
-        this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
-      }
+    if (posXmiddle > com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f && this.camera.position().x + com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1 < posXmiddle) {
+      this.camera.position().x = posXmiddle - com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1;
     }
+//    if (this.camera.position().x < posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X)) {
+//      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
+//    } else {
+//      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
+//    }
+
+    final var posYmiddle = this.gameObject.getTransform().position.y + (Prefabs.FREDHEIGHT / 2f);
+
+    if (posYmiddle < com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f &&  posYmiddle < this.camera.position().y + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1) {
+      this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1;
+    }
+
+    if (posYmiddle > com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f && this.camera.position().y + com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1 < posYmiddle) {
+      this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1;
+    }
+
+//    if (this.camera.position().y < posYmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3)) {
+//      this.camera.position().y = posYmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3);
+//    } else if (this.camera.position().y > com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 - posYmiddle) {
+//      this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
+//    }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_P)) {
       if (!(runSpeed == 100 * 4f)) {

@@ -158,6 +158,38 @@ public class LevelScene extends Scene {
     for (GameObject go : gameObjects) {
       if (go.getComponent(FredController.class) != null || go.getTransform().position.x > this.camera.position().x && go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x + com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH + 128) {
         go.update(dt);
+        DebugDraw.addBox2DDynamic(
+            new Vector2f(
+                camera.position().x + (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f),
+                camera.position().y + (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f)
+            ),
+            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH - 10, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT - 10),
+            1,
+            new Vector3f(1f, 0f, 0f)
+        );
+
+        DebugDraw.addBox2DDynamic(
+            new Vector2f(
+                camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1 + 1,
+                camera.position().y + ((com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT) / 2f)
+            ),
+            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
+            1,
+            new Vector3f(1f, 0f, 0f)
+        );
+
+
+        DebugDraw.addBox2DDynamic(
+            new Vector2f(
+                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + 1,
+                com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f
+            ),
+            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
+            1,
+            new Vector3f(0.5f, 1f, 1f)
+        );
+
+
         Optional.ofNullable(go.getComponent(FredController.class)).ifPresent(_notUsed -> {
           BoxBounds fredBoxBounds = go.getComponent(BoxBounds.class);
           DebugDraw.addBox2DDynamic(
@@ -166,10 +198,11 @@ public class LevelScene extends Scene {
                   fredBoxBounds.getCenterY()
               ),
               new Vector2f(fredBoxBounds.getWidth(), fredBoxBounds.getHeight()),
-              0,
+              1,
               new Vector3f(1f, 0f, 0f)
           );
         });
+
       } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3) {
         //deleteGameObject(go);
       }

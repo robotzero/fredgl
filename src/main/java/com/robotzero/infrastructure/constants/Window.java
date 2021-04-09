@@ -1,5 +1,6 @@
 package com.robotzero.infrastructure.constants;
 
+import com.robotzero.game.Prefabs;
 import org.joml.Vector4f;
 
 import java.awt.*;
@@ -12,6 +13,8 @@ public class Window {
   public static final int TILE_WIDTH = 32;
   public static final int TILE_HEIGHT = 32;
   public static final float GRAVITY = -50;
+  public static final float CAMERA_OFFSET_X1 = 600;
+  public static final float CAMERA_OFFSET_Y1 = 0;
 
   public static FontMetrics FONT_METRICS;
   public static String CURRENT_LEVEL = "Default";
