@@ -86,16 +86,16 @@ public class LevelScene extends Scene {
     jumpboards.forEach(jumpBoard -> {
       BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
 
-//      DebugDraw.addBox2D(
-//          new Vector2f(
-//              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-//              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-//          ),
-//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-//          0,
-//          new Vector3f(1f, 0f, 0f),
-//          0
-//      );
+      DebugDraw.addBox2D(
+          new Vector2f(
+              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+          ),
+          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+          0,
+          new Vector3f(1f, 0f, 0f),
+          0
+      );
 
       gameObjects.add(jumpBoard);
       renderer.add(jumpBoard);
@@ -156,76 +156,76 @@ public class LevelScene extends Scene {
     for (GameObject go : gameObjects) {
       if (go.getComponent(FredController.class) != null || go.getTransform().position.x > this.camera.position().x && go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x + com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH + 128) {
         go.update(dt);
-        DebugDraw.addBox2DDynamic(
-            new Vector2f(
-                camera.position().x + (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f),
-                camera.position().y + (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f)
-            ),
-            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH - 10, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT - 10),
-            1,
-            new Vector3f(1f, 0f, 0f)
-        );
+//        DebugDraw.addBox2DDynamic(
+//            new Vector2f(
+//                camera.position().x + (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f),
+//                camera.position().y + (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f)
+//            ),
+//            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH - 10, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT - 10),
+//            1,
+//            new Vector3f(1f, 0f, 0f)
+//        );
 
-        DebugDraw.addBox2DDynamic(
-            new Vector2f(
-                camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1 + 1,
-                camera.position().y + ((com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT) / 2f)
-            ),
-            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
-            1,
-            new Vector3f(1f, 0f, 0f)
-        );
-
-        DebugDraw.addBox2DDynamic(
-            new Vector2f(
-                camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X2 + 1,
-                camera.position().y + ((com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT) / 2f)
-            ),
-            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
-            1,
-            new Vector3f(1f, 0f, 0f)
-        );
-
-
-        DebugDraw.addBox2DDynamic(
-            new Vector2f(
-                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + 1 + this.camera.position().x,
-                com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f
-            ),
-            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
-            1,
-            new Vector3f(0.5f, 1f, 1f)
-        );
-
-        DebugDraw.addBox2DDynamic(
-            new Vector2f(
-                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
-                (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f) + 1 + this.camera.position().y
-            ),
-            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
-            1,
-            new Vector3f(0.5f, 1f, 1f)
-        );
-
-        DebugDraw.addBox2DDynamic(
-            new Vector2f(
-                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
-                com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1 + this.camera.position().y
-            ),
-            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
-            1,
-            new Vector3f(1f, 1f, 1f)
-        );
-
-        DebugDraw.addBox2DDynamic(
-            new Vector2f(
-                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
-                com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y2 + this.camera.position().y
-            ),
-            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
-            1,
-            new Vector3f(1f, 1f, 1f)
-        );
+//        DebugDraw.addBox2DDynamic(
+//            new Vector2f(
+//                camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1 + 1,
+//                camera.position().y + ((com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT) / 2f)
+//            ),
+//            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
+//            1,
+//            new Vector3f(1f, 0f, 0f)
+//        );
+//
+//        DebugDraw.addBox2DDynamic(
+//            new Vector2f(
+//                camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X2 + 1,
+//                camera.position().y + ((com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT) / 2f)
+//            ),
+//            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
+//            1,
+//            new Vector3f(1f, 0f, 0f)
+//        );
+//
+//
+//        DebugDraw.addBox2DDynamic(
+//            new Vector2f(
+//                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + 1 + this.camera.position().x,
+//                com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f
+//            ),
+//            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
+//            1,
+//            new Vector3f(0.5f, 1f, 1f)
+//        );
+//
+//        DebugDraw.addBox2DDynamic(
+//            new Vector2f(
+//                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
+//                (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f) + 1 + this.camera.position().y
+//            ),
+//            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
+//            1,
+//            new Vector3f(0.5f, 1f, 1f)
+//        );
+//
+//        DebugDraw.addBox2DDynamic(
+//            new Vector2f(
+//                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
+//                com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1 + this.camera.position().y
+//            ),
+//            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
+//            1,
+//            new Vector3f(1f, 1f, 1f)
+//        );
+//
+//        DebugDraw.addBox2DDynamic(
+//            new Vector2f(
+//                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
+//                com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y2 + this.camera.position().y
+//            ),
+//            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
+//            1,
+//            new Vector3f(1f, 1f, 1f)
+//        );
 
 
         Optional.ofNullable(go.getComponent(FredController.class)).ifPresent(_notUsed -> {

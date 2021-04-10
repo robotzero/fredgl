@@ -132,7 +132,7 @@ public class MapDrawer {
 		vy += viewd_unscale(view_dy * (step_size_y * walk_step));
 		int offx = -vx * map_scale / map_unit + view_width / 2;
 		int offy = -vy * map_scale / map_unit + view_height / 2;
-		offx = 0;
+		offx = Prefabs.STONEWIDTH;
 		offy = (view_height - (mazeConfig.getHeight() * map_scale_height)) - Prefabs.STONEHEIGHT;
 
 		// compute minimum for x,y

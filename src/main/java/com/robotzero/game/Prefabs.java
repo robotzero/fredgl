@@ -179,6 +179,7 @@ public class Prefabs {
         BoxBounds boxBounds = new BoxBounds(6, 40, false, true);
         Line lineComponent = new Line();
         lineComponent.setGameObject(line);
+        lineComponent.setType(mappedAsciCode);
         spriteRenderer.setGameObject(line);
         boxBounds.setGameObject(line);
         line.addComponent(spriteRenderer);
@@ -222,7 +223,7 @@ public class Prefabs {
       spriteRenderer.color.x = 1f;
       spriteRenderer.color.y = 0.6f;
       spriteRenderer.color.z = 1.0f;
-      BoxBounds boxBounds = new BoxBounds(STONEWIDTH - 6, STONEHEIGHT, false, true);
+      BoxBounds boxBounds = new BoxBounds(STONEWIDTH - 8, STONEHEIGHT, false, true);
       spriteRenderer.setGameObject(jumpBoard);
       boxBounds.setGameObject(jumpBoard);
 //      jumpBoard.addComponent(spriteRenderer);

@@ -44,12 +44,14 @@ public class FredController implements Component {
   private Camera camera;
 
   private float runSpeed = 100;
+
   private boolean onTheLine;
   private boolean jumpingUp = false;
   private boolean jumpingDown = false;
   private int currentRunSpeed = 0;
   private float linePositionX = 0;
   private float jumpBoardPositionX = 0;
+  private boolean bottomLineCollision;
 
   @Override
   public void start() {
@@ -69,11 +71,6 @@ public class FredController implements Component {
     if (posXmiddle > middleX && posXmiddle > this.camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X2 && rigidBody.acceleration.x > 0) {
       this.camera.position().x = posXmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X2;
     }
-//    if (this.camera.position().x < posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X)) {
-//      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
-//    } else {
-//      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
-//    }
 
     final var posYmiddle = this.gameObject.getTransform().position.y + (Prefabs.FREDHEIGHT / 2f);
     final var middleY = (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f) + this.camera.position().y;
@@ -98,9 +95,9 @@ public class FredController implements Component {
     if (jumpingOff && onTheLine) {
       if (animTime > 0) {
         if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f - 4;
+          this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f;
         } else {
-          this.rigidBody.acceleration.x = Prefabs.STONEWIDTH * 1.5f + 4;
+          this.rigidBody.acceleration.x = Prefabs.STONEWIDTH * 1.5f;
         }
         animTime -= dt;
         return;
@@ -235,8 +232,13 @@ public class FredController implements Component {
       this.rigidBody.acceleration.y = runSpeed;
       this.rigidBody.acceleration.x = 0;
     } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && onTheLine && !onGround && !jumpingOn && !jumpingDown && !jumpingOff) {
-      this.rigidBody.acceleration.y = -runSpeed;
-      this.rigidBody.acceleration.x = 0;
+      if (this.bottomLineCollision && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT > 8) {
+        this.rigidBody.acceleration.y = -runSpeed;
+        this.rigidBody.acceleration.x = 0;
+      } else if (!bottomLineCollision) {
+        this.rigidBody.acceleration.y = -runSpeed;
+        this.rigidBody.acceleration.x = 0;
+      }
     } else {
       this.rigidBody.acceleration.y = 0;
     }
@@ -256,6 +258,8 @@ public class FredController implements Component {
     if (collision.side == Collision.CollisionSide.BOTTOM && collision.gameObject.getName().contains("Stone_Block_Prefab") && !onTheLine && !jumpingOn) {
       onGround = true;
       return;
+    } else if (collision.gameObject.getName().contains("Line_Block_Prefab")) {
+      System.out.println("BLAH");
     }
 //    } else if (collision.side == Collision.CollisionSide.TOP && collision.gameObject.getName().contains("Stone_Block_Prefab") && !canJumpOff) {
 //      canJumpOff = true;
@@ -308,5 +312,13 @@ public class FredController implements Component {
 
   public void setCollisionObjectXPosition(float linePositionX) {
     this.linePositionX = linePositionX;
+  }
+
+  public boolean isOnTheLine() {
+    return onTheLine;
+  }
+
+  public void setBottomLineCollision(boolean bottomLineCollision) {
+    this.bottomLineCollision = bottomLineCollision;
   }
 }
