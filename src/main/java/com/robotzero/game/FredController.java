@@ -165,7 +165,7 @@ public class FredController implements Component {
       }
       if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = runSpeed;
-      } else if (onTheLine && !jumpingOn) {
+      } else if (onTheLine && !jumpingOn && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT < com.robotzero.infrastructure.constants.Window.JUMP_ALLOWANCE) {
         this.rigidBody.acceleration.x = runSpeed;
         this.rigidBody.acceleration.y = 0;
         machine.trigger("StartJumpOff");
@@ -184,7 +184,7 @@ public class FredController implements Component {
       }
       if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = -runSpeed;
-      } else if (onTheLine && !jumpingOn && canJumpOff) {
+      } else if (onTheLine && !jumpingOn && canJumpOff && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT < com.robotzero.infrastructure.constants.Window.JUMP_ALLOWANCE) {
         this.rigidBody.acceleration.x = -runSpeed;
         this.rigidBody.acceleration.y = 0;
         machine.trigger("StartJumpOff");
