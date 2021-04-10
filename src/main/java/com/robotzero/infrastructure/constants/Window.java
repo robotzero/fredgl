@@ -6,8 +6,10 @@ import org.joml.Vector4f;
 import java.awt.*;
 
 public class Window {
-  public static final int SCREEN_WIDTH = 1280;
-  public static final int SCREEN_HEIGHT = 672;
+//  public static final int SCREEN_WIDTH = 1280;
+//  public static final int SCREEN_HEIGHT = 672;
+  public static final int SCREEN_WIDTH = 1920;
+  public static final int SCREEN_HEIGHT = 1080;
   public static final String SCREEN_TITLE = "FredGL";
 
   public static final int TILE_WIDTH = 32;

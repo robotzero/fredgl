@@ -78,7 +78,7 @@ public class FredController implements Component {
     final var posYmiddle = this.gameObject.getTransform().position.y + (Prefabs.FREDHEIGHT / 2f);
     final var middleY = (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f) + this.camera.position().y;
 
-    if (posYmiddle < middleY && posYmiddle < camera.position().y + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1 && rigidBody.acceleration.y < com.robotzero.infrastructure.constants.Window.GRAVITY) {
+    if (posYmiddle < middleY && posYmiddle < camera.position().y + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1 && rigidBody.acceleration.y < com.robotzero.infrastructure.constants.Window.GRAVITY && this.camera.position().y > 0) {
       this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1;
     }
 

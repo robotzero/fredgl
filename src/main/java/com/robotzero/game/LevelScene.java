@@ -39,9 +39,8 @@ public class LevelScene extends Scene {
 
 
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
+    List<GameObject> stoneBlocks = Prefabs.STONES_MAP_DRAWER();
 //    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
-//    List<GameObject> stoneBlocks = Prefabs.STONES_MAP_DRAWER();
-    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     stoneBlocks.forEach(stoneBlock -> {
       BoxBounds boxBounds = stoneBlock.getComponent(BoxBounds.class);
 //      DebugDraw.addBox2D(
@@ -61,21 +60,20 @@ public class LevelScene extends Scene {
       stoneBlock.start();
     });
 
-    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
-//      List<GameObject> lineBlocks = Prefabs.LINES_MAP_DRAWER();
-//      List<GameObject> lineBlocks = List.of();
+//    List<GameObject> lineBlocks = Prefabs.LINES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
+    List<GameObject> lineBlocks = Prefabs.LINES_MAP_DRAWER();
     lineBlocks.forEach(lineBlock -> {
       BoxBounds boxBounds = lineBlock.getComponent(BoxBounds.class);
-      DebugDraw.addBox2D(
-          new Vector2f(
-              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-          ),
-          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-          0,
-          new Vector3f(1f, 0f, 0f),
-          0
-      );
+//      DebugDraw.addBox2D(
+//          new Vector2f(
+//              lineBlock.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+//              lineBlock.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+//          ),
+//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+//          0,
+//          new Vector3f(1f, 0f, 0f),
+//          0
+//      );
       gameObjects.add(lineBlock);
       renderer.add(lineBlock);
       physics.addGameObject(lineBlock);
@@ -83,8 +81,8 @@ public class LevelScene extends Scene {
       lineBlock.start();
     });
 
-//    List<GameObject> jumpboards = Prefabs.JUMPBOARDS_MAP_DRAWER();
-    List<GameObject> jumpboards = List.of();
+    List<GameObject> jumpboards = Prefabs.JUMPBOARDS_MAP_DRAWER();
+//    List<GameObject> jumpboards = List.of();
     jumpboards.forEach(jumpBoard -> {
       BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
 
