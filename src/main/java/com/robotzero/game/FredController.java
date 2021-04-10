@@ -61,12 +61,13 @@ public class FredController implements Component {
   @Override
   public void update(double dt) {
     final var posXmiddle = this.gameObject.getTransform().position.x + (Prefabs.FREDWIDTH / 2f);
-    if (posXmiddle < com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f &&  posXmiddle < this.camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1) {
+    final var middleX = (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x;
+    if (posXmiddle < middleX &&  posXmiddle < this.camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1 && rigidBody.acceleration.x < 0 && this.camera.position().x > 0) {
       this.camera.position().x = posXmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1;
     }
 
-    if (posXmiddle > com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f && this.camera.position().x + com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1 < posXmiddle) {
-      this.camera.position().x = posXmiddle - com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X1;
+    if (posXmiddle > middleX && posXmiddle > this.camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X2 && rigidBody.acceleration.x > 0) {
+      this.camera.position().x = posXmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X2;
     }
 //    if (this.camera.position().x < posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X)) {
 //      this.camera.position().x = posXmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X);
@@ -75,20 +76,15 @@ public class FredController implements Component {
 //    }
 
     final var posYmiddle = this.gameObject.getTransform().position.y + (Prefabs.FREDHEIGHT / 2f);
+    final var middleY = (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f) + this.camera.position().y;
 
-    if (posYmiddle < com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f &&  posYmiddle < this.camera.position().y + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1) {
+    if (posYmiddle < middleY && posYmiddle < camera.position().y + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1 && rigidBody.acceleration.y < com.robotzero.infrastructure.constants.Window.GRAVITY) {
       this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1;
     }
 
-    if (posYmiddle > com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f && this.camera.position().y + com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1 < posYmiddle) {
-      this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1;
+    if (posYmiddle > middleY && posYmiddle > this.camera.position().y + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y2 && rigidBody.acceleration.y > com.robotzero.infrastructure.constants.Window.GRAVITY) {
+      this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y2;
     }
-
-//    if (this.camera.position().y < posYmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3)) {
-//      this.camera.position().y = posYmiddle - (com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3);
-//    } else if (this.camera.position().y > com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3 - posYmiddle) {
-//      this.camera.position().y = posYmiddle - com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3;
-//    }
 
     if (KeyListener.isKeyPressed(GLFW_KEY_P)) {
       if (!(runSpeed == 100 * 4f)) {
@@ -170,7 +166,7 @@ public class FredController implements Component {
       if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = runSpeed;
       } else if (onTheLine && !jumpingOn) {
-        this.rigidBody.acceleration.x = -runSpeed;
+        this.rigidBody.acceleration.x = runSpeed;
         this.rigidBody.acceleration.y = 0;
         machine.trigger("StartJumpOff");
         jumpingOff = true;
@@ -189,7 +185,7 @@ public class FredController implements Component {
       if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = -runSpeed;
       } else if (onTheLine && !jumpingOn && canJumpOff) {
-        this.rigidBody.acceleration.x = runSpeed;
+        this.rigidBody.acceleration.x = -runSpeed;
         this.rigidBody.acceleration.y = 0;
         machine.trigger("StartJumpOff");
         jumpingOff = true;

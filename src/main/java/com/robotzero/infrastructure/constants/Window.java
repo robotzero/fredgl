@@ -13,8 +13,10 @@ public class Window {
   public static final int TILE_WIDTH = 32;
   public static final int TILE_HEIGHT = 32;
   public static final float GRAVITY = -50;
-  public static final float CAMERA_OFFSET_X1 = 600;
-  public static final float CAMERA_OFFSET_Y1 = 0;
+  public static final float CAMERA_OFFSET_X1 = SCREEN_WIDTH / 2f - Prefabs.FREDWIDTH / 2f;
+  public static final float CAMERA_OFFSET_X2 = SCREEN_WIDTH / 2f + Prefabs.FREDWIDTH / 2f;
+  public static final float CAMERA_OFFSET_Y1 = SCREEN_HEIGHT / 2f - Prefabs.FREDHEIGHT / 2f;
+  public static final float CAMERA_OFFSET_Y2 = SCREEN_HEIGHT / 2f + Prefabs.FREDHEIGHT / 2f;
 
   public static FontMetrics FONT_METRICS;
   public static String CURRENT_LEVEL = "Default";

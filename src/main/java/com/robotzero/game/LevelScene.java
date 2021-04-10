@@ -178,15 +178,55 @@ public class LevelScene extends Scene {
             new Vector3f(1f, 0f, 0f)
         );
 
+        DebugDraw.addBox2DDynamic(
+            new Vector2f(
+                camera.position().x + com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_X2 + 1,
+                camera.position().y + ((com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT) / 2f)
+            ),
+            new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
+            1,
+            new Vector3f(1f, 0f, 0f)
+        );
+
 
         DebugDraw.addBox2DDynamic(
             new Vector2f(
-                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + 1,
+                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + 1 + this.camera.position().x,
                 com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f
             ),
             new Vector2f(2, com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT),
             1,
             new Vector3f(0.5f, 1f, 1f)
+        );
+
+        DebugDraw.addBox2DDynamic(
+            new Vector2f(
+                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
+                (com.robotzero.infrastructure.constants.Window.SCREEN_HEIGHT / 2f) + 1 + this.camera.position().y
+            ),
+            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
+            1,
+            new Vector3f(0.5f, 1f, 1f)
+        );
+
+        DebugDraw.addBox2DDynamic(
+            new Vector2f(
+                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
+                com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y1 + this.camera.position().y
+            ),
+            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
+            1,
+            new Vector3f(1f, 1f, 1f)
+        );
+
+        DebugDraw.addBox2DDynamic(
+            new Vector2f(
+                (com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH / 2f) + this.camera.position().x,
+                com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y2 + this.camera.position().y
+            ),
+            new Vector2f(com.robotzero.infrastructure.constants.Window.SCREEN_WIDTH, 2),
+            1,
+            new Vector3f(1f, 1f, 1f)
         );
 
 
