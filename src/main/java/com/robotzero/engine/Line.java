@@ -18,13 +18,12 @@ public class Line implements Component {
         BoxBounds thisBounds = gameObject.getComponent(BoxBounds.class);
         BoxBounds otherBounds = trigger.gameObject.getComponent(BoxBounds.class);
         Optional.ofNullable(thisBounds.resolveCollision(otherBounds, true)).ifPresent(collision -> {
-          if (this.trigger == null && (collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT)) {
+          if (this.trigger == null && (collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT) && !fredController.isOnTheLine()) {
             this.trigger = trigger;
             fredController.setCollisionWithTheLine(true);
             fredController.setCollisionObjectXPosition(this.gameObject.getTransform().position.x);
           } else if (this.bottomTrigger == null) {
-            if (fredController.isOnTheLine() && this.type == 1) {
-              System.out.println(trigger.gameObject.getComponent(RigidBody.class).acceleration.y);
+            if (fredController.isOnTheLine() && this.type == 0) {
               fredController.setBottomLineCollision(true);
               this.bottomTrigger = trigger;
             }
@@ -36,9 +35,9 @@ public class Line implements Component {
 
   @Override
   public void unTrigger(Trigger trigger) {
-    if (bottomTrigger != null && this.type == 1) {
+    if (bottomTrigger != null && this.type == 0) {
       Optional.ofNullable(trigger.gameObject.getComponent(FredController.class)).filter(FredController::isOnTheLine).ifPresent(fredController -> {
-        if (gameObject.getTransform().position.distance(trigger.gameObject.getTransform().position) > Prefabs.FREDHEIGHT / 2f) {
+        if (gameObject.getTransform().position.distance(trigger.gameObject.getTransform().position) > Prefabs.STONEHEIGHT + 1) {
           fredController.setBottomLineCollision(false);
           bottomTrigger = null;
         }

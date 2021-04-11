@@ -156,11 +156,15 @@ public class FredController implements Component {
       }
     }
 
+    if (isOnTheLine() && bottomLineCollision && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT < 8) {
+      this.gameObject.getTransform().position.y = this.gameObject.getTransform().position.y + 2;
+    }
+
     if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D) && !jumpingUp && !jumpingDown) {
       if (gameObject.getTransform().scale.x < 0) {
         gameObject.getTransform().scale.x *= -1;
       }
-      if (!onTheLine && !jumpingOn) {
+      if (!onTheLine && !jumpingOn && (KeyListener.repeates(GLFW_KEY_D) > 1 || KeyListener.repeates(GLFW_KEY_RIGHT) > 1)) {
         this.rigidBody.acceleration.x = runSpeed;
       } else if (onTheLine && !jumpingOn && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT < com.robotzero.infrastructure.constants.Window.JUMP_ALLOWANCE) {
         this.rigidBody.acceleration.x = runSpeed;
@@ -179,7 +183,7 @@ public class FredController implements Component {
       if (gameObject.getTransform().scale.x > 0) {
         gameObject.getTransform().scale.x *= -1;
       }
-      if (!onTheLine && !jumpingOn) {
+      if (!onTheLine && !jumpingOn && (KeyListener.repeates(GLFW_KEY_A) > 1 || KeyListener.repeates(GLFW_KEY_LEFT) > 1)) {
         this.rigidBody.acceleration.x = -runSpeed;
       } else if (onTheLine && !jumpingOn && canJumpOff && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT < com.robotzero.infrastructure.constants.Window.JUMP_ALLOWANCE) {
         this.rigidBody.acceleration.x = -runSpeed;
@@ -232,13 +236,8 @@ public class FredController implements Component {
       this.rigidBody.acceleration.y = runSpeed;
       this.rigidBody.acceleration.x = 0;
     } else if (!isWalking() && KeyListener.isKeyPressed(GLFW_KEY_S) && onTheLine && !onGround && !jumpingOn && !jumpingDown && !jumpingOff) {
-      if (this.bottomLineCollision && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT > 8) {
         this.rigidBody.acceleration.y = -runSpeed;
         this.rigidBody.acceleration.x = 0;
-      } else if (!bottomLineCollision) {
-        this.rigidBody.acceleration.y = -runSpeed;
-        this.rigidBody.acceleration.x = 0;
-      }
     } else {
       this.rigidBody.acceleration.y = 0;
     }

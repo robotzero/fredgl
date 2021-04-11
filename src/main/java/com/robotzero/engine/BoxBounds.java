@@ -163,7 +163,7 @@ public class BoxBounds extends Bounds {
         Vector2f contactPoint = new Vector2f(otherBounds.center.x, otherBounds.gameObject.getTransform().position.y + otherBounds.getHeight());
         return new Collision(otherBounds.gameObject, Collision.CollisionSide.BOTTOM, contactPoint, this);
       } else {
-        if (!otherBounds.shouldCheckBottom || !this.shouldCheckTop){
+        if (!otherBounds.shouldCheckBottom || !this.shouldCheckTop) {
           return null;
         }
 
