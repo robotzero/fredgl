@@ -40,18 +40,23 @@ public class FredController implements Component {
   private boolean canJumpOff = true;
   private int lineOffsetPosition = 12;
   private int jumpBoardPositionOffset = 3;
+  private float waitKeyPressTime = 0.16f;
 
   private Camera camera;
 
-  private float runSpeed = 100;
+  private float runSpeed = 0.16f * Prefabs.STONEWIDTH * 10;
 
-  private boolean onTheLine;
+  private boolean onTheLine = false;
   private boolean jumpingUp = false;
   private boolean jumpingDown = false;
   private int currentRunSpeed = 0;
   private float linePositionX = 0;
   private float jumpBoardPositionX = 0;
   private boolean bottomLineCollision;
+  private boolean waitKeyPress = false;
+  private boolean flipdir = false;
+  private boolean rightKey = false;
+  private boolean leftKey = false;
 
   @Override
   public void start() {
@@ -94,14 +99,41 @@ public class FredController implements Component {
     rigidBody.gravity = 0;
     if (jumpingOff && onTheLine) {
       if (animTime > 0) {
-        if (gameObject.getTransform().scale.x < 0) {
-          this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f;
-        } else {
-          this.rigidBody.acceleration.x = Prefabs.STONEWIDTH * 1.5f;
+        if (rightKey) {
+          if (gameObject.getTransform().scale.x < 0 && flipdir) {
+            gameObject.getTransform().scale.x *= -1;
+            this.rigidBody.acceleration.x = Prefabs.STONEWIDTH * 1.5f;
+          } else if (gameObject.getTransform().scale.x > 0 && flipdir) {
+            this.rigidBody.acceleration.x = Prefabs.STONEWIDTH * 1.5f;
+            flipdir = false;
+          } else if (gameObject.getTransform().scale.x < 0 && !flipdir) {
+            gameObject.getTransform().scale.x *= -1;
+            this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f;
+          } else if (gameObject.getTransform().scale.x > 0 && !flipdir) {
+            this.rigidBody.acceleration.x = Prefabs.STONEWIDTH * 1.5f;
+          }
+        }
+
+        if (leftKey) {
+          if (gameObject.getTransform().scale.x > 0 && flipdir) {
+            gameObject.getTransform().scale.x *= -1;
+            this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f;
+          } else if (gameObject.getTransform().scale.x < 0 && flipdir) {
+            flipdir = false;
+            this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f;
+          } else if (gameObject.getTransform().scale.x > 0 && !flipdir) {
+            gameObject.getTransform().scale.x *= -1;
+            this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f;
+          } else if (gameObject.getTransform().scale.x < 0 && !flipdir) {
+            this.rigidBody.acceleration.x = -Prefabs.STONEWIDTH * 1.5f;
+          }
         }
         animTime -= dt;
         return;
       } else {
+        this.rightKey = false;
+        this.leftKey = false;
+        this.flipdir = false;
         this.rigidBody.velocity.y = -jumpHeight * 2 * 2;
         this.rigidBody.velocity.x = 0;
         animTime = time;
@@ -153,6 +185,18 @@ public class FredController implements Component {
         this.rigidBody.acceleration.x = 0;
         this.rigidBody.acceleration.y = 0;
         this.gameObject.getTransform().position.x = jumpBoardPositionX - jumpBoardPositionOffset;
+        this.waitKeyPress = true;
+        this.waitKeyPressTime = 0.16f;
+      }
+    }
+
+    if (waitKeyPress) {
+      if (waitKeyPressTime > 0) {
+        waitKeyPressTime -= dt;
+        return;
+      } else {
+        waitKeyPress = false;
+        waitKeyPressTime = 0.16f;
       }
     }
 
@@ -160,12 +204,27 @@ public class FredController implements Component {
       this.gameObject.getTransform().position.y = this.gameObject.getTransform().position.y + 2;
     }
 
-    if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D) && !jumpingUp && !jumpingDown) {
-      if (gameObject.getTransform().scale.x < 0) {
-        gameObject.getTransform().scale.x *= -1;
+    if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D) && !jumpingUp && !jumpingDown && !KeyListener.isKeyPressed(GLFW_KEY_LEFT) && !KeyListener.isKeyPressed(GLFW_KEY_A)) {
+      if (onTheLine) {
+        rightKey = true;
+        leftKey = false;
+        if (gameObject.getTransform().scale.x > 0) {
+          gameObject.getTransform().scale.x *= -1;
+          flipdir = true;
+          this.waitKeyPress = true;
+          return;
+        }
       }
-      if (!onTheLine && !jumpingOn && (KeyListener.repeates(GLFW_KEY_D) > 1 || KeyListener.repeates(GLFW_KEY_RIGHT) > 1)) {
+
+      if (!onTheLine && gameObject.getTransform().scale.x < 0) {
+        gameObject.getTransform().scale.x *= -1;
+        this.waitKeyPress = true;
+        return;
+      }
+
+      if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = runSpeed;
+        machine.trigger("StartWalking");
       } else if (onTheLine && !jumpingOn && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT < com.robotzero.infrastructure.constants.Window.JUMP_ALLOWANCE) {
         this.rigidBody.acceleration.x = runSpeed;
         this.rigidBody.acceleration.y = 0;
@@ -174,19 +233,37 @@ public class FredController implements Component {
         return;
       }
       if (onGround) {
-        machine.trigger("StartWalking");
         this.jumpingUp = false;
         this.jumpingOff = false;
         this.jumpingOn = false;
       }
-    } else if ((KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) && !jumpingUp && !jumpingDown) {
-      if (gameObject.getTransform().scale.x > 0) {
-        gameObject.getTransform().scale.x *= -1;
+    } else if ((KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) && !jumpingUp && !jumpingDown && !KeyListener.isKeyPressed(GLFW_KEY_RIGHT) && !KeyListener.isKeyPressed(GLFW_KEY_D)) {
+      if (onTheLine) {
+        this.rightKey = false;
+        this.leftKey = true;
+        if (gameObject.getTransform().scale.x < 0) {
+          gameObject.getTransform().scale.x *= -1;
+          flipdir = true;
+          this.waitKeyPress = true;
+          return;
+        }
       }
-      if (!onTheLine && !jumpingOn && (KeyListener.repeates(GLFW_KEY_A) > 1 || KeyListener.repeates(GLFW_KEY_LEFT) > 1)) {
+
+      if (!onTheLine && gameObject.getTransform().scale.x > 0) {
+        gameObject.getTransform().scale.x *= -1;
+        this.waitKeyPress = true;
+        return;
+      }
+
+      if (!onTheLine && !jumpingOn) {
         this.rigidBody.acceleration.x = -runSpeed;
+        machine.trigger("StartWalking");
       } else if (onTheLine && !jumpingOn && canJumpOff && this.gameObject.getTransform().position.y % Prefabs.STONEHEIGHT < com.robotzero.infrastructure.constants.Window.JUMP_ALLOWANCE) {
-        this.rigidBody.acceleration.x = -runSpeed;
+        if (this.gameObject.getTransform().scale.x > 0) {
+          this.rigidBody.acceleration.x = runSpeed;
+        } else {
+          this.rigidBody.acceleration.x = -runSpeed;
+        }
         this.rigidBody.acceleration.y = 0;
         machine.trigger("StartJumpOff");
         jumpingOff = true;
@@ -194,7 +271,6 @@ public class FredController implements Component {
       }
 
       if (onGround) {
-        machine.trigger("StartWalking");
         this.jumpingUp = false;
         jumpingOff = false;
         this.jumpingOn = false;
@@ -257,8 +333,6 @@ public class FredController implements Component {
     if (collision.side == Collision.CollisionSide.BOTTOM && collision.gameObject.getName().contains("Stone_Block_Prefab") && !onTheLine && !jumpingOn) {
       onGround = true;
       return;
-    } else if (collision.gameObject.getName().contains("Line_Block_Prefab")) {
-      System.out.println("BLAH");
     }
 //    } else if (collision.side == Collision.CollisionSide.TOP && collision.gameObject.getName().contains("Stone_Block_Prefab") && !canJumpOff) {
 //      canJumpOff = true;
