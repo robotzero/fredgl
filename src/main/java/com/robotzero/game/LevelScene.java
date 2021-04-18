@@ -36,7 +36,7 @@ public class LevelScene extends Scene {
     final Cells seencells = new Cells(conf.getWidth() + 1,conf.getHeight() + 1) ;
     MapDrawer mapDrawer = new MapDrawer(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, Constants.MAP_UNIT, Constants.STEP_SIZE, seencells, Prefabs.STONEWIDTH, mazeController);
     mapDrawer.draw_map(null, 0, 0, 0, 65536, 0, true, true);
-
+    mazeController.getMazeConfiguration().getStartingPosition();
 
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
     List<GameObject> stoneBlocks = Prefabs.STONES_MAP_DRAWER();
@@ -74,35 +74,38 @@ public class LevelScene extends Scene {
 //          new Vector3f(1f, 0f, 0f),
 //          0
 //      );
+
       gameObjects.add(lineBlock);
-      renderer.add(lineBlock);
+      if (!lineBlock.getName().contains("Jump")) {
+        renderer.add(lineBlock);
+      }
       physics.addGameObject(lineBlock);
       worldPartition.put(lineBlock.getGridCoords(), lineBlock);
       lineBlock.start();
     });
 
-    List<GameObject> jumpboards = Prefabs.JUMPBOARDS_MAP_DRAWER();
-//    List<GameObject> jumpboards = List.of();
-    jumpboards.forEach(jumpBoard -> {
-      BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
+//    List<GameObject> jumpboards = Prefabs.JUMPBOARDS_MAP_DRAWER();
+////    List<GameObject> jumpboards = List.of();
+//    jumpboards.forEach(jumpBoard -> {
+//      BoxBounds boxBounds = jumpBoard.getComponent(BoxBounds.class);
 
-      DebugDraw.addBox2D(
-          new Vector2f(
-              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
-          ),
-          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
-          0,
-          new Vector3f(1f, 0f, 0f),
-          0
-      );
+//      DebugDraw.addBox2D(
+//          new Vector2f(
+//              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
+//              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+//          ),
+//          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
+//          0,
+//          new Vector3f(1f, 0f, 0f),
+//          0
+//      );
 
-      gameObjects.add(jumpBoard);
-      renderer.add(jumpBoard);
-      physics.addGameObject(jumpBoard);
-      worldPartition.put(jumpBoard.getGridCoords(), jumpBoard);
-      jumpBoard.start();
-    });
+//      gameObjects.add(jumpBoard);
+//      renderer.add(jumpBoard);
+//      physics.addGameObject(jumpBoard);
+//      worldPartition.put(jumpBoard.getGridCoords(), jumpBoard);
+//      jumpBoard.start();
+//    });
 
     gameObjects.add(fredGameObject);
     renderer.add(fredGameObject);

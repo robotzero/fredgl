@@ -18,7 +18,7 @@ public class Line implements Component {
         BoxBounds thisBounds = gameObject.getComponent(BoxBounds.class);
         BoxBounds otherBounds = trigger.gameObject.getComponent(BoxBounds.class);
         Optional.ofNullable(thisBounds.resolveCollision(otherBounds, true)).ifPresent(collision -> {
-          if (this.trigger == null && (collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT) && !fredController.isOnTheLine()) {
+          if (this.trigger == null && (collision.side == Collision.CollisionSide.LEFT || collision.side == Collision.CollisionSide.RIGHT) && this.type == 0 && !fredController.isOnTheLine()) {
             this.trigger = trigger;
             fredController.setCollisionWithTheLine(true);
             fredController.setCollisionObjectXPosition(this.gameObject.getTransform().position.x);

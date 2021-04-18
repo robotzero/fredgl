@@ -14,6 +14,7 @@ import com.robotzero.engine.SpriteRenderer;
 import com.robotzero.engine.Spritesheet;
 import org.joml.Vector2f;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -65,11 +66,10 @@ public class Prefabs {
 
     RigidBody rigidBody = new RigidBody();
     BoxBounds boxBounds = new BoxBounds(Prefabs.FREDWIDTH, Prefabs.FREDHEIGHT, false, true);
-    //boxBounds.setYBuffer(2);
     FredController fredController = new FredController();
 
     //Transform transform = new Transform(new Vector2f(650, 300.0f));
-    Transform transform = new Transform(new Vector2f(260f, Prefabs.STONEHEIGHT));
+    Transform transform = new Transform(new Vector2f(258f, Prefabs.STONEHEIGHT));
     transform.scale = new Vector2f(FREDWIDTH, FREDHEIGHT);
     GameObject gameObject = new GameObject("Fred", transform, 0);
     idle.setGameObject(gameObject);
@@ -151,13 +151,23 @@ public class Prefabs {
       return transforms.stream().map(transform -> {
         GameObject line = new GameObject(String.format("Line_Block_Prefab_%s", transform.toString()), transform, 0);
         SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(mappedAsciCode), line);
-        BoxBounds boxBounds = new BoxBounds(6, 40, false, true);
         Line lineComponent = new Line();
+        if (mappedAsciCode == 2 || mappedAsciCode == 1) {
+          BoxBounds boxBounds = new BoxBounds(6, STONEHEIGHT, false, true);
+          boxBounds.setXBuffer(8);
+          boxBounds.setGameObject(line);
+          line.addComponent(boxBounds);
+        }
+
+        if (mappedAsciCode == 0) {
+          BoxBounds boxBounds = new BoxBounds(6, STONEHEIGHT, false, true);
+          boxBounds.setGameObject(line);
+          line.addComponent(boxBounds);
+        }
+
         lineComponent.setGameObject(line);
         spriteRenderer.setGameObject(line);
-        boxBounds.setGameObject(line);
         line.addComponent(spriteRenderer);
-        line.addComponent(boxBounds);
         line.addComponent(lineComponent);
 
         line.getTransform().scale.x = LINEWIDTH;
@@ -170,20 +180,36 @@ public class Prefabs {
 
   public static List<GameObject> LINES_MAP_DRAWER() {
     Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/line.png")).orElseThrow();
-    return MapDrawer.lineTransforms.entrySet().stream().flatMap(entrySet -> {
+    List<GameObject> jumpBoards = new ArrayList<>();
+    List<GameObject> lines = MapDrawer.lineTransforms.entrySet().stream().flatMap(entrySet -> {
       int mappedAsciCode = entrySet.getKey();
       List<Transform> transforms = entrySet.getValue();
       return transforms.stream().map(transform -> {
         GameObject line = new GameObject(String.format("Line_Block_Prefab_%s", transform.toString()), transform, 0);
         SpriteRenderer spriteRenderer = new SpriteRenderer(items.sprites.get(mappedAsciCode), line);
-        BoxBounds boxBounds = new BoxBounds(6, 40, false, true);
         Line lineComponent = new Line();
         lineComponent.setGameObject(line);
         lineComponent.setType(mappedAsciCode);
         spriteRenderer.setGameObject(line);
+
+        if (mappedAsciCode == 2 || mappedAsciCode == 1) {
+          Vector2f jumbBoardPosition = new Vector2f(transform.position.x() - 9, transform.position.y());
+          Transform transform1 = new Transform(jumbBoardPosition);
+          GameObject jumpBoard = new GameObject(String.format("JumpBoard_Block_Prefab_%s", transform1), transform1, 0);
+          BoxBounds jumbBoardBoxBounds = new BoxBounds(STONEWIDTH - 8, STONEHEIGHT, false, true);
+          jumbBoardBoxBounds.setGameObject(jumpBoard);
+          jumpBoard.addComponent(jumbBoardBoxBounds);
+          jumpBoard.getTransform().scale.x = STONEWIDTH;
+          jumpBoard.getTransform().scale.y = STONEHEIGHT;
+          jumpBoards.add(jumpBoard);
+        }
+
+        BoxBounds boxBounds = new BoxBounds(6, STONEHEIGHT, false, true);
         boxBounds.setGameObject(line);
-        line.addComponent(spriteRenderer);
         line.addComponent(boxBounds);
+        boxBounds.setGameObject(line);
+        line.addComponent(boxBounds);
+        line.addComponent(spriteRenderer);
         line.addComponent(lineComponent);
 
         line.getTransform().scale.x = LINEWIDTH;
@@ -192,6 +218,9 @@ public class Prefabs {
         return line;
       });
     }).collect(Collectors.toList());
+
+    lines.addAll(jumpBoards);
+    return lines;
   }
 
   public static List<GameObject> JUMPBOARDS(MapAsset map) {
