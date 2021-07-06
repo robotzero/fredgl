@@ -8,6 +8,7 @@ import com.robotzero.engine.Animation;
 import com.robotzero.engine.AnimationMachine;
 import com.robotzero.engine.BoxBounds;
 import com.robotzero.engine.GameObject;
+import com.robotzero.engine.Ghost;
 import com.robotzero.engine.Line;
 import com.robotzero.engine.RigidBody;
 import com.robotzero.engine.SpriteRenderer;
@@ -26,6 +27,8 @@ public class Prefabs {
   public static final int STONEHEIGHT = 40;
   public static final int FREDWIDTH = 32;
   public static final int FREDHEIGHT = 32;
+  public static final int GHOSTWIDTH = 23;
+  public static final int GHOSTHEIGHT = 29;
 
   public static GameObject FRED_PREFAB() {
     Spritesheet idle_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/fred_idle.png")).orElseThrow();
@@ -93,17 +96,37 @@ public class Prefabs {
     return gameObject;
   }
 
-  public static GameObject BRICK_BLOCK() {
-    Spritesheet items = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/items.png")).orElseThrow();
+  public static GameObject GHOST_PREFAB() {
+    Spritesheet walk_spritesheet = Optional.ofNullable(AssetPool.getSpritesheet("assets/spritesheets/ghost_sheet.png")).orElseThrow();
+    Animation walk = new Animation("Walk", 0.264f, walk_spritesheet.sprites, true);
 
-    GameObject brickBlock = new GameObject("Brick_Block_Prefab", new Transform(new Vector2f()), 0);
-    brickBlock.addComponent(new SpriteRenderer(items.sprites.get(5), brickBlock));
+    AnimationMachine ghostAnimation = new AnimationMachine();
+    ghostAnimation.setStartAnimation("Walk");
+    ghostAnimation.addAnimation(walk);
 
-    brickBlock.getTransform().scale.x = 32;
-    brickBlock.getTransform().scale.y = 32;
+    RigidBody rigidBody = new RigidBody();
+    BoxBounds boxBounds = new BoxBounds(Prefabs.GHOSTWIDTH, Prefabs.GHOSTHEIGHT, false, true);
+    Ghost ghost = new Ghost();
 
-    return brickBlock;
+    Transform transform = new Transform(new Vector2f(258f, Prefabs.STONEHEIGHT));
+    transform.scale = new Vector2f(GHOSTWIDTH, GHOSTHEIGHT);
+    GameObject gameObject = new GameObject("Ghost", transform, 0);
+    walk.setGameObject(gameObject);
+    SpriteRenderer spriteRenderer = new SpriteRenderer(ghostAnimation.getPreviewSprite(), gameObject);
+    spriteRenderer.setGameObject(gameObject);
+    rigidBody.setGameObject(gameObject);
+    boxBounds.setGameObject(gameObject);
+    ghost.setGameObject(gameObject);
+    ghostAnimation.setGameObject(gameObject);
+    gameObject.addComponent(ghost);
+    gameObject.addComponent(spriteRenderer);
+    gameObject.addComponent(ghostAnimation);
+    gameObject.addComponent(rigidBody);
+    gameObject.addComponent(boxBounds);
+
+    return gameObject;
   }
+
 
   public static List<GameObject> STONES(MapAsset map) {
     final Random randomGen = new Random();

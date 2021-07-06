@@ -36,9 +36,24 @@ public class LevelScene extends Scene {
     final Cells seencells = new Cells(conf.getWidth() + 1,conf.getHeight() + 1) ;
     MapDrawer mapDrawer = new MapDrawer(Constants.VIEW_WIDTH, Constants.VIEW_HEIGHT, Constants.MAP_UNIT, Constants.STEP_SIZE, seencells, Prefabs.STONEWIDTH, mazeController);
     mapDrawer.draw_map(null, 0, 0, 0, 65536, 0, true, true);
-    mazeController.getMazeConfiguration().getStartingPosition();
 
+    final var startingPositionX = mazeController.getMazeConfiguration().getStartingPosition()[0];
+    final var startingPositionY = mazeController.getMazeConfiguration().getStartingPosition()[1];
+    final var mazeHeight = mazeController.getMazeConfiguration().getHeight();
+    final var map_scale_width = Prefabs.STONEWIDTH * 2;
+    final var map_scale_height = Prefabs.STONEHEIGHT * 2;
+    final var offx = Prefabs.STONEWIDTH;
+    final var offy = (Constants.VIEW_HEIGHT - (mazeHeight * map_scale_height)) - Prefabs.STONEHEIGHT;
+    final var nx1 = startingPositionX * map_scale_width + offx;
+    final var ny1 = Constants.VIEW_HEIGHT - 0 - (startingPositionY * map_scale_height + offy);
     GameObject fredGameObject = Prefabs.FRED_PREFAB();
+    fredGameObject.getTransform().position.x = nx1;
+    fredGameObject.getTransform().position.y = ny1;
+
+    GameObject ghost = Prefabs.GHOST_PREFAB();
+    ghost.getTransform().position.x = nx1;
+    ghost.getTransform().position.y = ny1;
+
     List<GameObject> stoneBlocks = Prefabs.STONES_MAP_DRAWER();
 //    List<GameObject> stoneBlocks = Prefabs.STONES(Optional.ofNullable(AssetPool.getMap("assets/maps/map.txt")).orElseThrow());
     stoneBlocks.forEach(stoneBlock -> {
@@ -92,7 +107,7 @@ public class LevelScene extends Scene {
 //      DebugDraw.addBox2D(
 //          new Vector2f(
 //              jumpBoard.getTransform().position.x + (boxBounds.getWidth() * 0.5f),
-//              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)
+//              jumpBoard.getTransform().position.y + (boxBounds.getHeight() * 0.5f)!
 //          ),
 //          new Vector2f(boxBounds.getWidth(), boxBounds.getHeight()),
 //          0,
@@ -112,6 +127,12 @@ public class LevelScene extends Scene {
     physics.addGameObject(fredGameObject);
     worldPartition.put(fredGameObject.getGridCoords(), fredGameObject);
     fredGameObject.start();
+
+    gameObjects.add(ghost);
+    renderer.add(ghost);
+    physics.addGameObject(ghost);
+    worldPartition.put(ghost.getGridCoords(), ghost);
+    ghost.start();
     Window.getWindow().setColor(com.robotzero.infrastructure.constants.Window.COLOR_BLACK);
     //AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").play();
   }
@@ -126,11 +147,11 @@ public class LevelScene extends Scene {
     AssetPool.addSpritesheet("assets/spritesheets/icons.png", 32, 32, 0, 7, 15);
     AssetPool.addSpritesheet("assets/spritesheets/turtle.png", 16, 24, 0, 4, 4);
     AssetPool.addSpritesheet("assets/spritesheets/fred_walking_sheet.png", 32, 32, 0, 4, 4);
-//    AssetPool.addSpritesheet("assets/spritesheets/stone_sheet.png", 31, 39, 0, 3, 3);
     AssetPool.addSpritesheet("assets/spritesheets/stones_sprites_better.png", 32, 40, 0, 8, 8);
     AssetPool.addSpritesheet("assets/spritesheets/fred_jump_sheet.png", 32, 32, 0, 2, 2);
     AssetPool.addSpritesheet("assets/spritesheets/fred_climb.png", 32, 32, 0, 1, 1);
     AssetPool.addSpritesheet("assets/spritesheets/fred_idle.png", 32, 32, 0, 1, 1);
+    AssetPool.addSpritesheet("assets/spritesheets/ghost_sheet.png", 23, 29, 0, 2, 2);
     AssetPool.addMap("assets/maps/map.txt");
     // Engine Assets
     AssetPool.addSpritesheet("assets/spritesheets/defaultAssets.png", 24, 21, 0, 2, 2);
@@ -233,15 +254,15 @@ public class LevelScene extends Scene {
 
         Optional.ofNullable(go.getComponent(FredController.class)).ifPresent(_notUsed -> {
           BoxBounds fredBoxBounds = go.getComponent(BoxBounds.class);
-          DebugDraw.addBox2DDynamic(
-              new Vector2f(
-                  fredBoxBounds.getCenterX(),
-                  fredBoxBounds.getCenterY()
-              ),
-              new Vector2f(fredBoxBounds.getWidth(), fredBoxBounds.getHeight()),
-              1,
-              new Vector3f(1f, 0f, 0f)
-          );
+//          DebugDraw.addBox2DDynamic(
+//              new Vector2f(
+//                  fredBoxBounds.getCenterX(),
+//                  fredBoxBounds.getCenterY()
+//              ),
+//              new Vector2f(fredBoxBounds.getWidth(), fredBoxBounds.getHeight()),
+//              1,
+//              new Vector3f(1f, 0f, 0f)
+//          );
         });
 
       } else if (go.getTransform().position.x + go.getTransform().scale.x < this.camera.position().x || go.getTransform().position.y + go.getTransform().scale.y < com.robotzero.infrastructure.constants.Window.CAMERA_OFFSET_Y_3) {

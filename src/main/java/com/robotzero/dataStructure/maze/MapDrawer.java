@@ -125,20 +125,20 @@ public class MapDrawer {
 //		gc.setColor(Color.white);
 
     // determine offsets for x and y
-    int vx = px * map_unit + map_unit / 2;
-    vx += viewd_unscale(view_dx * (step_size * walk_step));
-    int vy = py * map_unit + map_unit / 2;
-    vy += viewd_unscale(view_dy * (step_size_y * walk_step));
-    int offx = -vx * map_scale / map_unit + view_width / 2;
-    int offy = -vy * map_scale / map_unit + view_height / 2;
-    offx = Prefabs.STONEWIDTH;
-    offy = (view_height - (mazeConfig.getHeight() * map_scale_height)) - Prefabs.STONEHEIGHT;
+//    int vx = px * map_unit + map_unit / 2;
+//    vx += viewd_unscale(view_dx * (step_size * walk_step));
+//    int vy = py * map_unit + map_unit / 2;
+//    vy += viewd_unscale(view_dy * (step_size_y * walk_step));
+//    int offx = -vx * map_scale / map_unit + view_width / 2;
+//    int offy = -vy * map_scale / map_unit + view_height / 2;
+    int offx = Prefabs.STONEWIDTH;
+    int offy = (view_height - (mazeConfig.getHeight() * map_scale_height)) - Prefabs.STONEHEIGHT;
 
     // compute minimum for x,y
-    int xmin = -offx / map_scale_width;
-    int ymin = -offy / map_scale_height;
-    ymin = 0;
-    xmin = 0;
+//    int xmin = -offx / map_scale_width;
+//    int ymin = -offy / map_scale_height;
+    int ymin = 0;
+    int xmin = 0;
     if (xmin < 0) xmin = 0;
     if (ymin < 0) ymin = 0;
 
@@ -162,15 +162,9 @@ public class MapDrawer {
 
         if (x < mazew && y > 0 && y < mazeh && mazeConfig.hasWall(x, y - 1, CardinalDirection.North) && !mazeConfig.hasWall(x, y, CardinalDirection.North)) {
           final var t = new Transform(new Vector2f(nx1 + offset, ny1));
-          final var j = new Transform(new Vector2f(nx1 + 3, ny1));
           if (!lineTransforms.get(2).contains(t)) {
             lineTransforms.get(2).add(t);
           }
-
-//          if (!jumpBoards.contains(j)) {
-//            jumpBoards.add(j);
-//          }
-
         int y2 = y + 1;
         while (y2 < mazeh && !mazeConfig.hasWall(x, y2, CardinalDirection.North)) {
           int ny11 = view_height - 0 - (y2 * map_scale_height + offy);

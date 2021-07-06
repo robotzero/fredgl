@@ -19,6 +19,9 @@ public class RigidBody implements Component {
 
   @Override
   public void update(double dt) {
+    Optional.ofNullable(this.gameObject.getComponent(Ghost.class)).ifPresent(ghost -> {
+      this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt) + (gravity * (float)dt));
+    });
     Optional.ofNullable(this.gameObject.getComponent(FredController.class)).ifPresentOrElse(fredController -> {
 //      if (fredController.isJumping() || (!fredController.isOnGround() && (fredController.collisionWithTheLine() || fredController.isOnTheLine() || fredController.isJumpingOn()))) {
 //        this.velocity.add(this.acceleration.x * (float)dt, (this.acceleration.y * (float)dt));
